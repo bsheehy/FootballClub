@@ -1,0 +1,237 @@
+﻿@using System.IO;
+@using System.Web.UI;
+@using Club.Services.Utils;
+@using Mallon.Core.Artifacts;
+@model Mallon.Core.Web.Models.ModelProperty
+
+@{
+  var value = Model.Value;
+  float minVal = 0;
+  float maxVal = 0;
+  string path, label, placeHolder = "";
+  bool outputHTML = false;
+	bool showSpinners = false;
+  MvcHtmlString sLabel = new MvcHtmlString("");
+  MvcHtmlString sControl = new MvcHtmlString("");
+  MvcHtmlString sValidation = Html.ValidationMessage(Model.Path);
+
+  //Workflow Views - can change from Readonly to Edit without going back to Controller
+  bool wfCtrlEditable = true;
+  //-1 == control in normal View
+  //0 == control in ReadOnly Workflow View
+  //1 == control in Edit Workflow  View
+  int wfView = -1;
+  if (ViewBag.wfView != null)
+  {
+    wfView = Convert.ToInt32(ViewData["wfView"]);
+    if (wfView == 0)
+    {
+      wfCtrlEditable = false;
+    }
+  }
+
+  //Set path (control name)
+  path = Model.Path;
+  //Set Label
+  label = Model.Label;
+  value = Model.Value;
+
+  if (Model.CtrlNumericOptions != null)
+  {
+    showSpinners = Model.CtrlNumericOptions.ShowSpinners;
+    if (!string.IsNullOrEmpty(Model.CtrlNumericOptions.Path))
+    {
+      path = Model.CtrlNumericOptions.Path;
+    }
+    //Set placeHolder if required
+    if (!string.IsNullOrEmpty(Model.CtrlNumericOptions.PlaceHolder))
+    {
+      placeHolder = Model.CtrlNumericOptions.PlaceHolder;
+    }
+
+    if (!string.IsNullOrEmpty(Model.CtrlNumericOptions.Label))
+    {
+      label = Model.CtrlNumericOptions.Label;
+    }
+
+    //Set Selected value      
+    if (Model.CtrlNumericOptions.Value != null)
+    {
+      value = Model.CtrlNumericOptions.Value;
+    }
+
+    //Set Min value
+    if (Model.CtrlNumericOptions.MinValue.HasValue)
+    {
+      minVal = (float)Model.CtrlNumericOptions.MinValue;
+    }
+
+    if (Model.CtrlNumericOptions.MaxValue.HasValue)
+    {
+      maxVal = (float)Model.CtrlNumericOptions.MaxValue;
+    }
+  }
+
+  var metadata = ModelMetadataProviders.Current.GetMetadataForProperty(null, Model.ParentType, Model.Name);
+  if (Model.Access.Allows(Mallon.Core.Artifacts.FieldAccessOptionality.Mandatory)) //Property is mandatory if its int value is greater or equal to 4 e.g. Read = 1, Mandatory = 4 so Read | Mandatory permissions = 5
+  {
+    metadata.IsRequired = true;
+  }
+  else
+  {
+    metadata.IsRequired = false;
+  }
+  IDictionary<string, object> ctrlDataAnnotations = Html.GetUnobtrusiveValidationAttributes(Model.Name, metadata);
+  IDictionary<string, object> ctrlAttributes = Utility.MergeDictionaries(Model.ControlHtmlAttributes, ctrlDataAnnotations);
+  switch (Model.Access)
+  {
+    case Mallon.Core.Artifacts.FieldAccessOptionality.Write:
+    case Mallon.Core.Artifacts.FieldAccessOptionality.ReadWrite:
+    case Mallon.Core.Artifacts.FieldAccessOptionality.ReadWriteMandatory:
+      outputHTML = true;
+      sLabel = Html.Label(Model.Label);
+      break;
+    case Mallon.Core.Artifacts.FieldAccessOptionality.Read:
+    case Mallon.Core.Artifacts.FieldAccessOptionality.ReadMandatory:
+      if (ctrlAttributes.ContainsKey("readonly"))
+      {
+        ctrlAttributes["readonly"] = true;
+      }
+      else
+      {
+        ctrlAttributes.Add("readonly", true);
+      }
+      wfCtrlEditable = false;
+      outputHTML = true;
+      sLabel = Html.Label(Model.Label);
+      break;
+    default:
+      outputHTML = false;
+      break;
+  }
+
+  if (ctrlAttributes.ContainsKey("readonly") && Convert.ToBoolean(ctrlAttributes["readonly"]) == true)
+  {
+    wfCtrlEditable = false;
+  }
+
+  if (outputHTML)
+  {
+    if (Model.PropertyType == typeof(int) || Model.PropertyType == typeof(int?))
+    {
+      if (minVal == 0 && maxVal == 0)
+      {
+        //sControl = new MvcHtmlString(Html.Kendo().IntegerTextBox()
+        //.Name(path)
+        //.Spinners(showSpinners)
+        //.Value((int?)value)
+        //.Enable(wfCtrlEditable)
+        //.HtmlAttributes(ctrlAttributes)
+        //.ToHtmlString());
+
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox()
+        .Name(path)
+        .Decimals(0)
+        .Format("#")
+        .Spinners(showSpinners)
+        .Value((int?)value)
+        .Enable(wfCtrlEditable)
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+      else
+      {
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox()
+        .Name(path)
+         .Decimals(0)
+          .Format("#")
+        .Enable(wfCtrlEditable)
+				.Spinners(showSpinners)
+        .Value((int?)value)
+        .Min(Convert.ToInt32(minVal))
+        .Max(Convert.ToInt32(maxVal))
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+    }
+    else if (Model.PropertyType == typeof(double) || Model.PropertyType == typeof(double?))
+    {
+      if (minVal == 0 && maxVal == 0)
+      {
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox<double>()
+        .Name(path)
+				.Spinners(showSpinners)
+        .Value((double?)value)
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+      else
+      {
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox<double>()
+        .Name(path)
+				.Spinners(showSpinners)
+        .Value((double?)value)				
+        .Min(Convert.ToDouble(minVal))
+        .Max(Convert.ToDouble(maxVal))
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+    }
+    else if (Model.PropertyType == typeof(float) || Model.PropertyType == typeof(float?))
+    {
+      if (minVal == 0 && maxVal == 0)
+      {
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox<float>()
+        .Name(path)
+				.Spinners(showSpinners)
+        .Value((float?)value)
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+      else
+      {
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox<float>()
+        .Name(path)
+				.Spinners(showSpinners)
+        .Value((float?)value)
+        .Min(minVal)
+        .Max(maxVal)
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+    }
+  }
+
+  bool hintAtStart = true;
+  if (ctrlAttributes.ContainsKey("hintAtEnd"))
+  {
+    hintAtStart = false;
+  }
+}
+
+@if (outputHTML)
+{
+  <td>
+    @if (hintAtStart && !string.IsNullOrEmpty(Model.Hint))
+    {
+      <img src="~/Images/16px/about.png" alt="Help" title="@Model.Hint" class="mouseChangeHelp" />
+    }
+    @sLabel
+  </td>
+  <td>
+    @sControl
+    @if (!hintAtStart && !string.IsNullOrEmpty(Model.Hint))
+    {
+      <img src="~/Images/16px/about.png" alt="Help" title="@Model.Hint" class="mouseChangeHelp" />
+    }
+    @if (metadata.IsRequired == true || ctrlAttributes.ContainsKey("required"))
+    {
+      <span class="requiredAfter"></span>
+      @sValidation
+    }
+  </td>
+}
+else
+{
+  @Html.Hidden(Model.Path, Model.Value);
+}

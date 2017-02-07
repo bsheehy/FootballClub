@@ -1,0 +1,113 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<ClubDetails>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  bool isAdmin = (bool)ViewBag.SuperUser;
+  string msgTableHelp = "<p>You can view and edit your Club details here.</p><p>Only Users who are <b>Administrators</b> can edit the Club details.</p>";  
+}
+@Html.Hidden("dialogId")
+<script type="text/javascript">
+  var isDirty = false;
+  $(document).ready(function () {
+    $(".dfw-clearContainerVals")
+      .bind("click", function () {
+      var container = $(this).data('containerdiv');
+      clearChildCtrls(container);
+
+      //This is needed if clearing Address's
+      $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
+      });
+
+
+    $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
+      isDirty = true;
+      enableSaveBtn(isDirty);
+    });
+
+    // a with class "dfw-ignoreDirtyLink" is not checked
+    $("a").not(".dfw-ignoreDirtyLink").click(function (event) {
+      if (IsPageDirty() === false) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    });
+
+
+    //Disable controls if required
+    var isAdministrator = @Json.Encode(isAdmin);
+    if (isAdministrator ===false)
+    {
+      disableAllControls("dClub");
+    }
+  });
+</script>
+
+<div id="headerSubMenu">
+@if(isAdmin)
+{ 
+  @(Html.Kendo().Button()
+      .Name("frmSubmit")
+      .Enable(false)
+      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save")
+      .Events(x => x.Click("clickHiddenSubmit")))
+  <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+}
+</div>
+
+<div id="dClub" class="dfw-colorText">
+  <table class="tbl2Cols">
+    <tr>
+      <td colspan="2">
+        @Html.HiddenFor(Model.GetProperty(m => m.Oid))
+        @Html.HiddenFor(Model.GetProperty(m => m.Orev))
+      </td>
+    </tr>
+    <tr>
+      <td>
+        @Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } })
+      </td>
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.Name), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.Description), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.AddressNumber), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.AddressStreet), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.AddressTown), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.AddressPostCode), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.AddressCounty), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.AddressCountry), new { @class = "k-textbox", @style = "width:75%"})
+    </tr>
+
+  </table>
+</div>

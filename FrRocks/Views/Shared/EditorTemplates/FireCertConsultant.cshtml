@@ -1,0 +1,25 @@
+﻿@using Mallons.DomainFire.Entities
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model FireCertConsultant
+
+@Html.HiddenFor(model => model.Oid)
+<table class="tbl2Cols">
+  <tr>
+    <td>
+      @Html.LabelFor(model => model.ConsultantRole)
+    </td>
+    <td>
+      @Html.TextBoxFor(model => model.ConsultantRole,new { @class = "k-textbox", @style = "width:100%"});
+    </td>
+  </tr>
+  <tr>
+    <td>
+      @Html.LabelFor(model => model.Notes)
+    </td>
+    <td>
+      @Html.TextAreaFor(model => model.Notes,new { @class = "k-textbox", @style = "width:100%",@rows="3"});
+    </td>
+  </tr>
+</table>
+

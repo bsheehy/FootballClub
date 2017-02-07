@@ -1,0 +1,3 @@
+The 01_StaticObjectsSchemaGen.sql file is created automatically using 'Lancelot/tools/SchemaGen' from the static class data using the makefile 'static_objects' command. Its no longer used to create the database as this data is now in the: 'C:\development\DiamondFireWeb\db\staticdata\01_StaticObjects.sql' file. 
+static_objects:
+	cd ../DiamondFireWeb.Gui/bin/ && $(SchemaGen) --static $(Assemblies) > "$(CURDIR)/staticdata/schemaGen/01_StaticObjectsSchemaGen.sql"

@@ -1,0 +1,131 @@
+﻿@using System.IO;
+@using System.Web.UI;
+@using Club.Services.Utils;
+@using Mallon.Core.Artifacts;
+@model Mallon.Core.Web.Models.ModelProperty
+
+@{
+	bool outputHTML = false;
+	MvcHtmlString sLabel = new MvcHtmlString("");
+	MvcHtmlString sControl = new MvcHtmlString("");
+  MvcHtmlString sValidation = Html.ValidationMessage(Model.Path);
+
+  //Workflow Views - can change from Readonly to Edit without going back to Controller
+  bool wfCtrlEditable = true;
+  //-1 == control in normal View
+  //0 == control in ReadOnly Workflow View
+  //1 == control in Edit Workflow  View
+  int wfView = -1;
+  if (ViewBag.wfView != null)
+  {
+    wfView = Convert.ToInt32(ViewData["wfView"]);
+    if (wfView == 0)
+    {
+      wfCtrlEditable = false;
+    }
+  }
+  
+  object value = default(TimeSpan);
+  if(Model.PropertyType == typeof(TimeSpan?))
+  {
+    value = Model.Value;
+  }
+  else
+  {
+    if((TimeSpan)Model.Value == default(TimeSpan))
+    {
+      value = null;
+    }
+    else
+    {
+      value = Model.Value;
+    }
+  }
+
+	var metadata = ModelMetadataProviders.Current.GetMetadataForProperty(null, Model.ParentType, Model.Name);
+	if (Model.Access.Allows(Mallon.Core.Artifacts.FieldAccessOptionality.Mandatory)) //Property is mandatory if its int value is greater or equal to 4 e.g. Read = 1, Mandatory = 4 so Read | Mandatory permissions = 5
+	{
+		metadata.IsRequired = true;
+	}
+  else
+  {
+    metadata.IsRequired = false;
+  }
+	IDictionary<string, object> ctrlDataAnnotations = Html.GetUnobtrusiveValidationAttributes(Model.Name, metadata);
+	IDictionary<string, object> ctrlAttributes =  Utility.MergeDictionaries(Model.ControlHtmlAttributes, ctrlDataAnnotations);
+
+  ctrlAttributes.AddHtmlAttribute("class", "ctrlMinWidth");
+	switch (Model.Access)
+	{
+		case Mallon.Core.Artifacts.FieldAccessOptionality.Write:
+		case Mallon.Core.Artifacts.FieldAccessOptionality.ReadWrite:
+		case Mallon.Core.Artifacts.FieldAccessOptionality.ReadWriteMandatory:
+			outputHTML = true;
+			sLabel = Html.Label(Model.Label);
+			break;
+		case Mallon.Core.Artifacts.FieldAccessOptionality.Read:
+    case Mallon.Core.Artifacts.FieldAccessOptionality.ReadMandatory:
+			outputHTML = true;
+			if(ctrlAttributes.ContainsKey("readonly"))
+			{
+				ctrlAttributes["readonly"] = true;
+			}
+			else
+			{
+				ctrlAttributes.Add("readonly", true);
+			}
+      wfCtrlEditable = false;
+			sLabel = Html.Label(Model.Label);
+			break;
+		default:
+			outputHTML = false;
+			break;
+	}
+
+  if (ctrlAttributes.ContainsKey("readonly") && Convert.ToBoolean(ctrlAttributes["readonly"]) == true)
+  {
+    wfCtrlEditable = false;
+  }
+
+	if (outputHTML)
+	{
+		sControl = new MvcHtmlString(Html.Kendo().TimePicker()
+      .Name(Model.Path)
+      .Enable(wfCtrlEditable)
+      .Value((TimeSpan?)value).HtmlAttributes(ctrlAttributes).ToHtmlString());
+	}
+
+  bool hintAtStart = true;
+  if (ctrlAttributes.ContainsKey("hintAtEnd"))
+  {
+    hintAtStart = false;
+  }
+}
+
+@if (outputHTML)
+{
+  <td>
+    @if (hintAtStart && !string.IsNullOrEmpty(Model.Hint))
+    {
+      <img src="~/Images/16px/about.png" alt="Help" title="@Model.Hint" class="mouseChangeHelp" />
+    }
+		@sLabel
+	</td>
+  <td>
+		@sControl
+    @if (!hintAtStart && !string.IsNullOrEmpty(Model.Hint))
+    {
+      <img src="~/Images/16px/about.png" alt="Help" title="@Model.Hint" class="mouseChangeHelp" />
+    }
+    @if (metadata.IsRequired == true || ctrlAttributes.ContainsKey("required"))
+    {
+      <span class="requiredAfter"></span>
+      @sValidation
+    }
+  </td>
+}
+else
+{
+	@Html.Hidden(Model.Path, Model.Value);
+}
+

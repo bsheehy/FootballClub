@@ -1,0 +1,23 @@
+﻿@using FrRocks.Models
+@model IList<ModelToolbarItem>
+
+@{
+  foreach (ModelToolbarItem itm in Model)
+  {
+    var guid = itm.Oid == null ? "null" : "'" + itm.Oid + "'";
+    if (itm.Enabled)
+    {
+      <a href="javascript:handleToolbarClick('@itm.Op', '@itm.Controller', @guid)">
+        <img alt="@itm.Text" title="@itm.Text" src="@itm.Image" /></a>
+    }
+    else
+    {
+        <img alt="@itm.Text" title="@itm.Text" src="@itm.Image" class="disabled") />
+    }
+  }
+}
+
+
+
+
+

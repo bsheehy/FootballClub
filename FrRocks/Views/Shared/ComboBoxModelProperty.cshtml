@@ -1,0 +1,199 @@
+﻿@using System.IO;
+@using System.Web.UI;
+@using Club.Services.Utils;
+@using Mallon.Core.Artifacts;
+@using Club.Services.Utils;
+@model Mallon.Core.Web.Models.ModelProperty
+
+@{
+  string value, path, label, placeHolder = "";
+  bool outputHTML = false;
+  MvcHtmlString sLabel = new MvcHtmlString("");
+  MvcHtmlString sControl = new MvcHtmlString("");
+  MvcHtmlString sValidation = Html.ValidationMessage(Model.Path);
+  
+  //Set path (control name)
+  path = Model.Path;
+  //Set Label
+  label = Model.Label;
+  value = "";
+
+  //Workflow Views - can change from Readonly to Edit without going back to Controller
+  bool wfCtrlEditable = true;
+  //-1 == control in normal View
+  //0 == control in ReadOnly Workflow View
+  //1 == control in Edit Workflow  View
+  int wfView = -1;
+  if (ViewBag.wfView != null)
+  {
+    wfView = Convert.ToInt32(ViewData["wfView"]);
+    if (wfView == 0)
+    {
+      wfCtrlEditable = false;
+    }
+  }
+  
+  
+  if(Model.CtrlComboBoxOptions == null)
+  {
+    throw new Exception("Partial View ComboBoxModelProperty for " + path + " - Parameter CtrlComboBoxOptions cannot be null.");
+  }
+  else
+  {
+    if(Model.CtrlComboBoxOptions.ListOptions == null)
+    {
+      throw new Exception("Partial View ComboBoxModelProperty for " + path + " - Parameter CtrlComboBoxOptions.SelectList (ListOptions) cannot be null.");
+    }
+    if (!string.IsNullOrEmpty(Model.CtrlComboBoxOptions.Path))
+    {
+      path = Model.CtrlComboBoxOptions.Path;
+    }
+  
+    //Set placeHolder if required
+    if (!string.IsNullOrEmpty(Model.CtrlComboBoxOptions.PlaceHolder))
+    {
+      placeHolder = Model.CtrlComboBoxOptions.PlaceHolder;
+    }
+
+    if (!string.IsNullOrEmpty(Model.CtrlComboBoxOptions.Label))
+    {
+      label = Model.CtrlComboBoxOptions.Label;
+    }
+  
+    //Set Selected value
+    //Set Selected value
+    if(Model.CtrlComboBoxOptions.Value == null)
+    {
+      value = "";
+    }
+    else if(Model.CtrlComboBoxOptions.Value.GetType() == typeof(System.Guid))
+    {
+      if (!((System.Guid)Model.CtrlComboBoxOptions.Value).Equals(System.Guid.Empty))
+      {
+        value = Model.CtrlComboBoxOptions.Value.ToString();
+      }
+      else
+      {
+        value = "";
+      }
+    }
+    else
+    {
+      value = Model.Value.ToString();
+    }
+  }
+
+  var metadata = ModelMetadataProviders.Current.GetMetadataForProperty(null, Model.ParentType, Model.Name);
+	if (Model.Access.Allows(Mallon.Core.Artifacts.FieldAccessOptionality.Mandatory)) //Property is mandatory if its int value is greater or equal to 4 e.g. Read = 1, Mandatory = 4 so Read | Mandatory permissions = 5
+	{
+		metadata.IsRequired = true;
+	}
+  else
+  {
+    metadata.IsRequired = false;
+  }
+  IDictionary<string, object> ctrlDataAnnotations = Html.GetUnobtrusiveValidationAttributes(Model.Name, metadata);
+  IDictionary<string, object> ctrlAttributes = Utility.MergeDictionaries(Model.ControlHtmlAttributes, ctrlDataAnnotations);
+
+  ctrlAttributes.AddHtmlAttribute("class", "ctrlMinWidth");
+  
+  if (Model.CtrlComboBoxOptions != null)
+  {
+    if (!string.IsNullOrEmpty(Model.CtrlComboBoxOptions.Label))
+    {
+      label = Model.CtrlComboBoxOptions.Label;
+    }
+
+    //ComboBoxes usually display FK entities i.e. Person.PersonTitle (Mr, Miss etc..) these persmissions come across as None but we
+    //need to display them thuse default displays the combobox.
+		switch (Model.Access)
+		{
+			case Mallon.Core.Artifacts.FieldAccessOptionality.Write:
+			case Mallon.Core.Artifacts.FieldAccessOptionality.ReadWrite:
+			case Mallon.Core.Artifacts.FieldAccessOptionality.ReadWriteMandatory:
+				outputHTML = true;
+				sLabel = Html.Label(Model.Label);
+				break;
+			case Mallon.Core.Artifacts.FieldAccessOptionality.Read:
+			case Mallon.Core.Artifacts.FieldAccessOptionality.ReadMandatory:
+				outputHTML = true;
+				if(ctrlAttributes.ContainsKey("readonly"))
+				{
+					ctrlAttributes["readonly"] = true;
+				}
+				else
+				{
+					ctrlAttributes.Add("readonly", true);
+				}
+        wfCtrlEditable = false;
+				sLabel = Html.Label(Model.Label);
+				break;
+			default:
+				outputHTML = false;
+				break;
+		}
+  }
+
+  if (ctrlAttributes.ContainsKey("readonly") && Convert.ToBoolean(ctrlAttributes["readonly"]) == true)
+  {
+    wfCtrlEditable = false;
+  }
+
+  if (outputHTML)
+  {
+    if (string.IsNullOrEmpty(placeHolder))
+    {
+      sControl = new MvcHtmlString(Html.Kendo().ComboBox()
+        .Name(path)
+        .BindTo(Model.CtrlComboBoxOptions.ListOptions)
+        .Value(value)
+        .Enable(wfCtrlEditable)
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+    }
+    else
+    {
+      sControl = new MvcHtmlString(Html.Kendo().ComboBox()
+      .Name(path)
+      .BindTo(Model.CtrlComboBoxOptions.ListOptions)
+      .Value(value)
+      .Enable(wfCtrlEditable)
+      .Placeholder(placeHolder)
+      .HtmlAttributes(ctrlAttributes)
+      .ToHtmlString());
+    }
+  }
+
+  bool hintAtStart = true;
+  if (ctrlAttributes.ContainsKey("hintAtEnd"))
+  {
+    hintAtStart = false;
+  }
+}
+
+@if (outputHTML)
+{
+  <td>
+    @if (hintAtStart && !string.IsNullOrEmpty(Model.Hint))
+    {
+      <img src="~/Images/16px/about.png" alt="Help" title="@Model.Hint" class="mouseChangeHelp" />
+    }
+    @sLabel
+  </td>
+  <td>
+    @sControl
+    @*@if (!hintAtStart && !string.IsNullOrEmpty(Model.Hint))
+    {
+      <img src="~/Images/16px/about.png" alt="Help" title="@Model.Hint" class="mouseChangeHelp" />
+    }*@
+    @if (metadata.IsRequired == true || ctrlAttributes.ContainsKey("required"))
+    {
+      <span class="requiredAfter"></span>
+      @sValidation
+    }
+  </td>
+}
+else
+{
+	@Html.Hidden(path, value);
+}

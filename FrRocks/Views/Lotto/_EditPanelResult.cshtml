@@ -1,0 +1,100 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<LottoResult>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.Entity.Oid.ToString();
+}
+@Html.Hidden("dialogId")
+<script type="text/javascript">
+  var isDirty = false;
+  $(document).ready(function () {
+    $(".dfw-clearContainerVals")
+      .bind("click", function () {
+      var container = $(this).data('containerdiv');
+      clearChildCtrls(container);
+
+      //This is needed if clearing Address's
+      $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
+      });
+
+
+    $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
+      isDirty = true;
+      enableSaveBtn(isDirty);
+    });
+
+    // a with class "dfw-ignoreDirtyLink" is not checked
+    $("a").not(".dfw-ignoreDirtyLink").click(function (event) {
+      if (IsPageDirty() === false) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    });
+  });
+</script>
+
+
+@(Html.Kendo().PanelBar()
+.Name("pnlbLottoResultDetails")
+.ExpandMode(PanelBarExpandMode.Multiple)
+.HtmlAttributes(new { style = "width:100%" })
+.Items(panelbar =>
+{
+  panelbar.Add().Text("Lotto Result:")
+  .ImageUrl("~/Images/24px/user1.png")
+  .Expanded(true)
+  .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+  .Content(@<div id="dLottoResult" class="dfw-colorText">
+              <div id="headerSubMenu">
+                @(Html.Kendo().Button()
+      .Name("frmSubmit")
+      .Enable(false)
+      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save")
+      .Events(x => x.Click("clickHiddenSubmit")))
+
+                <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+              </div>
+
+    <table class="tbl2Cols">
+      <tr>
+        <td colspan="2">
+          @Html.HiddenFor(Model.GetProperty(m => m.Oid))
+          @Html.HiddenFor(Model.GetProperty(m => m.Orev))
+        </td>
+      </tr>
+
+      <tr>
+        @Html.DateFor(Model.GetProperty(m => m.DrawDate), new {@style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.NumericFor(Model.GetProperty(m => m.No1), new {@style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.NumericFor(Model.GetProperty(m => m.No2), new { @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.NumericFor(Model.GetProperty(m => m.No3), new { @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.NumericFor(Model.GetProperty(m => m.No4), new { @style = "width:75%" })
+      </tr>
+    </table>
+  <br />
+  </div>);
+})
+)
+
+

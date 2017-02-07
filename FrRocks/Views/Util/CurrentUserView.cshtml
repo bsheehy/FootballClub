@@ -1,0 +1,70 @@
+﻿@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Mallon.Core.Artifacts
+@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+}
+
+@model TypedModel<User>
+@using (Ajax.BeginForm("CurrentUserView", "Util", new AjaxOptions { OnFailure = "handleAjaxError()", OnBegin = "", OnComplete = "hideProgress()", OnSuccess = "myAccountUpdated()" }, new { @id = "viewAccountInfo" }))
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(false)
+
+  @Html.HiddenFor(Model.GetProperty(x => x.Oid))
+  <table style="width:600px; padding:20px;">
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(x => x.Login), new { @style = "width:95%;", @disabled = "true"})
+    </tr>
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(x => x.FullName), new { @style = "width:100%;" })
+    </tr>
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(x => x.Password), new { @style = "width:100%;", type = "password", @id = "myAccountPWord" })
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <p style="font-size:small;"><a href="#" onclick="showHidePassword('Show')" class="k-button">Show Password </a> | <a href="#" onclick="showHidePassword()" class="k-button">Hide Password</a></p>
+      </td>
+    </tr>
+    @if(Model.Entity.AccountLocked)
+    { 
+    <tr>
+      <td>
+        @Html.Label("Account Is Locked")
+      </td>
+      <td>
+        @Html.Label(String.Format("Number of Failed Logins: {0}", Model.Entity.NoOfFailedLogins), new { @style = "color:#888;" })
+      </td>
+    </tr>
+    }
+    <tr>
+      <td>
+        @Html.Label("Roles")
+      </td>
+      <td>
+        @(Html.Kendo().Grid(Model.Entity.Roles)
+          .Name("Roles")
+          .HtmlAttributes(new { @style = "width:100%;" })
+          .Columns(c =>
+            {
+              c.Bound(p => p.Oid).Hidden();
+              c.Bound(p => p.Name).Title("Name");
+              c.Bound(p => p.Description).Title("Description");
+
+            })
+        )
+      </td>
+    </tr>
+  </table>
+  if (pnlViewUserAccess == PageViewType.Create || pnlViewUserAccess == PageViewType.Edit)
+  {
+    <input id="hiddenSubmit" type="submit" value="Update" class="k-button dfw-k-button" style="float:right;" />
+  }
+}

@@ -1,0 +1,89 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Domain.Models
+@{
+  bool personEdit = false;
+  bool selectGuardian = false;
+  bool selectTeamMember = false;
+  bool selectCommitteeMember = false;
+  bool selectPersonMembership = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  if (ViewBag.SelectGuardian != null)
+  {
+    selectGuardian = ViewBag.SelectGuardian;
+  }
+  if (ViewBag.SelectTeamMember != null)
+  {
+    selectTeamMember = ViewBag.SelectTeamMember;
+  }
+  if (ViewBag.SelectCommitteeMember != null)
+  {
+    selectCommitteeMember = ViewBag.SelectCommitteeMember;
+  }
+  if (ViewBag.SelectPersonMembership!= null)
+  {
+    selectPersonMembership = ViewBag.SelectPersonMembership;
+  }
+}
+<div id="dPremSearchResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+  @(Html.Kendo().Grid<ModelPerson>()
+  .Name("searchGridResults")
+  .AutoBind(true)
+  .ToolBar(tools =>
+  {
+    tools.Excel();
+  })
+  .Columns(columns =>
+    {
+      columns.Bound(p => p.Oid).Hidden();
+      if (personEdit)
+      {
+        columns.Bound(p => p.Oid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= Oid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      if (selectGuardian)
+      {
+        columns.Command(command => command.Custom("Select").Click("savePersonGuardian")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      if (selectTeamMember)
+      {
+        columns.Command(command => command.Custom("Select").Click("selectTeamMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      if (selectCommitteeMember)
+      {
+        columns.Command(command => command.Custom("Select").Click("selectCommitteeMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      if (selectPersonMembership)
+      {
+        columns.Command(command => command.Custom("Select").Click("selectPersonMembership")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      columns.Bound(p => p.NameSingleLine).Title("Name").Width("200px");
+      columns.Bound(p => p.AddressSingleLine).Title("Address").Width("300px");
+      columns.Bound(p => p.HasDirectDebits).Title("Direct Debits").Width("150px");
+      columns.Bound(p => p.Age).Title("Age").Width("100px");
+      columns.Bound(p => p.Dob).Title("DOB").Format("{0:dd/MMM/yyyy}").Width(150);
+      columns.Bound(p => p.Phone).Title("Phone").Width("100px");
+      columns.Bound(p => p.Email).Title("Email").Width("100px");
+    })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Sortable()
+  .Filterable()
+  .Groupable()
+  .Scrollable(s => s.Enabled(true).Height("auto"))
+  .Selectable(x => x.Type(GridSelectionType.Cell))
+  .DataSource(ds => ds
+    .Ajax()
+    .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+    .Model(model => model.Id(p => p.Oid))
+    .Read(read => read.Action("SearchResults_ReadData", "Person").Data("getPersonSearchParams"))
+  )
+  )
+</div>
+
+<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.PersonControlId')" />

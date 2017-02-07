@@ -1,0 +1,65 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model TypedModel<TeamMemberQry>
+@functions{ 
+string ctrlId = System.Guid.NewGuid().ToString();
+string msgTableHelp = "<p>The history of the Clubs Teams and the Team Members can be searched here.</p>";  
+
+}
+<script type="text/javascript">
+  function getTeamMemberSearchParams() {
+    return searchGetParams("searchCriteria@(ctrlId)");
+  }
+</script>
+
+<div class="table-responsive">
+  <table id="searchCriteria@(ctrlId)" style="width: 100%; margin-bottom: 5px;" class="tbl4Cols">
+    <tr>
+      <td>
+        @Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } })
+      </td>
+    </tr>
+    <tr>
+      @Html.DropDownListFor(Model.GetProperty(m => m.aq_TeamOid, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.Teams, Model.Entity.aq_TeamOid.HasValue ? Model.Entity.aq_TeamOid : null, " ")), new { @style = "width:90%", @min_width = "150px;" })
+
+      @Html.DropDownListFor(Model.GetProperty(m => m.aq_TeamMemberTypeOid, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.TeamMemberTypes, Model.Entity.aq_TeamMemberTypeOid.HasValue ? Model.Entity.aq_TeamMemberTypeOid : null, " ")), new { @style = "width:90%", @min_width = "150px;" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.aq_Forename), new { @class = "k-textbox", @style = "width:90%" })
+
+      @Html.TextBoxFor(Model.GetProperty(m => m.aq_Surname), new { @class = "k-textbox", @style = "width:90%" })
+    </tr>
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.aq_Address), new { @class = "k-textbox", @style = "width:90%" })
+
+      @Html.NumericFor(Model.GetProperty(m => m.aq_TeamYear, new ModelCtrlNumericOptions { MinValue = 1900, MaxValue = 2200 }), new { @style = "width:90%" })
+    </tr>
+    <tr>
+    @Html.DropDownListFor(Model.GetProperty(m => m.MaxRecords, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.MaxRecords, Model.Entity.MaxRecords, null)), new { @style = "width:90%" })
+  </tr>
+  <tr>
+      <td></td>
+    <td colspan="3">
+      <div id="searchWrapper" class="float-right" style="display: inline-block">
+        <input type="submit" value="Go" class="k-button" id="btnSearchGo" style="width: auto; padding-top: 2px; padding-bottom: 2px;" onclick="searchBeginSearch()" />
+        <input type="button" value="Clear" class="k-button" id="btnSearchClear" onclick="searchClearSearch('searchCriteria@(ctrlId)')" style="width: auto; padding-top: 2px; padding-bottom: 2px;" />
+
+        @*@Html.ActionLink("New Person", "Create", "Person", null, new { @class = "k-button" })*@
+
+        @*<button class="dfw-ignoreDirtyLink k-button" data-actionurl="@Html.Action("Create", "Person")" id="btnAddComplaint" data-role="button" role="button" aria-disabled="false"><img alt="icon" class="k-image" src="~/Images/16px/add.png">New Person</button>*@
+        
+        @*@(Html.Kendo().Button()
+          .Name("createPerson")
+          .HtmlAttributes(new { @class = "saveButtonRight" })
+          .ImageUrl(Url.Content("~/Images/16px/check.png"))
+          .Content("Create New Person")
+                .Events(x => x.Click("gotoCreatePerson")))*@
+
+      </div>
+    </td>
+    </tr>
+  </table>
+  </div>

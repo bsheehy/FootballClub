@@ -1,0 +1,62 @@
+﻿@{
+  ViewBag.Title = "About";
+}
+<br />
+
+@(Html.Kendo().TabStrip()
+  .Name("ContactsTabStrip")
+  .Items(items =>
+  {
+    items.Add()
+        .Text("About")
+        .Selected(true)
+        .Content(@<text><div class="dfw-colorText">
+  <p>
+    <h4>This website was created by Brendan Sheehy for the Fr Rocks GFC. It is used to:</h4>
+    <ul>
+      <li>Administer and Update the following:</li>
+      <ul>
+        <li>Club Details.</li>
+        <li>Club Teams.</li>
+        <li>A Persons Membership.</li>
+        <li>A Persons Lotto Direct Debits.</li>
+      </ul>
+      <li>Search the following:</li>
+      <ul>
+        <li>A Persons Membership history</li>
+        <li>A Persons Lotto Direct Debit History.</li>
+        <li>Search Teams and Team members.</li>
+      </ul>
+      <li>Check Lotto Winners for Direct Debits.</li>
+    </ul>
+  </p>
+</div></text>).ContentHtmlAttributes(new { style = "min-height: 200px" });
+
+    items.Add()
+  .Text("Contact")
+  .Content(@<div>
+    <text>
+      <p>
+        <h4>Fr Rocks GFC</h4>
+      </p>
+      <p>
+        1 Convent Rd<br />
+        Cookstown<br />
+        Tyrone<br />
+        BT80 8QA
+      </p>
+      <p>
+        Telephone: ??? <br />
+        Email: ???
+      </p>
+      <p>
+        <a href="https://goo.gl/maps/UsqzLi35vfQ2" target="_blank" class="k-button">View Map</a>
+        <a href="https://www.facebook.com/Cookstown-Fr-Rocks-GFC-139628172745442/?fref=ts" target="_blank" class="k-button">Facebook</a>
+        <a href="https://en.wikipedia.org/wiki/Cookstown_Fr._Rock's_GAC" target="_blank" class="k-button">Further Info</a>
+      </p>
+    </text>
+  </div>).ContentHtmlAttributes(new { style = "min-height: 200px" });
+  })
+)
+
+

@@ -1,0 +1,61 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Models
+@using Club.Services.Utils
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Mallon.Core.Artifacts
+@model TypedModel<Role>
+
+@Html.HiddenFor(Model.GetProperty(x => x.Oid))
+@Html.Hidden("controller", Model.ExtraFields["controller"])
+
+<table class="tbl2Cols">
+  <tr>
+    <h4>Group Details</h4>
+  </tr>
+  <tr>
+    @Html.CheckBoxFor(Model.GetProperty(m => m.Active), new { @lblSecond = "false" })
+  </tr>
+  <tr>
+    <td>
+      Name:
+    </td>
+    <td>
+      @Html.TextBox("Name", Model.Entity.Name, new { @class = "k-textbox", @style = "width:75%;", @disabled = "disabled"})
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Description:
+    </td>
+    <td>
+      @Html.TextArea("Description", Model.Entity.Description, new { @rows = "2", @class = "k-textbox", @style = "width:75%;" })
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Default Access:
+    </td>
+    <td>
+      @{Html.RenderPartial("DefaultAccess", (object)ViewBag.DefaultAccess);}
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top">
+      Class Access:
+    </td>
+    <td>
+      @{Html.RenderAction("classAccessTree");}
+    </td>
+  </tr>
+</table>
+<script>
+  if ('@Model.ExtraFields["op"]' == "n") {
+    document.getElementById("Name").disabled = false;
+
+  }
+</script>

@@ -1,0 +1,12 @@
+﻿@model string
+
+@(Html.TextAreaFor(m => m, new {@class="k-textbox", onkeydown = "stop()" }))
+
+@*Allow user to press Enter key for adding new lines on the textarea while editing*@
+<script>
+  function stop() {
+    if (event.keyCode == 13) {
+      event.stopPropagation();
+    }
+  }
+</script>

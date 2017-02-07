@@ -1,0 +1,16 @@
+﻿@using @using Mallon.Core.Web.Models.HtmlExtensions
+@model Mallon.Core.Web.Models.TypedModel<Club.Domain.Artifacts.Person>
+
+@Html.Hidden(string.IsNullOrEmpty(Model.PrependRoutPath)?"Person": Model.PrependRoutPath,Model.Entity.Oid == System.Guid.Empty?"":Model.Entity.Oid.ToString())
+
+@*Add these but keep them invisible this way we can still copy values between persons e.g. In FireCert Copy 'Owner' from 'Notify'*@
+@Html.Hidden(string.Concat(string.IsNullOrEmpty(Model.PrependRoutPath) ? "Person" : Model.PrependRoutPath, "AllDetails"), Model.Entity.AllDetails, new { @disabled = "disabled" })
+
+
+<tr>
+@Html.TextBoxFor(Model.GetProperty(m=>m.SingleLine),new { @class = "k-textbox", @rows="2", @style = "width:75%", @disabled="disabled"})
+</tr>
+
+<tr>
+@Html.TextBoxFor(Model.GetProperty(m=>m.AddressSingleLine),new { @class = "k-textbox", @rows="2", @style = "width:75%", @disabled="disabled"})
+</tr>

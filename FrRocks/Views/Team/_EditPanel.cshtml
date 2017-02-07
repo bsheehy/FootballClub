@@ -1,0 +1,100 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Team>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.Entity.Oid.ToString();
+
+  bool teamEdit = false;
+  if (ViewBag.EditTeam != null)
+  {
+    teamEdit = ViewBag.EditTeam;
+  }
+}
+
+@Html.Hidden("dialogId")
+<script type="text/javascript">
+  var isDirty = false;
+  $(document).ready(function () {
+    $(".dfw-clearContainerVals")
+      .bind("click", function () {
+      var container = $(this).data('containerdiv');
+      clearChildCtrls(container);
+
+      //This is needed if clearing Address's
+      $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
+      });
+
+
+    $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
+      isDirty = true;
+      enableSaveBtn(isDirty);
+    });
+
+    // a with class "dfw-ignoreDirtyLink" is not checked
+    $("a").not(".dfw-ignoreDirtyLink").click(function (event) {
+      if (IsPageDirty() === false) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    });
+  });
+
+  function closeDialogCtrl() {
+    var dialogName = getDialogName("@(ctrlId)");
+    if (dialogName != null && $("#" + dialogName).length > 0) {
+      $("#" + dialogName).data("kendoWindow").close();
+    }
+  }
+
+</script>
+
+@Html.Hidden("CopyTeamMembersUrl", Url.Action("CopyTeamMembers", "Team"))
+
+@(Html.Kendo().PanelBar()
+.Name("pnlbPersonDetails")
+.ExpandMode(PanelBarExpandMode.Multiple)
+.HtmlAttributes(new { style = "width:100%" })
+.Items(panelbar =>
+{
+  panelbar.Add().Text("Team:")
+  .ImageUrl("~/Images/16px/link.png")
+  .Expanded(true)
+  .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+  .Content(@<div id="dPerson" class="dfw-colorText">
+    <table class="tbl2Cols">
+      <tr>
+        <td colspan="2">
+          @Html.HiddenFor(Model.GetProperty(m => m.Oid))
+          @Html.HiddenFor(Model.GetProperty(m => m.Orev))
+        </td>
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.NameSingleLine), new { @class = "k-textbox", @style = "width:75%", @readonly = true })
+      </tr>
+    </table>
+  <br />
+  </div>);
+
+  if (pnlViewUserAccess != PageViewType.Create)
+  {
+    panelbar.Add().Text("Users Who Can Edit Team:")
+    .ImageUrl(Url.Content("~/Images/24px/edit.png"))
+    .Expanded(true)
+    .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+    .Content(@<div id="dManagersGrid">
+      @Html.Partial("~/Views/Team/TeamAdminsGrid.cshtml", Model, Html.ViewData)
+      <br />
+    </div>);
+  }
+})
+)
+
+

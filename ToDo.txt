@@ -1,0 +1,6 @@
+=====================
+TO DO:
+=====================
+Team/Edit
+1. Copy Team members from another team
+2. Team Managers?? - Only Admin User or Team Managers can edit the Team personel.

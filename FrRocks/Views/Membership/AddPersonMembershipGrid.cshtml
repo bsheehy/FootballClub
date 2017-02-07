@@ -1,0 +1,110 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Domain.Models
+@model TypedModel<PersonMembershipQry>
+@functions{ 
+string ctrlId = System.Guid.NewGuid().ToString();
+}
+@{
+  bool addPersonMembership = false;
+  if (ViewBag.AddPersonMembership != null)
+  {
+    addPersonMembership = ViewBag.AddPersonMembership;
+  }
+}
+<script type="text/javascript">
+  function getMembershipSearchParams() {
+    return searchGetParams("searchCriteria@(ctrlId)");
+  }
+</script>
+
+<div class="table-responsive dfw-colorText">
+  <table id="searchCriteria@(ctrlId)" style="width: 100%; margin-bottom: 5px;" class="tbl4Cols dfw-colorText">
+    <tr>
+      @Html.DropDownListFor(Model.GetProperty(m => m.aq_MembershipOid, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.MembershipTypes, Model.Entity.aq_MembershipOid.HasValue ? Model.Entity.aq_MembershipOid : null, " ")), new { @style = "width:90%", @min_width = "150px;", @disabled = "disabled" })
+    </tr>
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.aq_Forename), new { @class = "k-textbox", @style = "width:90%" })
+
+      @Html.TextBoxFor(Model.GetProperty(m => m.aq_Surname), new { @class = "k-textbox", @style = "width:90%" })
+    </tr>
+    <tr>
+      @*@Html.DropDownListFor(Model.GetProperty(m => m.MaxRecords, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.MaxRecords, Model.Entity.MaxRecords, null)), new { @style = "width:90%" })*@
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan="3">
+        <div id="searchWrapper" class="float-right" style="display: inline-block">
+          <input type="submit" value="Go" class="k-button" id="btnSearchGo" style="width: auto; padding-top: 2px; padding-bottom: 2px;" onclick="searchBeginSearch()" />
+          <input type="button" value="Clear" class="k-button" id="btnSearchClear" onclick="searchClearSearch('searchCriteria@(ctrlId)')" style="width: auto; padding-top: 2px; padding-bottom: 2px;" />
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div id="dPremSearchResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+  @(Html.Kendo().Grid<ModelPersonMembershipType>()
+  .Name("personMembershipGridResults")
+  .AutoBind(true)
+  .ToolBar(tools =>
+  {
+    tools.Excel();
+    if (addPersonMembership)
+    {
+      tools.Template(@<text>
+        @(Html.Kendo().Button()
+          .Name("btnAddNewMember")
+          .Icon("plus")
+          .Content("Add")
+          .HtmlAttributes(new
+          {
+            type = "button",
+            id = "btnAddNewMember",
+            data_dialogguid = ctrlId.ToString(),
+            data_dialogtitle = "Add New Member",
+            data_dialogtofit = "false",
+            data_closejscallback = "refreshPersonMembershipGrid",
+            data_actionurl = Url.Action("SelectMembershipMember", "Person", new { membershipTypeOid = @Model.Entity.aq_MembershipOid, controlId = "btnAddNewMember" })
+          })
+          .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+      //toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
+    }
+  })
+            .Columns(columns =>
+              {
+                columns.Bound(p => p.Oid).Hidden();
+                //if (addPersonMembership)
+                //{
+                //  columns.Command(command => command.Custom("Select").Click("selectPersonMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+                //  //columns.Bound(p => p.MembershipTypeOid).Title("Membership").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Membership") + "?Oid=#= MembershipTypeOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+                //}
+                //if (personEdit)
+                //{
+                //  columns.Bound(p => p.PersonOid).Title("Person").ClientTemplate("<a href='" + Url.Action("Edit", "Membership") + "?Oid=#= PersonOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+                //}
+                columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("200px");
+                columns.Bound(p => p.MembershipTypeName).Title("Membership").Width("300px");
+                columns.Bound(p => p.Date).Title("Paid Date").Format("{0:dd/MMM/yyyy}").Width("150px");
+              })
+            //.Pageable(x => { x.PageSizes(new int[] { 30, 60 }); })
+            .Sortable()
+            .Filterable()
+            .Groupable()
+            .Scrollable(s => s.Enabled(true).Height("auto"))
+            .Selectable(x => x.Type(GridSelectionType.Cell))
+            .DataSource(ds => ds
+            .Ajax()
+            .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+            .Model(model => model.Id(p => p.Oid))
+                .Read(read => read.Action("SearchResults_ReadData", "Membership").Data("getMembershipSearchParams"))
+            )
+  )
+</div>
+
+

@@ -1,0 +1,59 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Domain.Models
+@{
+  bool membershipEdit = false;
+  if (ViewBag.MembershipEdit != null)
+  {
+    membershipEdit = ViewBag.MembershipEdit;
+  }
+  bool personEdit = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+}
+<div id="dPremSearchResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+  @(Html.Kendo().Grid<ModelPersonMembershipType>()
+  .Name("searchGridResults")
+  .AutoBind(false)
+  .ToolBar(tools =>
+  {
+    tools.Excel();
+  })
+  .Columns(columns =>
+    {
+      columns.Bound(p => p.Oid).Hidden();
+      if (membershipEdit)
+      {
+        columns.Bound(p => p.MembershipTypeOid).Title("Membership").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Membership") + "?Oid=#= MembershipTypeOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      if (personEdit)
+      {
+        columns.Bound(p => p.PersonOid).Title("Person").ClientTemplate("<a href='" + Url.Action("Edit", "Membership") + "?Oid=#= PersonOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("200px");
+      columns.Bound(p => p.MembershipTypeName).Title("Membership").Width("300px");
+      columns.Bound(p => p.Date).Title("Paid Date").Width("100px");
+      columns.Bound(p => p.MembershipTypeStartDate).Title("Start Date").Format("{0:dd/MMM/yyyy}").Width(150);
+      columns.Bound(p => p.MembershipTypeEndDate).Title("End Date").Format("{0:dd/MMM/yyyy}").Width(150);
+    })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Sortable()
+  .Filterable()
+  .Groupable()
+  .Scrollable(s => s.Enabled(true).Height("auto"))
+  .Selectable(x => x.Type(GridSelectionType.Cell))
+  .DataSource(ds => ds
+  .Ajax()
+  .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+  .Model(model => model.Id(p => p.Oid))
+      .Read(read => read.Action("SearchResults_ReadData", "Membership").Data("getMembershipSearchParams"))
+  )
+  )
+</div>
+

@@ -1,0 +1,41 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Models
+@using Club.Services.Utils
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Mallon.Core.Artifacts
+@model IEnumerable<ModelDefaultAccess>
+
+<div style="width:75%; display:table-cell;">
+
+  @(Html.Kendo().Grid(Model)
+          .Name("defaultaccessGrid")
+          .Columns(columns =>
+          {
+            columns.Bound(p => p.Check)
+              .ClientTemplate(
+                "# # " +
+              "<input type='checkbox' name='DefaultAccessChk' value='#=Access#' #= Check ?  checked='checked':'' # class='chkbx' />" +
+              "# #")
+              .Title(" ");
+            columns.Bound(p => p.Name)
+              .Title(" ");
+          })
+          .HtmlAttributes(new { @style = "width:75%;" })
+          //.Scrollable(x => { x.Enabled(false); x.Height(250); })
+          .Selectable(x => x.Type(GridSelectionType.Cell))
+          .DataSource(ds => ds
+          .Ajax()
+          .Batch(true)
+          .Model(model =>
+          {
+            model.Id(i => i.Access);
+            model.Field(f => f.Name).Editable(false);
+          })
+          //.Update(update => update.Action("updateDefaultAccess", "AdminRole"))
+          .Read(read => read.Action("getDefaultAccess", "AdminRole")))
+          .Resizable(resize => resize.Columns(true))
+  )
+</div>
+
+

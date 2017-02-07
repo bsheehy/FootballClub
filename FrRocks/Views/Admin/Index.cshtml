@@ -1,0 +1,496 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using FrRocks.Models
+@using Mallon.Common.Enums
+@using System.Configuration;
+@{
+  ViewBag.Title = "Administration";
+  Layout = "~/Views/Shared/_LayoutAdministration.cshtml";
+  bool superUser = ViewBag.SuperUser;
+}
+@Html.Hidden("dialogId")
+
+<div id="mainAdmin" class="row dfw-colorText">
+  <div class="col-xs-12">
+    <div id="toolbar" class="row"></div>
+    <div id="mainAdminContent" class="row">
+      <div class="col-xs-12">
+        <div id="showInActiveDiv">
+          @Html.Kendo().CheckBox().Name("setInActive").Label("Show Inactive").HtmlAttributes(new { @class = "dfw-ignoreChange" })
+        </div>
+      </div>
+    </div>
+
+    <div id="adminContent" class="row">
+      <div class="col-xs-12 col-md-6">
+        <div id="divItemListFilter">
+          <input type="text" id="itemListFilter" class="k-textbox" style="width:50%" />
+          <button class="k-button" onclick="filterItemList()">Starts With</button>
+        </div>
+        <div id="itemList">
+
+        </div>
+      </div>
+      <div id="contentPane" class="col-xs-12 col-md-6">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "contentForm", @style = "width:100%;max-width:100%" }))
+        {
+          @Html.AntiForgeryToken()
+          @Html.ValidationSummary(false)
+
+          <div id="content">
+
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+  var curItem = null;
+  var modified = false;
+  //var divProgress = 'content';
+  $(document).ready(function () {
+    $('#showInActiveDiv').hide();
+    $('#divItemListFilter').hide();
+  });
+  function handleTreeClicked(item) {
+    showProgress();
+    loadItemList(item);
+    $('#itemList').show();
+    $('#showInActiveDiv').hide();
+    clearContent();
+  }
+
+  function clearContent() {
+    // Clear the current content
+    $('#content').html('');
+
+  }
+
+  // Loads the list of items into the itemList div
+  function loadItemList(item, oid) {
+    curItem = item;
+    var controller = "Admin" + item;
+    var url1 = '@Url.Action("ListAll", "__Controller__")';
+    url1 = url1.replace("__Controller__", controller);
+    if (oid != null)
+      url1 += "?oid=" + oid;
+
+    $('#itemList').load(url1, null, function () { listLoaded(oid, controller) });
+    updateToolbar('v', controller, oid);
+  }
+
+  function listLoaded(oid, controller) {
+    // Set the hilight handlers and click handlers
+    $('#listAll').find('div').each(function (i, e) {
+      $(e).mouseover(itemHilight)
+        .mouseout(itemUnhilight)
+        .click(function (e) {
+          itemUnhilight(e);
+          var oid = $(e.target).attr('id');
+          if (oid == null) {
+            oid = $(e.target).parent().attr('id');
+          }
+          handleListClicked(oid, controller);
+        });
+    });
+
+    if (oid != null) {
+      // Select the list item
+      var listView = $("#listAll").data("kendoListView");
+      var itm = listView.element.find('#' + oid).first();
+      // selects first list view item
+      listView.select(itm);
+      handleListClicked(oid, controller);
+    }
+
+    $('#titleTxt').text($('#title').val());
+    $('#divItemListFilter').show();
+    hideProgress();
+    //resizeHeaderMenuSpacerDiv();
+  }
+
+  //NOTE: Cannot use normal Keno UI ListView filtering baecause here the data is not added to the listAll (Kendo ListView) rather
+  //the listItem rows are added to the itemList div.
+  function filterItemList() {
+    var filter = $('#itemListFilter').val()
+    var listView = $("#listAll").data("kendoListView");
+    var dataSource = listView.dataSource;
+    var allData = dataSource.data();
+    var myFilters = new Array();
+
+    //Hide all list items
+    $('#listAll').children('.mouseChangePointer').each(function () {
+      $(this).hide();
+    });
+
+    if (filter) {
+      myFilters.push({ field: "Text", operator: "startswith", value: filter });
+    }
+
+    var query = new kendo.data.Query(allData);
+    var queryData = query.filter(myFilters).data;
+    for (var i = 0; i < queryData.length; i++) {
+      var id = queryData[i].uid;
+      if (id) {
+        $("#listAll").find("div[data-uid='" + id + "']").each(function () {
+          $(this).show();
+        });
+      }
+    }
+  }
+
+  function handleListClicked(oid, controller) {
+    $('.validation-summary-errors').children('ul').first().text('');
+    //Handles Item that has been clicked in the list
+    var url1 = '@Url.Action("Index", "__Controller__")';
+    url1 = url1.replace("__Controller__", controller);
+    url1 += "?op=v&Oid=" + oid;
+
+    showProgress();
+    if (controller == null) {
+      controller = $('#controller').attr('value');
+      url1 = url1.replace("undefined", controller);
+    }
+
+    //$('#content').load(url1, null, function (respText, status, jqXHR) { contentLoaded('v', controller, oid) });
+
+    $('#content').load(url1, null,
+      function (respText, status, jqXHR) {
+        //contentLoadedHandler(respText, status, jqXHR);
+        contentLoaded('v', controller, oid);
+      });
+  }
+
+
+  function contentLoadedHandler(respText, status, jqXHR) {
+    if (status == "error") {
+      alert("oh noes!!!!");
+    }
+  }
+
+
+  function contentLoaded(op, controller, oid) {
+    modified = false;
+    var contentOid = $('#Oid').val();
+    $('#content').children().each(function (i, e) {
+      $(e).on('input propertychange paste change', function () {
+        if (!modified) {
+          changeText('t', contentOid, controller);
+        }
+      });
+    });
+
+    hideProgress();
+    updateToolbar(op, controller, oid);
+  }
+
+  function updateToolbar(op, controller, oid) {
+    if (op == "d" || op == "s") {
+      if (op == "s") {
+        if (oid == null)
+          oid = $('#Oid').val();
+      }
+      else {
+        // must be delete - clear current content
+        clearContent();
+        oid = null;
+      }
+      // Reload the item list
+      loadItemList(curItem, oid);
+
+    }
+    else {
+      var url = '@Url.Action("Toolbar", "__Controller__")';
+      url = url.replace("__Controller__", controller);
+      var pchar = "?";
+      if (op != null) {
+        url += "?op=" + op;
+        pchar = "&";
+      }
+
+      if (oid != null) {
+        url += pchar + "Oid=" + oid;
+      }
+      $('#toolbar').load(url);
+
+      if (op == 'n') {
+        var listView = $("#listAll").data("kendoListView");
+        listView.clearSelection();
+        $('#Active').prop('checked', true);
+      }
+      else if (op == 'c' && oid != null) {
+        listLoaded(oid);
+      }
+    }
+  }
+
+  //function fnValidateDynamicContent(element) {
+  //  var currForm = $('#contentForm');
+  //  currForm.removeData("validator");
+  //  currForm.removeData("unobtrusiveValidation");
+  //  $.validator.unobtrusive.parse(currForm);
+  //  currForm.validate(); // This line is important and added for client side validation to trigger, without this it didn't fire client side errors.
+  //}
+
+  function handleToolbarClick(op, controller, oid) {
+    $('.validation-summary-errors').children('ul').first().text('');
+    var url = '@Url.Action("Index", "__Controller__")';
+    url = url.replace("__Controller__", controller);
+    var data = $('#contentForm').serialize();
+    var pchar = "?";
+    if (op != null) {
+      url += "?op=" + op;
+      pchar = "&";
+
+      if (op == 's') {
+        ///MINE
+        //if (!fnValidateDynamicContent())
+        //{
+        //  return;
+        //}
+
+        ////ORIGINAL
+        var vald = $('#contentForm')
+          .updateValidation()
+          .validate();
+        if (!vald.form()) {
+          return;
+        }
+        oid = null;
+      }
+
+    }
+
+    if (oid != null) {
+      url += pchar + "Oid=" + oid;
+    }
+    // showProgress();
+
+    if (op == 'd') {
+      if (oid != null) {
+        var myData = [{ "oid": oid, "op": op, "controller": controller, "url": url, "data": data }];
+        var message = "Are you sure you want to delete this?";
+        var buttons = ["Yes", "No"];
+        showModalAlert(message, "deleteResponse", myData, buttons);
+      }
+    } else {
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        complete: function (respText, status, jqXHR) {
+          if (status == 'error') {
+            handleAjaxError(jqXHR, null);
+
+          }
+          else {
+            $('#content').html(respText.responseText);
+            contentLoaded(op, controller, oid);
+          }
+        }
+      });
+    }
+  }
+
+  function changeText(op, oid, controller) {
+    modified = true;
+    updateToolbar(op, controller, oid);
+  }
+
+  function deleteResponse(buttonResponse, params) {
+    var result = null;
+    switch (buttonResponse) {
+      case "Yes":
+        result = true;
+        break;
+      case "No":
+        result = false;
+        break;
+      default:
+        break;
+    }
+    var oid = params[0].oid;
+    var controller = params[0].controller;
+    var op = params[0].op;
+    var url = params[0].url;
+    var data = params[0].data;
+    if (result == true) {
+
+      $.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        complete: function (respText, status, jqXHR) {
+          if (status == 'error') {
+            handleAjaxError(jqXHR, null);
+
+          }
+          else {
+            $('#content').html(respText.responseText);
+            contentLoaded(op, controller, oid);
+          }
+        }
+      });
+    } else {
+      listLoaded(oid, controller)
+    }
+  }
+
+  function itemHilight(e) {
+    if (!($(e.target).hasClass('k-state-selected') | $(e.target).parent().hasClass('k-state-selected'))) {
+      $(e.target).addClass('k-state-hover');
+      if ($(e.target).parent().is('div')) {
+        $(e.target).parent().addClass('k-state-hover');
+      }
+    }
+  }
+
+  function itemUnhilight(e) {
+    $(e.target).removeClass('k-state-hover');
+    if ($(e.target).parent().is('div')) {
+      $(e.target).parent().removeClass('k-state-hover');
+    }
+  }
+  function handleGenerateStats(controller) {
+    $('.validation-summary-errors').children('ul').first().text('');
+    //Handles Item that has been clicked in the list
+    var url1 = '@Url.Action("Index", "__Controller__")';
+    url1 = url1.replace("__Controller__", controller);
+
+    if (controller == null) {
+      controller = $('#controller').attr('value');
+      url1 = url1.replace("undefined", controller);
+    }
+    $('#mainAdmin').load(url1, null, function (respText, status, jqXHR) { });
+  }
+
+
+  /***********************AdminRoles******************************/
+  /***************************************************************/
+
+  function clickNode(path, right) {
+    var oid = $('#Oid').val();
+    changeText('t', oid, "AdminRoles");
+    var node = $('#' + right + '_' + path.replace(/[.]/g, '_'));
+    var input = $('#' + path.replace(/[.]/g, '_'));
+    var flag = 0;
+    switch (right) {
+      case 'C':
+        flag = 1;
+        break;
+      case 'R':
+        flag = 2;
+        break;
+      case 'U':
+        flag = 4;
+        break;
+      case 'D':
+        flag = 8;
+        break;
+    }
+
+    var access = parseInt(input.val());
+    if (node.hasClass('unchecked')) {
+      node.removeClass('unchecked');
+      access = access | flag;
+    }
+    else {
+      node.addClass('unchecked');
+      access = access & (flag ^ 15);
+    }
+    input.val(access);
+  }
+
+  function addClassAccess() {
+    var win = $('#addClassAccessWin').data('kendoWindow');
+    win.open();
+    win.center();
+    var oid = $("#Oid").val();
+    var url = '@Url.Action("ClassEditor", "AdminRoles")';
+    $('#classEditor').load(url + "/" + oid);
+  }
+
+  function openUserSetup() {
+    var Oid = $('#UserOid').val();
+    var guid = Oid;
+    var parentDialog = getDialogName(guid);
+    $('#dialogId').val(parentDialog);
+    kendoDialogCreate(guid, null, false);
+    kendoDialogOpen(guid, "", '@Url.Action("UserSetup", "Admin")');
+  }
+
+  function saveClassEditor() {
+    var models = new Array();
+    var treeview = $("#addClassGrid").data("kendoTreeView");
+
+    $("#addClassGrid .k-item input[type=checkbox]:checked").closest(".k-item").each(function () {
+      var dataItem = treeview.dataItem(this);
+      var data = {
+        Path: dataItem.Path,
+        ParentPath: dataItem.ParentPath,
+        HasChildren: dataItem.HasChildren,
+        Access: dataItem.Access,
+        Name: dataItem.Name,
+        Checked: dataItem.Checked,
+        Assembly: dataItem.Assembly,
+        Text: dataItem.Text,
+        Value: dataItem.Value
+      };
+
+      models.push(data);
+    });
+
+    var url = '@Url.Action("SaveClassEditor", "AdminRoles")';
+
+    models = JSON.stringify({ 'models': models, 'oid': $("#Oid").val() });
+
+    $.ajax({
+      contentType: 'application/json; charset=utf-8',
+      dataType: 'json',
+      type: 'POST',
+      url: url,
+      data: models,
+      success: function (result) {
+        if (result.success === true) {
+        }
+        else {
+          handleAjaxError(result);
+        }
+      },
+      error: function (request) {
+        hideProgress();
+        handleAjaxError(request);
+      }
+    });
+
+    var treeView = $("#classaccessGrid").data("kendoTreeView");
+    treeView.dataSource.read();
+    $('#addClassAccessWin').data('kendoWindow').close();
+  }
+
+  function editMasterTemplate(masterOid) {
+    var url = '@Url.Action("TemplateEditor", "AdminLetterTemplate")' + "?letterTemplateOid=" + masterOid;
+    window.open(url);
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

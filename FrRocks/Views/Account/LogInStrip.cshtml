@@ -1,0 +1,48 @@
+﻿@model Mallon.Core.Artifacts.User
+@Html.Hidden("UserOid", Model.Oid)
+@(Html.Kendo().ToolBar()
+.Name("menu")
+.Items(items =>
+{
+  items.Add().Type(CommandType.Button).Text("Main Menu").ShowText(ShowIn.Both).Url(Url.Action("Index", "Home")).HtmlAttributes(new { @class = "loginStripBtns" });
+  //items.Add().Type(CommandType.Separator);
+
+  items.Add().Type(CommandType.Button).Text("My Account").ShowText(ShowIn.Both).HtmlAttributes(new { onClick = "myAccountOpen();", @class = "loginStripBtns" });
+      
+  if (Model == null)
+  {
+    items.Add().Type(CommandType.Button).Text("Login").ShowText(ShowIn.Both).Url(Url.Action("Index", "Account")).HtmlAttributes(new { @class = "loginStripBtns" });
+    //items.Add().Type(CommandType.Separator);
+  }
+  else
+  {
+    items.Add().Type(CommandType.Button).Text("Logout").ShowText(ShowIn.Both).Url(Url.Action("Logout", "Account")).HtmlAttributes(new { @class = "loginStripBtns" });
+    //items.Add().Type(CommandType.Separator);
+  }
+
+  if (Model != null && Model.HasRole(Model, "Administrator") == true) // TODO: Implement role restriction on admin access && Model.GetFunctionAccess().Contains(Mallon.Core.Functions.Function.Administer)
+  {
+    items.Add().Type(CommandType.Button).Text("Administration").ShowText(ShowIn.Both).Url(Url.Action("Index", "Admin")).HtmlAttributes(new { @class = "loginStripBtns" });
+    //items.Add().Type(CommandType.Separator);
+  }
+
+  //items.Add().Type(CommandType.Button).Text("My Account").ShowText(ShowIn.Both).HtmlAttributes(new { onClick = "myAccountOpen();", @class = "loginStripBtns" });
+  //items.Add().Type(CommandType.Separator);
+})
+.HtmlAttributes(new { @style = "border-radius: 5px;", @class = "dfw-menuSlim" })
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

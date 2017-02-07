@@ -1,0 +1,215 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.Entity.Oid.ToString();
+}
+@Html.Hidden("dialogId")
+<script type="text/javascript">
+  var isDirty = false;
+  $(document).ready(function () {
+    $(".dfw-clearContainerVals")
+      .bind("click", function () {
+      var container = $(this).data('containerdiv');
+      clearChildCtrls(container);
+
+      //This is needed if clearing Address's
+      $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
+      });
+
+
+    $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
+      isDirty = true;
+      enableSaveBtn(isDirty);
+    });
+
+    // a with class "dfw-ignoreDirtyLink" is not checked
+    $("a").not(".dfw-ignoreDirtyLink").click(function (event) {
+      if (IsPageDirty() === false) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    });
+  });
+
+  function refreshPersonGuardians() {
+    $('#gridPersonGuardian').data('kendoGrid').dataSource.read();
+  }
+
+  function savePersonGuardian(e) {
+    var row = $(e.currentTarget).closest("tr");
+    var gridId = this.element.attr("id");
+    var dataItem = this.dataItem(row);
+    var guardianOid = dataItem.Oid;
+    var personOid = $('#PersonOid').val();
+    var url = $('#SaveGuardianUrl').val();
+    try {
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          'personOid': personOid,
+          'guardianOid': guardianOid
+        },
+        success: function (result) {
+          if (result.success === true) {
+            var message = "Guardian saved.";
+            var buttons = ["OK"];
+            showModalAlert(message, "", "", buttons);
+            //Remove the row
+            var grid = $('#' + gridId).data("kendoGrid");
+            grid.removeRow(row);
+          }
+          else {
+            handleAjaxError(result);
+          }
+        },
+        error: function (request) {
+          hideProgress();
+          handleAjaxError(request);
+        },
+        beforeSend: function () {
+          showProgress();
+        },
+        complete: function () {
+          hideProgress();
+        }
+      });
+    }
+    catch (e) {
+      var message = e.description;
+      var buttons = ["OK"];
+      showModalAlert(message, "", "", buttons);
+    }
+  }
+
+  function closeDialogCtrl() {
+    var dialogName = getDialogName("@(ctrlId)");
+    if (dialogName != null && $("#" + dialogName).length > 0) {
+      $("#" + dialogName).data("kendoWindow").close();
+    }
+  }
+
+</script>
+
+
+@(Html.Kendo().PanelBar()
+.Name("pnlbPersonDetails")
+.ExpandMode(PanelBarExpandMode.Multiple)
+.HtmlAttributes(new { style = "width:100%" })
+.Items(panelbar =>
+{
+  panelbar.Add().Text("Person:")
+  .ImageUrl("~/Images/24px/user1.png")
+  .Expanded(true)
+  .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+  .Content(@<div id="dPerson" class="dfw-colorText">
+              <div id="headerSubMenu">
+                @(Html.Kendo().Button()
+      .Name("frmSubmit")
+      .Enable(false)
+      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save")
+      .Events(x => x.Click("clickHiddenSubmit")))
+
+                <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+              </div>
+
+    <table class="tbl2Cols">
+      <tr>
+        <td colspan="2">
+          @Html.HiddenFor(Model.GetProperty(m => m.Oid))
+          @Html.HiddenFor(Model.GetProperty(m => m.Orev))
+        </td>
+      </tr>
+
+      <tr>
+        @Html.DropDownListFor(Model.GetProperty(m => m.Title, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.PersonTitles, Model.Entity.Title == null ? System.Guid.Empty : Model.Entity.Title.Oid, "Select Title")))
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.Forename), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.Surname), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.DateFor(Model.GetProperty(m => m.Dob), new {@style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.Phone), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.MobileNo), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.Email), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.AddressNumber), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.AddressStreet), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.AddressTown), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.AddressPostCode), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.AddressCounty), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.AddressCountry), new { @class = "k-textbox person", @style = "width:75%"})
+      </tr>
+
+      <tr>
+        @Html.CheckBoxFor(Model.GetProperty(m => m.Alergies), new { @lblSecond = "false" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.AlergiesDetails), new { @class = "k-textbox person", @style = "width:75%", @rows = "3" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.Comments), new { @class = "k-textbox person", @style = "width:75%", @rows = "3" })
+      </tr>
+    </table>
+  <br />
+  </div>);
+
+  if (pnlViewUserAccess == PageViewType.Edit)
+  { 
+    panelbar.Add().Text("Adult Guardians:")
+    .ImageUrl("~/Images/24px/businessman.png")
+    .Expanded(false)
+    .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+    .Content(@<div id="dMembershipGrid">
+        @Html.Partial("~/Views/Person/PersonGuardiansGrid.cshtml", Model, Html.ViewData)
+      <br />
+    </div>);
+  }
+})
+)
+
+

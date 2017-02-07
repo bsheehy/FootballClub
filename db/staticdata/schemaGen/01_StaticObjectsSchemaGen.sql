@@ -1,0 +1,6 @@
+INSERT INTO [core_version_info] ([orev], [database_version], [software_version], [oid]) VALUES (1 , '1' , '1' , 'c19df5be-79c7-4ffc-8699-c2cfac4be2bd' )
+INSERT INTO [club_person_title] ([orev], [description], [active], [oid]) VALUES (1 , 'Mr' , 1 , 'ee38c53a-8a27-4684-bb9e-792d63bc41d0' )
+INSERT INTO [club_person_title] ([orev], [description], [active], [oid]) VALUES (1 , 'Mrs' , 1 , 'ee38c53a-8a27-4684-bb9e-792d63bc41d1' )
+INSERT INTO [club_person_title] ([orev], [description], [active], [oid]) VALUES (1 , 'Master' , 1 , 'ee38c53a-8a27-4684-bb9e-792d63bc41d2' )
+INSERT INTO [club_person_title] ([orev], [description], [active], [oid]) VALUES (1 , 'Doctor' , 1 , 'ee38c53a-8a27-4684-bb9e-792d63bc41d3' )
+INSERT INTO [club_person_title] ([orev], [description], [active], [oid]) VALUES (1 , 'Miss' , 1 , 'ee38c53a-8a27-4684-bb9e-792d63bc41d4' )

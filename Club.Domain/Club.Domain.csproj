@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{175D77E1-B480-4977-A349-C112016FB5E6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Club.Domain</RootNamespace>
+    <AssemblyName>Club</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=5.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\AutoMapper.5.2.0\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentNHibernate, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.4.0.2.4000\lib\net40\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
+      <HintPath>..\packages\NetTopologySuite.1.13.3.2\lib\net45\PowerCollections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Artifacts\CommitteeMinute.cs" />
+    <Compile Include="Artifacts\Committee.cs" />
+    <Compile Include="Artifacts\CommitteeMemberType.cs" />
+    <Compile Include="Artifacts\Lotto.cs" />
+    <Compile Include="Artifacts\LottoResult.cs" />
+    <Compile Include="Artifacts\LottoResultWinner.cs" />
+    <Compile Include="Artifacts\Mapping\CommitteeMemberMap.cs" />
+    <Compile Include="Artifacts\Mapping\PersistentClubMap.cs" />
+    <Compile Include="Artifacts\Mapping\CommitteeMap.cs" />
+    <Compile Include="Artifacts\Mapping\TeamMap.cs" />
+    <Compile Include="Artifacts\Mapping\QualificationMap.cs" />
+    <Compile Include="Artifacts\Mapping\PersonQualificationMap.cs" />
+    <Compile Include="Artifacts\PersistentClub.cs" />
+    <Compile Include="Artifacts\CommitteeAdmin.cs" />
+    <Compile Include="Artifacts\TeamAdmin.cs" />
+    <Compile Include="Artifacts\CommitteeMember.cs" />
+    <Compile Include="Artifacts\TeamMemberType.cs" />
+    <Compile Include="Artifacts\TeamMember.cs" />
+    <Compile Include="Artifacts\Team.cs" />
+    <Compile Include="Artifacts\PersonGuardian.cs" />
+    <Compile Include="Artifacts\PersonQualification.cs" />
+    <Compile Include="Artifacts\Qualification.cs" />
+    <Compile Include="Artifacts\ClubDetails.cs" />
+    <Compile Include="Artifacts\Mapping\LottoTicketDirectDebitMap.cs" />
+    <Compile Include="Artifacts\Mapping\MembershipTypeMap.cs" />
+    <Compile Include="Artifacts\Mapping\ClubDetailsMap.cs" />
+    <Compile Include="Artifacts\Mapping\PersonMembershipTypeMap.cs" />
+    <Compile Include="Artifacts\MembershipType.cs" />
+    <Compile Include="Artifacts\PersonMembershipType.cs" />
+    <Compile Include="ClubDomainMappingProfile.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Extensions\ArrayExtensions.cs" />
+    <Compile Include="Extensions\MappingAutoConfig.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Interfaces\IAddress.cs" />
+    <Compile Include="Artifacts\LottoTicketDirectDebit.cs" />
+    <Compile Include="Artifacts\Mapping\PersonMap.cs" />
+    <Compile Include="Artifacts\Person.cs" />
+    <Compile Include="Artifacts\PersonTitle.cs" />
+    <Compile Include="Interfaces\ISearchQry.cs" />
+    <Compile Include="Interfaces\iTestPersist.cs" />
+    <Compile Include="Models\DataAnnotationAttributes.cs" />
+    <Compile Include="Models\ModelClassAccess.cs" />
+    <Compile Include="Models\ModelCommitteeMinute.cs" />
+    <Compile Include="Models\ModelDefaultAccess.cs" />
+    <Compile Include="Models\ModelLotto.cs" />
+    <Compile Include="Models\ModelLottoResultWinner.cs" />
+    <Compile Include="Models\ModelLottoResult.cs" />
+    <Compile Include="Models\ModelLottoTicketResult.cs" />
+    <Compile Include="Models\ModelLottoTicketDirectDebit.cs" />
+    <Compile Include="Models\ModelQualifcation.cs" />
+    <Compile Include="Models\ModelPersonQualification.cs" />
+    <Compile Include="Models\ModelRoles.cs" />
+    <Compile Include="Models\ModelRole.cs" />
+    <Compile Include="Models\ModelCommittee.cs" />
+    <Compile Include="Models\ModelClubMinutes.cs" />
+    <Compile Include="Models\ModelCommitteeAdmin.cs" />
+    <Compile Include="Models\ModelTeamAdmin.cs" />
+    <Compile Include="Models\ModelTeam.cs" />
+    <Compile Include="Models\ModelCommitteeMember.cs" />
+    <Compile Include="Models\ModelTeamMember.cs" />
+    <Compile Include="Models\ModelPersonGuardian.cs" />
+    <Compile Include="Models\ModelPerson.cs" />
+    <Compile Include="Models\ModelPersonMembershipType.cs" />
+    <Compile Include="Models\ModelUser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queries\CommitteeMinutesQry.cs" />
+    <Compile Include="Queries\LottoResultQry.cs" />
+    <Compile Include="Queries\LottoTicketDirectDebitQry.cs" />
+    <Compile Include="Queries\PersonMembershipQry.cs" />
+    <Compile Include="Queries\CommitteeQry.cs" />
+    <Compile Include="Queries\CommitteeMemberQry.cs" />
+    <Compile Include="Queries\ClubMinutesQry.cs" />
+    <Compile Include="Queries\UserQry.cs" />
+    <Compile Include="Queries\TeamQry.cs" />
+    <Compile Include="Queries\TeamMemberQry.cs" />
+    <Compile Include="Queries\PersonQry.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lancelot\Core\CoreSpatial\CoreSpatial.csproj">
+      <Project>{eaaee593-6b30-4531-bd14-5de92e617c92}</Project>
+      <Name>CoreSpatial</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lancelot\Core\CoreWeb\CoreWeb.csproj">
+      <Project>{dea58ace-2cd9-49a2-8b6b-c33694249f6d}</Project>
+      <Name>CoreWeb</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lancelot\Core\Core\Core.csproj">
+      <Project>{af689b2c-f600-4e62-86e4-d6eb20e53580}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lancelot\Documents\Documents\Documents.csproj">
+      <Project>{9a10080b-3a48-440f-a7e3-bed696cde28e}</Project>
+      <Name>Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Lancelot\NHibernateSupport\NHibernateSupport.csproj">
+      <Project>{3ab65de2-9af1-4815-9231-3d97f7578f55}</Project>
+      <Name>NHibernateSupport</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

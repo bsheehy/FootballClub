@@ -1,0 +1,65 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+}
+
+<div id="dQualificationsGrid">
+  @(Html.Kendo().Grid<ModelPersonQualification>()
+  .Name("gridPersonQualifications")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
+    }
+  })
+  .Editable(editable => editable.Mode(GridEditMode.InLine))
+  .Sortable()
+  .HtmlAttributes(new { style = "height: 550px;" })
+    //.Scrollable(s => s.Height("500"))
+  .Columns(columns =>
+  {
+    //columns.ForeignKey(p => p.Qualification == null ? Guid.Empty : p.Qualification.Oid, (System.Collections.IEnumerable)ViewData["Qualifications"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Qualification").Width(250);
+    columns.ForeignKey(p => p.QualificationOid, (System.Collections.IEnumerable)ViewData["Qualifications"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Qualification").Width(250);
+    //columns.Bound(p => p.Qualification.Name).Title("Qualification Name").Width(200);
+    columns.Bound(p => p.DateTaken).Title("Date Taken").Format("{0:dd/MMM/yyyy}").Width(150).EditorTemplateName("Date");
+    columns.Bound(p => p.Result).Title("Result").Width(150);
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      columns.Command(command => { command.Edit(); command.Destroy(); }).Width(150);
+    }
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.Oid);
+      model.Field(p => p.Oid).DefaultValue(Guid.Empty);
+      model.Field(p => p.DateTaken).DefaultValue(DateTime.Now);
+
+      //model.Field(p => p.PersonOid).DefaultValue(Model.Entity.Oid);
+      //model.Field(p => p.Date).DefaultValue(DateTime.Now);
+      //model.Field(p => p.MembershipTypeStartDate).Editable(false);
+      //model.Field(p => p.Active).Editable(false);
+    })
+    .Events(e =>
+      {
+        e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+      })
+    .Update(update => update.Action("PersonQualification_Update", "Person"))
+    .Destroy(update => update.Action("PersonQualification_Delete", "Person"))
+    .Create(update => update.Action("PersonQualification_Create", "Person", new { personOid = Model.Entity.Oid }))
+    .Read(read => read.Action("PersonQualification_GridRead", "Person", new { personOid = Model.Entity.Oid }))
+  )
+  )
+</div>
+
+
+

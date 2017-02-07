@@ -1,0 +1,56 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Models
+@using Club.Services.Utils
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Mallon.Core.Artifacts
+@model IEnumerable<ModelClassAccess>
+
+<script type="text/javascript">
+    function UpdateAllChildren(nodes, checked) {
+      var i;
+      var test;
+      for (i = 0; i < nodes.get_count() ; i++) {
+        if (checked) {
+          nodes.getNode(i).check();
+        }
+        else {
+          nodes.getNode(i).set_checked(false);
+        }
+
+        if (nodes.getNode(i).get_nodes().get_count() > 0) {
+          UpdateAllChildren(nodes.getNode(i).get_nodes(), checked);
+        }
+      }
+    }
+
+    function updateTree() {
+      $('input:checkbox[data-indeterminate]').each(function () {
+        $(this)[0].indeterminate = true;
+      });
+    };
+</script>
+<table class="editTable">
+  <tr>Select/Deselect to update</tr>
+  <tr>
+    @(Html.Kendo().TreeView()
+      .Name("addClassGrid")
+      .HtmlAttributes(new { @style = "height:300px;" })
+      .DataTextField("Text")
+      .Events(e => e.DataBound("updateTree"))
+      .Checkboxes(config => config
+      .CheckChildren(true))
+      .DataSource(ds =>
+      ds.Model(m => m
+      .Id("Text")
+      )
+      .Read("GetClassAccessList", "AdminRoles")
+      )
+      .CheckboxTemplate("<input type='checkbox' name='checkedNodes' value='#= item.id #' #if(item.checked) { # checked # } if(item.indeterminate) { # data-indeterminate # } # />")
+    .LoadOnDemand(true)
+    )
+
+  </tr>
+
+</table>
+

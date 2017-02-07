@@ -1,0 +1,34 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@{
+  ViewBag.Title = "Edit Person";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(false)
+
+  @*<div id="headerSubMenu">
+    @(Html.Kendo().Button()
+      .Name("frmSubmit")
+      .Enable(false)
+      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save")
+      .Events(x => x.Click("clickHiddenSubmit")))
+    <button class="saveButtonRight k-button" value="Cancel" onclick="window.location.href=window.location.href">Cancel</button>
+  </div>*@
+
+  @Html.Partial("_ViewLayout", Model)
+  <input id="hiddenSubmit" type="submit" value="Save" hidden="hidden" />
+}
+
+@*<script type="text/javascript">
+  $(document).ready(function () {
+    insertSubMenuIntoHeaderMenu('headerSubMenu');
+  });
+</script>*@

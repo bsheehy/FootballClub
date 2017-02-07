@@ -1,0 +1,88 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Services.Utils
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Mallon.Core.Artifacts
+@model TypedModel<Role>
+
+@*@(Html.HiddenFor(Model.GetProperty(x => x.Oid)))*@
+<script type="text/javascript">
+  $(document).on("click", ".delete-link", function (e) {
+    e.preventDefault();
+    var treeview = $("#classaccessGrid").data("kendoTreeView");
+    var dataItem = treeview.dataItem(this);
+
+    var model = JSON.stringify({ 'oid': dataItem.Oid, 'role': $("#Oid").val() });
+
+    var url = '@Url.Action("DeleteClassAccess", "AdminRoles")';
+
+      $.ajax({
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
+        type: 'POST',
+        url: url,
+        data: model,
+        beforeSend: function () { kendo.ui.progress($("#classaccessGrid"), true); },
+        success: function () {
+          treeview.remove(treeview.select());
+          kendo.ui.progress($("#classaccessGrid"), false);
+        }
+      });
+  });
+</script>
+<script id="treeview-template" type="text/kendo-ui-template">
+  #if (!item.HasChildren){ #
+  <div style="display:inline">
+    <a class='delete-link' href='\#'></a>
+    <a id="C_#: item.Path.replace(/[.]/g, '_') #" # if ((item.Access & 1)==0){ # class="unchecked" # } # href="javascript:clickNode('#: item.Path #', 'C')">C</a>
+    <a id="R_#: item.Path.replace(/[.]/g, '_') #" # if ((item.Access & 2)==0){ # class="unchecked" # } # href="javascript:clickNode('#: item.Path #', 'R')">R</a>
+    <a id="U_#: item.Path.replace(/[.]/g, '_') #" # if ((item.Access & 4)==0){ # class="unchecked" # } # href="javascript:clickNode('#: item.Path #', 'U')">U</a>
+    <a id="D_#: item.Path.replace(/[.]/g, '_') #" # if ((item.Access & 8)==0){ # class="unchecked" # } # href="javascript:clickNode('#: item.Path #', 'D')">D</a>
+    <input type="hidden" id="#: item.Path.replace(/[.]/g, '_') #" name="ClassAccess_#: item.Path #" value="#: item.Access #" />
+  </div>
+  # } #
+  #: item.Name #
+
+</script>
+<div style="width: 300px">
+  @(Html.Kendo().TreeView()
+        .Name("classaccessGrid")
+        .HtmlAttributes(new { @style = "padding:0px; margin:0px;height:auto;" })
+        .DataTextField("Path")
+        .LoadOnDemand(true)
+        .TemplateId("treeview-template")
+        .DataSource(ds =>
+            ds.Model(m => m
+              .Id("Path")
+              .HasChildren("HasChildren")
+            )
+            .Read("ClassAccessRead", "AdminRoles", new { Oid = Model.Entity.Oid })
+            )
+
+  )
+
+    <input class="k-button k-button-icontext k-add-button" type="button" onclick="addClassAccess()"
+           value="Add Class" />
+
+</div>
+@{Html.Kendo().Window()
+     .Name("addClassAccessWin")
+     .Title("Add Class Access")
+     .Content(@<text>
+      <div id="classEditor">
+      </div>
+      <div class="save-btn-window">
+
+
+        <input type="button" value="Save" class="k-button" onclick="saveClassEditor()" id="addClassBtn" />
+      </div>
+    </text>)
+    .Height(370)
+    .Width(700)
+    .Draggable(true)
+    .Scrollable(false)
+    .Actions(actions => actions.Close())
+    .Visible(false)
+    .Render();
+}
+
