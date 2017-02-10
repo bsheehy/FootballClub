@@ -21,7 +21,15 @@
 
       @Html.TextBoxFor(Model.GetProperty(m => m.aq_Surname), new { @class = "k-textbox", @style = "width:90%" })
     </tr>
+
     <tr>
+      @Html.NumericFor(Model.GetProperty(m => m.aq_YearFrom), new { @style = "width:90%" })
+
+      @Html.NumericFor(Model.GetProperty(m => m.aq_YearTo), new { @style = "width:90%" })
+    </tr>
+
+
+    @*<tr>
       @Html.DateFor(Model.GetProperty(m => m.aq_StartDateFrom), new { @style = "width:90%" })
 
       @Html.DateFor(Model.GetProperty(m => m.aq_StartDateTo), new { @style = "width:90%" })
@@ -31,7 +39,7 @@
       @Html.DateFor(Model.GetProperty(m => m.aq_EndDateFrom), new { @style = "width:90%" })
 
       @Html.DateFor(Model.GetProperty(m => m.aq_EndDateTo), new { @style = "width:90%" })
-    </tr>
+    </tr>*@
     <tr>
     @Html.DropDownListFor(Model.GetProperty(m => m.MaxRecords, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.MaxRecords, Model.Entity.MaxRecords, null)), new { @style = "width:90%" })
   </tr>

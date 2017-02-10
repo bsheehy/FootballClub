@@ -83,6 +83,11 @@ BEGIN
 	INSERT [dbo].[documents_type_path_configuration] ([oid], [type], [orev], [applies_to], [path_config]) VALUES (N'068e3ae0-b17a-443e-9620-8557c1115a16', N'T', 0, N'Club.Domain.Artifacts.Qualification', N'\Qualification\[[Oid]]')
 END
 
+IF NOT EXISTS(SELECT * FROM [documents_type_path_configuration] WHERE [Oid] = N'7af97f7c-3166-4cdd-8e7f-bc98fe307822')
+BEGIN
+	INSERT [dbo].[documents_type_path_configuration] ([oid], [type], [orev], [applies_to], [path_config]) VALUES (N'7af97f7c-3166-4cdd-8e7f-bc98fe307822', N'T', 0, N'Club.Domain.Artifacts.Team', N'\Team\[[Oid]]')
+END
+
 
 -- ==============================================================================================
 --					 [club_qualification] Static Data 

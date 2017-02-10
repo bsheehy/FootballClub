@@ -32,7 +32,7 @@ namespace Club.Domain
 
       CreateMap<TeamMember, ModelTeamMember>().ReverseMap();
 
-      CreateMap<Qualification, ModelQualifcation>().ReverseMap();
+      CreateMap<Qualification, ModelQualification>().ReverseMap();
 
       CreateMap<PersonQualification, ModelPersonQualification>().ReverseMap();
 

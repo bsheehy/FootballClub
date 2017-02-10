@@ -1,0 +1,58 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Domain.Models
+@{
+  bool personEdit = false;
+  bool qualificationEdit = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  if (ViewBag.QualificationEdit != null)
+  {
+    qualificationEdit = ViewBag.QualificationEdit;
+  }
+}
+<div id="dPremSearchResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+  @(Html.Kendo().Grid<ModelPersonQualification>()
+  .Name("searchGridResults")
+  .AutoBind(true)
+  .ToolBar(tools =>
+  {
+    tools.Excel();
+  })
+  .Columns(columns =>
+    {
+      columns.Bound(p => p.Oid).Hidden();
+      if (personEdit)
+      {
+        columns.Bound(p => p.Oid).Title("Person").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= Person.Oid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      //if (qualificationEdit)
+      //{
+      //  columns.Bound(p => p.Oid).Title("Qualification").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Qualification") + "?Oid=#= QualificationOid #' class='k-button'>Edit Qualification</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      //}
+      columns.Bound(p => p.QualificationName).Title("Qualification Name").Width("150px");      
+      columns.Bound(p => p.Person.NameSingleLine).Title("Person Name").Width("200px");
+      columns.Bound(p => p.Person.AddressSingleLine).Title("Person Address").Width("300px");
+    })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Sortable()
+  .Filterable()
+  .Groupable()
+  .Scrollable(s => s.Enabled(true).Height("auto"))
+  .Selectable(x => x.Type(GridSelectionType.Cell))
+  .DataSource(ds => ds
+    .Ajax()
+    .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+    .Model(model => model.Id(p => p.Oid))
+    .Read(read => read.Action("SearchPersonQualificationResults_ReadData", "Qualification").Data("getQualificationMemberSearchParams"))
+    )
+  )
+</div>
+
+<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.PersonControlId')" />

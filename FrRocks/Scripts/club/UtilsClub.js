@@ -1035,6 +1035,65 @@ function refreshLottoWinnersGrid() {
 }
 
 /*
+ * =============================================
+ * Qualifications Methods
+ * =============================================
+ */
+
+function refreshQualificationMemberGrid() {
+  $('#gridQualificationMemberGrid').data('kendoGrid').dataSource.read();
+}
+
+function selectQualificationMember(e) {
+  var row = $(e.currentTarget).closest("tr");
+  var gridId = this.element.attr("id");
+  var dataItem = this.dataItem(row);
+  var personOid = dataItem.Oid;
+  var qualificationOid = $('#QualificationOid').val();
+  var url = $('#SaveQualificationMemberUrl').val();
+  try {
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        'personOid': personOid,
+        'qualificationOid': qualificationOid
+      },
+      success: function (result) {
+        if (result.success === true) {
+          var message = "Team Member added.";
+          var buttons = ["OK"];
+          showModalAlert(message, "", "", buttons);
+          //Remove the row
+          var grid = $('#' + gridId).data("kendoGrid");
+          grid.removeRow(row);
+        }
+        else {
+          handleModelStateException(result);
+        }
+      },
+      error: function (request) {
+        hideProgress();
+        handleModelStateException(request);
+      },
+      beforeSend: function () {
+        showProgress();
+      },
+      complete: function () {
+        hideProgress();
+      }
+    });
+  }
+  catch (e) {
+    var message = e.description;
+    var buttons = ["OK"];
+    showModalAlert(message, "", "", buttons);
+  }
+}
+
+
+
+/*
  * GENERAL FUNCTIONS
  * 
  */

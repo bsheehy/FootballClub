@@ -118,6 +118,12 @@
                       innerChildren.Add().Text("Search Direct Debits").Action("SearchDirectDebits", "Lotto");
                       innerChildren.Add().Text("Check Direct Debits Winners").Action("LottoTicketDirectDebitWinners", "Lotto");
                     });
+
+                    items.Add().Text("Other").Items(innerChildren =>
+                    {
+                      innerChildren.Add().Text("Search Qualifications").Action("Search", "Qualification");
+                      innerChildren.Add().Text("Search People Qualifications").Action("SearchPersonQualification", "Qualification");
+                    });
      
                     items.Add().Text("About").Action("About", "Home");
                   })

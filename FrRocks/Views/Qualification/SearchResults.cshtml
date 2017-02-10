@@ -4,16 +4,16 @@
 @using Mallon.Core.Web.Models.HtmlExtensions
 @using Club.Domain.Models
 @{
-  bool teamEdit = false;
-  if (ViewBag.TeamEdit != null)
+  bool qualificationEdit = false;
+  if (ViewBag.QualificationEdit != null)
   {
-    teamEdit = ViewBag.TeamEdit;
+    qualificationEdit = ViewBag.QualificationEdit;
   }
 }
 <div id="dPremSearchResults">
   <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
   <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
-  @(Html.Kendo().Grid<ModelTeam>()
+  @(Html.Kendo().Grid<ModelQualification>()
   .Name("searchGridResults")
   .AutoBind(true)
   .ToolBar(tools =>
@@ -23,13 +23,12 @@
   .Columns(columns =>
     {
       columns.Bound(p => p.Oid).Hidden();
-      if (teamEdit)
+      if (qualificationEdit)
       {
-        columns.Bound(p => p.Oid).Title("Team").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Team") + "?Oid=#= Oid #' class='k-button'>Edit Team</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+        columns.Bound(p => p.Oid).Title("Qualification").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Qualification") + "?Oid=#= Oid #' class='k-button'>Edit Qualification</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
-      columns.Bound(p => p.NameSingleLine).Title("Team Name").Width("200px");
-      columns.Bound(p => p.Year).Title("Year").Width("100px");
-      columns.Bound(p => p.Sex).Title("Sex").Width("100px");
+      columns.Bound(p => p.Name).Title("Qualification Name").Width("200px");
+      columns.Bound(p => p.Description).Title("Qualification Description").Width("200px");
     })
   .Pageable(x => { x.PageSizes(new int[] { 30, 60 }); })
   .Sortable()
@@ -41,7 +40,7 @@
     .Ajax()
     .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
     .Model(model => model.Id(p => p.Oid))
-    .Read(read => read.Action("SearchResults_ReadData", "Team").Data("getTeamMemberSearchParams"))
+    .Read(read => read.Action("SearchResults_ReadData", "Qualification").Data("getQualificationMemberSearchParams"))
   )
   )
 </div>

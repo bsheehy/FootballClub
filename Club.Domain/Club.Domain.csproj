@@ -169,6 +169,8 @@
     <Compile Include="Queries\CommitteeQry.cs" />
     <Compile Include="Queries\CommitteeMemberQry.cs" />
     <Compile Include="Queries\ClubMinutesQry.cs" />
+    <Compile Include="Queries\QualificationQry.cs" />
+    <Compile Include="Queries\PersonQualificationQry.cs" />
     <Compile Include="Queries\UserQry.cs" />
     <Compile Include="Queries\TeamQry.cs" />
     <Compile Include="Queries\TeamMemberQry.cs" />

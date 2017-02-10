@@ -30,6 +30,13 @@
   {
     lottoDrawsWithoutResults= ViewBag.LottoDrawsWithoutResults as SelectList;
   }
+  
+  
+  bool bUserCanEditQualifications = false;
+  if (ViewBag.UserCanEditQualifications != null)
+  {
+    bUserCanEditQualifications = (bool)ViewBag.UserCanEditQualifications;
+  }
 }
 <script>
   function addCommitteMinutes(e) {
@@ -185,6 +192,17 @@
         Search Committee Minutes
       </a>
 
+      <a href="@Url.Action("SearchPersonQualification", "Qualification")" class="k-button aSpace" style="width:80%">
+        <span class="glyphicon glyphicon-search"></span>
+        Search People with Qualifications
+      </a>
+
+
+      <a href="@Url.Action("Search", "Qualification")" class="k-button aSpace" style="width:80%">
+        <span class="glyphicon glyphicon-search"></span>
+        Search Qualifications
+      </a>
+
     </div>
 
     <div class="col-md-6 col-sm-12">
@@ -194,5 +212,13 @@
         <span class="glyphicon glyphicon-edit"></span>
         View Club Details
       </a>
+
+    @if (bUserCanEditQualifications)
+    { 
+      <a href="@Url.Action("Create", "Qualification")" class="k-button aSpace" style="width:80%">
+        <span class="glyphicon glyphicon-edit"></span>
+        Add new Qualification
+      </a>
+    }
     </div></div>
 </div>

@@ -1,0 +1,13 @@
+==================================================================
+geoHunt
+==================================================================
+geoHunt - mobile outdoor game app. Two users\teams play the game and each team have the app and a gps enabled phone. 1 team is the 'hunter' the other the 'prey' - objective is for the hunter to catch the prey using the GPS coordinates and maps.
+
+Instructions are:
+1. Team leader configures the game paramaters on their phone.
+	Example: Length of game, area of the game, how often 'prey' broadcasts location, when broadcasts stop e.g. 50 meters within prey.
+2. Both teams subscribe to the configured game.
+3. Prey sets out with x mins advantage.	 
+4. Prey phone periodically broadcasts location - hunter uses location to chase the prey.
+5. If hunter gets within x meters of prey - locations stop broadcasting.
+==================================================================

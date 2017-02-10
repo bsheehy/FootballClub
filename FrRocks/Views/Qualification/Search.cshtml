@@ -1,0 +1,47 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model TypedModel<QualificationQry>
+@{
+  ViewBag.Title = "Search Qualifications";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+  @(Html.Kendo().PanelBar()
+  .Name("pnlbQualificationMembersC")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("Qualification Search Criteria")
+        .ImageUrl(Url.Content("~/Images/24px/view.png"))
+        .Expanded(true)
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .Content(@<div>
+          @Html.Partial("~/Views/Qualification/SearchCriteria.cshtml")
+        </div>);
+  })
+  )
+</div>
+<br />
+<div id="listContent">
+  @(Html.Kendo().PanelBar()
+  .Name("pnlbQualificationMembers")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("Qualification Results")
+      .ImageUrl(Url.Content("~/Images/24px/scroll_view.png"))
+      .Expanded(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="dQualificationResults">
+        @Html.Partial("~/Views/Qualification/SearchResults.cshtml")
+      </div>
+      );
+  })
+  )
+</div>
+

@@ -63,6 +63,12 @@ namespace Club.Domain.Queries
       if (this.aq_MembershipOid.HasValue && this.aq_MembershipOid.Value != Guid.Empty)
         return true;
 
+      if (this.aq_YearFrom.HasValue)
+        return true;
+
+      if (this.aq_YearTo.HasValue)
+        return true;
+
       if (this.aq_StartDateFrom.HasValue)
         return true;
 
@@ -99,6 +105,12 @@ namespace Club.Domain.Queries
     [DisplayName("End Date To")]
     public DateTime? aq_EndDateTo { get; set; }
 
+    [DisplayName("Year From")]
+    public int? aq_YearFrom { get; set; }
+
+    [DisplayName("Year To")]
+    public int? aq_YearTo { get; set; }
+
     protected override void PrepareHql()
     {
       Hql = (queryString) +
@@ -106,7 +118,9 @@ namespace Club.Domain.Queries
       (!(String.IsNullOrEmpty(aq_Surname)) ? surnameString : null) +
       (aq_MembershipOid.HasValue ? membershipOidString : null) +
       (aq_StartDateFrom.HasValue ? startDateFromString : null) +
-      (aq_StartDateTo.HasValue ? startDateToString : null) +
+      (aq_YearFrom.HasValue ? startDateToString : null) +
+      (aq_YearTo.HasValue ? yearToString : null) +
+      (aq_StartDateTo.HasValue ? yearFromString : null) +
       (aq_EndDateFrom.HasValue ? endDateFromString : null) +
       (aq_EndDateTo.HasValue ? endDateToString : null);
     }
@@ -128,6 +142,11 @@ namespace Club.Domain.Queries
       if (aq_StartDateTo.HasValue)
         query.SetDateTime("startDateTo", aq_StartDateTo.Value);
 
+      if (aq_YearFrom.HasValue)
+        query.SetInt32("yearFrom", aq_YearFrom.Value);
+
+      if (aq_YearTo.HasValue)
+        query.SetInt32("yearTo", aq_YearTo.Value);
 
       if (aq_EndDateFrom.HasValue)
         query.SetDateTime("endDateFrom", aq_EndDateFrom.Value);
@@ -172,6 +191,12 @@ namespace Club.Domain.Queries
 
     private readonly string endDateToString =
       "and r.MembershipType.EndDate < :endDateTo" + Environment.NewLine;
+
+    private readonly string yearFromString =
+      "and r.MembershipType.Year >= :yearFrom" + Environment.NewLine;
+
+    private readonly string yearToString =
+      "and r.MembershipType.Year <= :yearTo" + Environment.NewLine;
 
   }
 }

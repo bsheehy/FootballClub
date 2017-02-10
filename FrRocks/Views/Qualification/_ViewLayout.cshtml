@@ -1,0 +1,50 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Qualification>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+}
+
+
+<div>
+
+  @(Html.Kendo().TabStrip()
+    .Name("tsQualification")
+    .Items(tabstrip =>
+    {
+      tabstrip.Add().Text("Qualification Details")
+      .ImageUrl(Url.Content("~/Images/24px/users_family.png"))
+      .Selected(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="d_pnlMandatory">
+        @Html.Partial("~/Views/Qualification/_EditPanel.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+      if (pnlViewUserAccess != PageViewType.Create)
+      {
+        tabstrip.Add().Text("People with Qualification")
+        .ImageUrl(Url.Content("~/Images/24px/users3_preferences.png"))
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .Content(@<div id="d_pnlQualificationMembers">
+          @Html.Partial("~/Views/Qualification/QualificationPersonsGrid.cshtml", Model, Html.ViewData)
+        </div>
+        );
+
+        tabstrip.Add().Text("Attached Documents")
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .ImageUrl(Url.Content("~/Images/24px/documents.png"))
+        .Content(
+        @<div id="dAttachedDocs">
+          @Html.Partial("~/Views/Shared/_AttachedDocuments.cshtml", null, Html.ViewData)
+        </div>
+          );
+      }
+    })
+)
+
+</div>

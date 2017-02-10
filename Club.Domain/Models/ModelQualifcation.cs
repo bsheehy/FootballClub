@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 namespace Club.Domain.Models
 {
-  public class ModelQualifcation
+  public class ModelQualification
   {
     public virtual Guid Oid { get; set; }
 

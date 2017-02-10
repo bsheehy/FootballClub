@@ -72,6 +72,7 @@
     <Compile Include="Controllers\ClubDetailsServiceController.cs" />
     <Compile Include="Controllers\CommitteeServiceController.cs" />
     <Compile Include="Controllers\ClubMinutesServiceController.cs" />
+    <Compile Include="Controllers\QualificationServiceController.cs" />
     <Compile Include="Controllers\TeamServiceController.cs" />
     <Compile Include="Controllers\MembershipServiceController.cs" />
     <Compile Include="Controllers\PersonServiceController.cs" />

@@ -214,6 +214,7 @@
     <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Controllers\CommitteeController.cs" />
     <Compile Include="Controllers\ClubMinutesController.cs" />
+    <Compile Include="Controllers\QualificationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
     <Compile Include="Controllers\PersonController.cs" />
@@ -2225,6 +2226,18 @@
     <Content Include="Views\Person\SelectPerson.cshtml" />
     <Content Include="Views\Person\AjaxAddPerson.cshtml" />
     <Content Include="Views\Person\_View.cshtml" />
+    <Content Include="Views\Qualification\Search.cshtml" />
+    <Content Include="Views\Qualification\SearchCriteria.cshtml" />
+    <Content Include="Views\Qualification\SearchResults.cshtml" />
+    <Content Include="Views\Qualification\Edit.cshtml" />
+    <Content Include="Views\Qualification\_EditPanel.cshtml" />
+    <Content Include="Views\Qualification\_ViewLayout.cshtml" />
+    <Content Include="Views\Qualification\Create.cshtml" />
+    <Content Include="Views\Qualification\QualificationPersonsGrid.cshtml" />
+    <Content Include="Views\Person\SelectQualificationMember.cshtml" />
+    <Content Include="Views\Qualification\SearchPersonQualificationResults.cshtml" />
+    <Content Include="Views\Qualification\SearchPersonQualification.cshtml" />
+    <Content Include="Views\Qualification\SearchPersonQualificationCriteria.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />

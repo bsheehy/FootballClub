@@ -91,6 +91,11 @@ namespace Club.Domain.Queries
     /// <summary>
     /// Used for model purposes only - dont search on it.
     /// </summary>
+    public virtual Guid? aq_QualificationOid { get; set; }
+
+    /// <summary>
+    /// Used for model purposes only - dont search on it.
+    /// </summary>
     public virtual Guid? aq_CommitteeOid { get; set; }
 
     /// <summary>

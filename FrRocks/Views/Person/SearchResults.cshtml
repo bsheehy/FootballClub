@@ -9,6 +9,7 @@
   bool selectTeamMember = false;
   bool selectCommitteeMember = false;
   bool selectPersonMembership = false;
+  bool selectQualificationMember = false;
   if (ViewBag.PersonEdit != null)
   {
     personEdit = ViewBag.PersonEdit;
@@ -28,6 +29,10 @@
   if (ViewBag.SelectPersonMembership!= null)
   {
     selectPersonMembership = ViewBag.SelectPersonMembership;
+  }
+  if (ViewBag.SelectQualificationMember != null)
+  {
+    selectQualificationMember = ViewBag.SelectQualificationMember;
   }
 }
 <div id="dPremSearchResults">
@@ -62,6 +67,10 @@
       if (selectPersonMembership)
       {
         columns.Command(command => command.Custom("Select").Click("selectPersonMembership")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+      if (selectQualificationMember)
+      {
+        columns.Command(command => command.Custom("Select").Click("selectQualificationMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
       columns.Bound(p => p.NameSingleLine).Title("Name").Width("200px");
       columns.Bound(p => p.AddressSingleLine).Title("Address").Width("300px");

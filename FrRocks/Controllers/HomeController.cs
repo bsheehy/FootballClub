@@ -26,6 +26,9 @@ namespace FrRocks.Controllers
 
       }
 
+      bool bUserCanEditQualifications = this.UserController.EffectiveUser.HasRole(this.UserController.EffectiveUser, Constants.AdministrationRoleOids);
+      ViewBag.UserCanEditQualifications = bUserCanEditQualifications;
+
       return View();
     }
 

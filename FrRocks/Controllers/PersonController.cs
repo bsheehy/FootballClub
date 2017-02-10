@@ -498,6 +498,46 @@ namespace FrRocks.Controllers
 
     #endregion
 
+
+    #region Qualification Members
+
+    public PartialViewResult SelectQualificationMember(Guid qualificationOid, string controlId = null)
+    {
+      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
+      model.Init();
+      model.Entity.aq_QualificationOid = qualificationOid;
+      ViewBag.SelectQualificationMember = true;
+      ViewBag.PersonControlId = controlId;
+      ViewBag.QualificationOid = qualificationOid.ToString();
+      SetViewOptions();
+      SetViewBagSelectLists_ForSearch(controlId);
+      return PartialView(model);
+    }
+
+    [HttpPost]
+    [ActionName("SelectQualificationMember")]
+    public ActionResult SelectQualificationMemberPost(Guid personOid, Guid qualificationOid)
+    {
+      if (this.UserController.EffectiveUser.GetClassAccess(typeof(Team)).Allows(Access.Update) == true)
+      {
+        QualificationServiceController service = (QualificationServiceController)this.Injector.Activate(typeof(QualificationServiceController));
+        if (service.SelectPersonQualification(new ModelStateWrapper(this.ModelState), personOid, qualificationOid))
+        {
+          ModelJsonResult j = new ModelJsonResult();
+          j.success = true;
+          return Json(j, JsonRequestBehavior.AllowGet);
+        }
+        throw new ModelStateException(this.ModelState);
+      }
+      else
+      {
+        this.ModelState.AddModelError("Person", "You do not have permissions to add Qualificationsto People.");
+        throw new ModelStateException(this.ModelState);
+      }
+    }
+
+    #endregion
+
     public ActionResult SelectPerson(TypedModel<Person> m, string controlId = null, string pnlView = null, bool personView = false, bool personEdit = false, bool personSelect = false, bool checkCookie = false)
     {
       ViewBag.PersonControlId = controlId;
