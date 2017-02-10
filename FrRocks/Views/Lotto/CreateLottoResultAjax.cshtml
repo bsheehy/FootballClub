@@ -1,0 +1,121 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model LottoResult
+@{
+  ViewBag.Title = "Create Lotto Result";
+}
+<script type="text/javascript">
+
+  function validateLottoResultAjax(e) {
+    var valid = true;
+    var frmAjax = $("#frmCreateLottoResultAjax");
+    valid = frmAjax.validate().form();
+
+    if (valid == false)
+    {
+      return false;
+    }
+
+    var vald = $('#frmCreateLottoResultAjax')
+          .updateValidation()
+          .validate();
+    valid = vald.form();
+
+
+    var no1 = Number($("#No1").val());
+    var no2 = Number($("#No2").val());
+    var no3 = Number($("#No3").val());
+    var no4 = Number($("#No4").val());
+    var maxNum = Number($("#MaxLottoNumber").val());
+    var errorMsg ="";
+
+    if (no1 < 1 || no1 > maxNum) {
+      valid = false;
+      errorMsg += "'No 1' must be between 1 and " + maxNum + "<br/>";
+    }
+    if (no2 < 1 || no2 > maxNum) {
+      valid = false;
+      errorMsg += "'No 2' must be between 1 and " + maxNum + "<br/>";
+    }
+    if (no3 < 1 || no3 > maxNum) {
+      valid = false;
+      errorMsg += "'No 3' must be between 1 and " + maxNum + "<br/>";
+    }
+    if (no4 < 1 || no4 > maxNum) {
+      valid = false;
+      errorMsg += "'No 4' must be between 1 and " + maxNum + "<br/>";
+    }
+
+    if (no1 == no2 || no1 == no3 || no1 == no4 || no2 == no3 || no2 == no4 || no3 == no4) {
+      valid = false;
+      errorMsg += "The numbers must all be unique.";
+    }
+
+    if (valid == false && errorMsg.length > 0) {
+      showError(errorMsg);
+    }
+
+    return valid;
+  }
+
+  function OnSuccessCreateLottoResultAjax(e) {
+    if (e.success && e.success === true) {
+      refreshLottoDrawPage();
+    }
+    else {
+      handleAjaxError(e);
+    }
+  }
+
+</script>
+
+
+
+@using (Ajax.BeginForm("CreateLottoResultAjax", "Lotto", new AjaxOptions { OnFailure = "handleAjaxError", OnBegin = "return validateLottoResultAjax()", OnComplete = "hideProgress", OnSuccess = "OnSuccessCreateLottoResultAjax" }, new { @id = "frmCreateLottoResultAjax" }))
+{
+  <fieldset>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false)
+    <div class="form-group">
+      @Html.HiddenFor(m => m.Oid)
+      @Html.HiddenFor(m => m.Orev)
+      @Html.HiddenFor(m => m.Lotto.Oid)
+      @Html.Hidden("MaxLottoNumber","30")      
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(m => m.No1)
+      @(Html.Kendo().NumericTextBoxFor(x => x.No1).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.No1)
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(m => m.No2)
+      @(Html.Kendo().NumericTextBoxFor(x => x.No2).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.No2)
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(m => m.No3)
+      @(Html.Kendo().NumericTextBoxFor(x => x.No3).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.No3)
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(m => m.No4)
+      @(Html.Kendo().NumericTextBoxFor(x => x.No4).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.No4)
+    </div>
+
+      @*@(Html.Kendo().Button()
+      .Name("btnAddLottoResult")
+      .HtmlAttributes(new { @class = "saveButtonRight", @id = "btnAddLottoResult" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save XX")
+      .Events(x => x.Click("saveLottoResultAjax")))*@
+
+    <input id="btnSubmitCreateLottoResultAjax" type="submit" class="k-button" value="Save" />
+</fieldset>
+}
+

@@ -1,0 +1,68 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Lotto>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.Entity.Oid.ToString();
+}
+
+@if (pnlViewUserAccess ==  PageViewType.Create)
+{ 
+<table class="tbl2Cols">
+  <tr>
+    <td colspan="2">
+      @Html.HiddenFor(Model.GetProperty(m => m.Oid))
+      @Html.HiddenFor(Model.GetProperty(m => m.Orev))
+    </td>
+  </tr>
+
+  <tr>
+    @Html.DateFor(Model.GetProperty(m => m.LottoDrawDate), new { @style = "width:75%" })
+
+    @*<br />xxxx 
+    @(Html.Kendo().DatePicker()
+    .Name("XXdatepicker")
+      .Value(Model.Entity.LottoDrawDate)
+    .HtmlAttributes(new { style = "width:150px" })
+    )
+    <br />yyy 
+    @(Html.Kendo().TextBox().Value(Model.Entity.LottoDrawDate.ToString()).Name("XXXMMMSSS"))
+  </tr>*@
+
+  <tr>
+    @Html.NumericFor(Model.GetProperty(m => m.Jackpot), new { @style = "width:75%" })
+  </tr>
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m => m.Message), new { @style = "width:75%" })
+  </tr>
+</table>
+}
+else
+{
+  <table class="tbl2Cols">
+    <tr>
+      <td colspan="2">
+        @Html.HiddenFor(Model.GetProperty(m => m.Oid))
+        @Html.HiddenFor(Model.GetProperty(m => m.Orev))
+      </td>
+    </tr>
+
+    <tr>
+      @Html.DateFor(Model.GetProperty(m => m.LottoDrawDate), new { @style = "width:75%", @disabled = "disabled" })
+    </tr>
+
+    <tr>
+      @Html.NumericFor(Model.GetProperty(m => m.Jackpot), new { @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.Message), new { @style = "width:75%" })
+    </tr>
+  </table>
+}

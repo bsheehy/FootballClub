@@ -16,7 +16,15 @@ namespace FrRocks.Controllers
       ViewBag.Committees = UtilsSelectLists.CommitteesWhereUserIsAdminOrAdministrator(this.DbSession, this.UserController.EffectiveUser, true, DateTime.Now.Year);
       ViewBag.Teams = UtilsSelectLists.TeamsWhereUserIsAdminOrAdministrator(this.DbSession, this.UserController.EffectiveUser, true, DateTime.Now.Year);
       ViewBag.MembershipTypes = UtilsSelectLists.MembershipTypesForAdmin(this.DbSession, this.UserController.EffectiveUser, true, DateTime.Now.Year);
-      ViewBag.UserCanAddLottoResults = this.UserController.EffectiveUser.HasRole(this.UserController.EffectiveUser, Constants.AdministrationRoleOids);
+
+      bool bUserCanEditLottoResults = this.UserController.EffectiveUser.HasRole(this.UserController.EffectiveUser, Constants.AdministrationRoleOids);
+      ViewBag.UserCanAddLottoResults = bUserCanEditLottoResults;
+      if (bUserCanEditLottoResults)
+      {
+        //Get Looto Draws without results
+        ViewBag.LottoDrawsWithoutResults = UtilsSelectLists.LottoDrawsWithoutResults(this.DbSession, DateTime.Now.Year);
+
+      }
 
       return View();
     }

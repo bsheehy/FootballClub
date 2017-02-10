@@ -200,6 +200,33 @@
         .ToHtmlString());
       }
     }
+    else if (Model.PropertyType == typeof(decimal) || Model.PropertyType == typeof(decimal?))
+    {
+      if (minVal == 0 && maxVal == 0)
+      {
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox<decimal>()
+        .Name(path)
+        .Spinners(showSpinners)
+        .Value((decimal?)value)
+        .Format("c")
+        .Decimals(2)
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+      else
+      {
+        sControl = new MvcHtmlString(Html.Kendo().NumericTextBox<decimal>()
+        .Name(path)
+        .Format("c")
+        .Decimals(2)
+        .Spinners(showSpinners)
+        .Value((decimal?)value)
+        .Min((decimal?)minVal)
+        .Max((decimal?)maxVal)
+        .HtmlAttributes(ctrlAttributes)
+        .ToHtmlString());
+      }
+    }
   }
 
   bool hintAtStart = true;

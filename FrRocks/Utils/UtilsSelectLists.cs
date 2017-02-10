@@ -3,6 +3,7 @@ using Club.Domain;
 using Club.Domain.Artifacts;
 using Mallon.Core.Artifacts;
 using NHibernate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -179,6 +180,26 @@ namespace FrRocks.Utils
       else
       {
         result = new SelectList(entities, "Oid", "NameSingleLine");
+      }
+      return result;
+    }
+
+    public static SelectList LottoDrawsWithoutResults(ISession session, int? yearLimit = null)
+    {
+      List<Lotto> entities = session.QueryOver<Lotto>().Where(x => x.LottoResult == null || x.LottoResult.Oid == Guid.Empty).List<Lotto>().ToList<Lotto>();
+      if (yearLimit.HasValue && yearLimit.Value > 1800)
+      {
+        entities = entities.Where(x => x.LottoDrawDate.Value.Date.Year == yearLimit).ToList();
+      }
+
+      SelectList result;
+      if (entities.Count > 0)
+      {
+        result = new SelectList(entities, "Oid", "LottoDrawDate", entities[0]);
+      }
+      else
+      {
+        result = new SelectList(entities, "Oid", "LottoDrawDate");
       }
       return result;
     }

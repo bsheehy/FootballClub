@@ -1,0 +1,63 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model LottoResult
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.Oid.ToString();
+}
+
+<table class="tbl2Cols">
+  <tr>
+    <td colspan="2">
+      @Html.HiddenFor(m => m.Oid)
+      @Html.HiddenFor(m => m.Orev)
+      @Html.HiddenFor(m => m.Lotto.Oid)
+    </td>
+  </tr>
+
+  <tr>
+    <td>No 1</td>
+    <td>
+      @(Html.Kendo().NumericTextBoxFor(x=>x.No1)
+                .Value(Model.No1))
+    </td>
+
+  </tr>
+
+  <tr>
+    <td>No 2</td>
+    <td>
+      @(Html.Kendo().NumericTextBoxFor(x => x.No2)
+                .Value(Model.No2))
+    </td>
+
+  </tr>
+
+  <tr>
+    <td>No 3</td>
+    <td>
+      @(Html.Kendo().NumericTextBoxFor(x => x.No3)
+                .Value(Model.No3))
+    </td>
+
+  </tr>
+
+  <tr>
+    <td>No 4</td>
+    <td>
+      @(Html.Kendo().NumericTextBoxFor(x => x.No4)
+                .Value(Model.No4))
+    </td>
+
+  </tr>
+</table>
+
+
+
+
+

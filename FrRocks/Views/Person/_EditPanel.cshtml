@@ -2,7 +2,6 @@
 @using Mallon.Core.Web.Models
 @using Mallon.Core.Web.Models.HtmlExtensions
 @using Club.Services.Utils
-@using Club.Services.Utils
 @model Mallon.Core.Web.Models.TypedModel<Person>
 @functions{ string ctrlId = System.Guid.NewGuid().ToString();}
 @{
@@ -14,15 +13,12 @@
 <script type="text/javascript">
   var isDirty = false;
   $(document).ready(function () {
+
     $(".dfw-clearContainerVals")
       .bind("click", function () {
       var container = $(this).data('containerdiv');
       clearChildCtrls(container);
-
-      //This is needed if clearing Address's
-      $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
-      });
-
+    });
 
     $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
       isDirty = true;

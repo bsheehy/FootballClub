@@ -289,6 +289,30 @@ go
 
 
 
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FKC600C4439B3B4AD1]') AND parent_object_id = OBJECT_ID('[club_lotto]'))
+
+alter table [club_lotto]  drop constraint FKC600C4439B3B4AD1
+
+
+
+go
+
+
+
+
+
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK73954481696D5F52]') AND parent_object_id = OBJECT_ID('[club_lotto_result]'))
+
+alter table [club_lotto_result]  drop constraint FK73954481696D5F52
+
+
+
+go
+
+
+
+
+
     if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK22AAC0979B3B4AD1]') AND parent_object_id = OBJECT_ID('[club_lotto_result_winner]'))
 
 alter table [club_lotto_result_winner]  drop constraint FK22AAC0979B3B4AD1
@@ -766,6 +790,14 @@ go
 
 
     if exists (select * from dbo.sysobjects where id = object_id(N'[club_committee_minute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_committee_minute]
+
+go
+
+
+
+
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[club_lotto]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_lotto]
 
 go
 
@@ -1689,9 +1721,9 @@ go
 
        [name] NVARCHAR(255) not null,
 
-       [description] NVARCHAR(255) null,
-
        [year] INT default 0  not null,
+
+       [description] NVARCHAR(255) null,
 
        [start_date] DATETIME null,
 
@@ -1701,7 +1733,9 @@ go
 
        [time_type] NCHAR(1) default 0  not null,
 
-       primary key ([oid])
+       primary key ([oid]),
+
+      unique ([name], [year])
 
     )
 
@@ -1801,6 +1835,30 @@ go
 
 
 
+    create table [club_lotto] (
+
+        [oid] UNIQUEIDENTIFIER not null,
+
+       [orev] INT not null,
+
+       [lotto_draw_date] DATETIME default 'getdate()'  not null,
+
+       [message] NVARCHAR(255) null,
+
+       [jackpot] DECIMAL(19,5) default 0  not null,
+
+       [lotto_result] UNIQUEIDENTIFIER null,
+
+       primary key ([oid])
+
+    )
+
+go
+
+
+
+
+
     create table [club_lotto_result] (
 
         [oid] UNIQUEIDENTIFIER not null,
@@ -1817,7 +1875,7 @@ go
 
        [no5] INT default 0  not null,
 
-       [draw_date] DATETIME default 'getdate()'  not null,
+       [lotto] UNIQUEIDENTIFIER not null,
 
        primary key ([oid])
 
@@ -1834,6 +1892,8 @@ go
         [oid] UNIQUEIDENTIFIER not null,
 
        [orev] INT not null,
+
+       [message] NVARCHAR(255) null,
 
        [matches] INT default 0  not null,
 
@@ -1899,6 +1959,10 @@ go
 
        [orev] INT not null,
 
+       [name] NVARCHAR(255) not null,
+
+       [year] INT default 0  not null,
+
        [time_type] NCHAR(1) default 0  not null,
 
        [sex] NCHAR(1) default 0  not null,
@@ -1907,17 +1971,15 @@ go
 
        [active] BIT default 1  not null,
 
-       [name] NVARCHAR(255) not null,
-
-       [year] INT default 0  not null,
-
        [start_date] DATETIME null,
 
        [end_date] DATETIME null,
 
        [cost] FLOAT(53) null,
 
-       primary key ([oid])
+       primary key ([oid]),
+
+      unique ([name], [year])
 
     )
 
@@ -2622,6 +2684,34 @@ go
         foreign key ([committee]) 
 
         references [club_committee]
+
+go
+
+
+
+
+
+    alter table [club_lotto] 
+
+        add constraint FKC600C4439B3B4AD1 
+
+        foreign key ([lotto_result]) 
+
+        references [club_lotto_result]
+
+go
+
+
+
+
+
+    alter table [club_lotto_result] 
+
+        add constraint FK73954481696D5F52 
+
+        foreign key ([lotto]) 
+
+        references [club_lotto]
 
 go
 

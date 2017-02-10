@@ -1,9 +1,9 @@
 ﻿@using Club.Domain.Artifacts
 @using Mallon.Core.Web.Models
 @using Mallon.Core.Web.Models.HtmlExtensions
-@model Mallon.Core.Web.Models.TypedModel<LottoResult>
+@model Mallon.Core.Web.Models.TypedModel<Lotto>
 @{
-  ViewBag.Title = "Create Lotto Result";
+  ViewBag.Title = "Edit Lotto Draw";
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,6 +12,7 @@
   @Html.AntiForgeryToken()
   @Html.ValidationSummary(false)
 
-  @Html.Partial("_EditPanelLottoResult", Model)
+  @Html.Partial("_EditPanelLotto", Model)
+  
   <input id="hiddenSubmit" type="submit" value="Save" hidden="hidden" />
 }

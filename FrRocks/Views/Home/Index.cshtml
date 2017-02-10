@@ -24,6 +24,12 @@
   {
     userCanAddLottoResults = (bool)ViewBag.UserCanAddLottoResults;
   }
+
+  SelectList lottoDrawsWithoutResults = null;
+  if (ViewBag.LottoDrawsWithoutResults != null)
+  {
+    lottoDrawsWithoutResults= ViewBag.LottoDrawsWithoutResults as SelectList;
+  }
 }
 <script>
   function addCommitteMinutes(e) {
@@ -56,9 +62,23 @@
     window.location = url;
   }
 
-  function addWeeklyLottoResult(e)
-  {
+  function addWeeklyLottoResult(e) {
     var url = '@Url.Action("CreateLottoResult", "Lotto")';
+    window.location = url;
+  }
+
+  function addWeeklyLottoDraw(e) {
+    var url = '@Url.Action("CreateLotto", "Lotto")';
+    window.location = url;
+  }
+
+  function updateWeeklyLottoDraw(e){
+    var lottoDrawOid = $("#lottoDrawsWithoutResults").data("kendoDropDownList").value();
+    if (isStringValueEmpty(lottoDrawOid) == true) {
+      showError("Please select a Lotto Draw to View");
+      return;
+    }
+    var url = '@Url.Action("EditLotto", "Lotto")?Oid=' + lottoDrawOid;
     window.location = url;
   }
 
@@ -79,32 +99,46 @@
   </div>
 
   <div class="row">
-    <div class="col-md-6 col-sm-12">
-      <h3>@Html.Partial("~/Views/Shared/Hint.cshtml", string.Format("You can configure Weekly Lotto Results, Teams, Committee Minutes etc.. for the current year ({0}) if you are:<br/> 1. A member of the Administration group.<br/> 2. Have been added as an Admin of the relevant entity e.g. a Team Admin", DateTime.Now.Year.ToString()), new ViewDataDictionary { { "ImageSize", "32px" } }) Add and Edit</h3>
-
-      @if (userCanAddLottoResults)
-      {
-        <a href="javascript:addWeeklyLottoResult();" class="k-button aSpace" style="width:80%">
+    @if (userCanAddLottoResults)
+    {
+      <div class="col-md-6 col-sm-12">
+        <h3>@Html.Partial("~/Views/Shared/Hint.cshtml", string.Format("You can configure Weekly Lotto Draws and Results for the current year ({0}) if you are a member of the Administration group.", DateTime.Now.Year.ToString()), new ViewDataDictionary { { "ImageSize", "32px" } }) Club Lotto</h3>
+        <a href="javascript:addWeeklyLottoDraw();" class="k-button aSpace" style="width:80%">
           <span class="glyphicon glyphicon-plus"></span>
-          Add Weekly Lotto Result
+          Add New Weekly Lotto Draw
         </a>
-      }
+
+        @if (lottoDrawsWithoutResults != null && lottoDrawsWithoutResults.Count() > 0)
+        {
+        <a href="javascript:updateWeeklyLottoDraw();" class="k-button" style="width:80%">
+          <span class="glyphicon glyphicon-edit"></span>
+          Update Weekly Lotto Draw
+        </a>
+
+        @(Html.Kendo().DropDownList().Name("lottoDrawsWithoutResults").BindTo(lottoDrawsWithoutResults).OptionLabel("Please select Lotto  Draw...").HtmlAttributes(new { @class = "aSpace", @style = "width:80%" }))
+        }
+      </div>
+    }
+
+    @if (committees != null && committees.Count() > 0)
+    {
+      <div class="col-md-6 col-sm-12">
+        <h3>@Html.Partial("~/Views/Shared/Hint.cshtml", string.Format("You can configure Committee Minutes for the current year ({0}) if you are:<br/> 1. A member of the Administration group.<br/> 2. Have been added as an Admin of the relevant entity e.g. a Team Admin", DateTime.Now.Year.ToString()), new ViewDataDictionary { { "ImageSize", "32px" } }) Club Committees</h3>
 
 
-      @if (committees != null && committees.Count() > 0)
-      {
         <a href="javascript:addCommitteMinutes();" class="k-button" style="width:80%">
           <span class="glyphicon glyphicon-plus"></span>
           Add Committee Minutes
         </a>
 
         @(Html.Kendo().DropDownList().Name("committees").BindTo(committees).OptionLabel("Please select Committee...").HtmlAttributes(new { @class = "aSpace", @style = "width:80%" }))
+      </div>
+    }
 
-      }
-
-
-      @if (membershipTypes != null && membershipTypes.Count() > 0)
-      {
+    @if (membershipTypes != null && membershipTypes.Count() > 0)
+    {
+      <div class="col-md-6 col-sm-12">
+        <h3>@Html.Partial("~/Views/Shared/Hint.cshtml", string.Format("You can configure Club membership for the current year ({0}) if you are:<br/> 1. A member of the Administration group.", DateTime.Now.Year.ToString()), new ViewDataDictionary { { "ImageSize", "32px" } }) Club Membership</h3>
         <a href="javascript:addPersonMembership();" class="k-button" style="width:80%">
           <span class="glyphicon glyphicon-plus"></span>
           Add Person Membership
@@ -112,19 +146,25 @@
 
         @(Html.Kendo().DropDownList().Name("membershipTypes").BindTo(membershipTypes).OptionLabel("Please select Membership Type...").HtmlAttributes(new { @class = "aSpace", @style = "width:80%" }))
 
-      }
+      </div>
+    }
 
-      @if (teams != null && teams.Count() > 0)
-      {
+    @if (teams != null && teams.Count() > 0)
+    {
+      <div class="col-md-6 col-sm-12">
+        <h3>@Html.Partial("~/Views/Shared/Hint.cshtml", string.Format("You can configure Teams for the current year ({0}) if you are:<br/> 1. A member of the Administration group.<br/> 2. Have been added as an Admin of the relevant entity e.g. a Team Admin", DateTime.Now.Year.ToString()), new ViewDataDictionary { { "ImageSize", "32px" } }) My Teams</h3>
+
+
         <a href="javascript:viewTeam();" class="k-button" style="width:80%">
           <span class="glyphicon glyphicon-edit"></span>
           View Team
         </a>
 
         @(Html.Kendo().DropDownList().Name("teams").BindTo(teams).OptionLabel("Please select Team...").HtmlAttributes(new { @class = "aSpace", @style = "width:80%" }))
+      </div>
+    }
 
-      }
-    </div>
+
     <div class="col-md-6 col-sm-12">
       <h3>@Html.Partial("~/Views/Shared/Hint.cshtml", "Search various Club details here.", new ViewDataDictionary { { "ImageSize", "32px" } }) Searches</h3>
 
@@ -146,9 +186,7 @@
       </a>
 
     </div>
-  </div>
 
-  <div class="row">
     <div class="col-md-6 col-sm-12">
       <h3>@Html.Partial("~/Views/Shared/Hint.cshtml", "You can view and edit Club Detail and other functionality here.", new ViewDataDictionary { { "ImageSize", "32px" } }) Other</h3>
 
@@ -156,7 +194,5 @@
         <span class="glyphicon glyphicon-edit"></span>
         View Club Details
       </a>
-    </div>
-  </div>
-
+    </div></div>
 </div>

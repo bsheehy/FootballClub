@@ -13,7 +13,6 @@ $.fn.filterByData = function (prop, val) {
   );
 }
 
-
 function disableAllControls(targetId) {
   if (targetId)
   {
@@ -26,7 +25,6 @@ function disableAllControls(targetId) {
   }
   
 }
-
 
 /* 
 Ajax Forms - required for client validation on a <form> that was loaded via AJAX.
@@ -244,7 +242,6 @@ function searchOnChangeNoWarning(e) {
   }
 }
 
-
 function searchClearSearch(containerDiv, excludeControlsArray) {
   if (!containerDiv) {
     containerDiv = "#searchCriteria";
@@ -458,6 +455,36 @@ function openPersonDialog(e) {
   var oid = $("#" + containerDiv).find("#" + modelRoutepath).val();
   kendoDialogOpen(dialogGuid, dialogTitle, addressActionUrl, { Oid: oid, personSelect: true, controlId: controlId });
 
+}
+
+//Validates openPersonDialog and openAddresDialog data attributes.
+function validateDialogAttributes(controlId, containerDiv, dialogGuid, addressActionUrl) {
+  if (!controlId) {
+    return "The HTML control 'id' attribute is mandatory.";
+  }
+
+  if (!dialogGuid) {
+    return "The data attribute 'data-dialogguid' is mandatory.";
+  }
+
+  if (!addressActionUrl) {
+    return "The data attribute 'data-actionurl' is mandatory.";
+  }
+
+  if (!containerDiv) {
+    return "The data attribute 'data-containerdiv' is mandatory.";
+  }
+
+  if (!$('#' + containerDiv).length) {
+    return "The control with id: " + containerDiv + " does not exist in the DOM.";
+  }
+
+  //Check if controlId is a child of containerDiv
+  if (!$('#' + containerDiv).has('#' + controlId).length) {
+    return "The control '" + controlId + "' must be a child of: " + containerDiv;
+  }
+
+  return "";
 }
 
 function setAjaxAddPerson(dataItem) {
@@ -1003,6 +1030,9 @@ function refreshPersonMembershipGrid() {
   $('#personMembershipGridResults').data('kendoGrid').dataSource.read();
 }
 
+function refreshLottoWinnersGrid() {
+  $('#gridLottoWinnersGrid').data('kendoGrid').dataSource.read();
+}
 
 /*
  * GENERAL FUNCTIONS
@@ -1019,4 +1049,82 @@ function isStringValueEmpty(sValue) {
   }
 
   return false;
+}
+
+function setAjaxAddPerson(dataItem) {
+  var controlId = $("#PersonControlId").val();
+  setAjaxPersonOnCallingPage(dataItem, controlId);
+}
+
+function setAjaxPersonOnCallingPage(dataItem, personControlId) {
+  var mydata = $("#" + personControlId).data();
+  var prependModel = mydata.modelroutepath;
+  var addressContainerDiv = mydata.containerdiv;
+  var setPerson = mydata.setperson;
+  var parentDialog = getDialogName(mydata.dialogguid);
+
+  setPersonSingleLine(prependModel, dataItem, parentDialog, addressContainerDiv, personControlId, setPerson);
+}
+
+//This function is used to clear the Person details for the following Person Views:_ViewSingleLine.cshtml , _ViewSingleLineAll.cshtml
+function clearPersonSingleLine(prependRoute) {
+  if (prependRoute == null) {
+    prependRoute = "Person";
+  }
+  $("#" + prependRoute).val("").change();
+  $("#" + prependRoute + "_SingleLine").val("");
+  $("#" + prependRoute + "_AllDetails").val("");
+  $("#" + prependRoute + "_Address_SingleLine").val("");
+  $("#" + prependRoute + "_Address_AllDetails").val("");
+}
+
+//Use 'personContainerDiv' if there are more than 1 Person entry on same form so we know which one to update
+//or there are multiple dialogs. setPerson default == True
+function setPersonSingleLine(prependRoute, dataItem, dialogName, personContainerDiv, personControlId, setPerson) {
+  //clear existing values
+  clearChildCtrls(personContainerDiv);
+  var isSetPerson = true;
+
+  if (setPerson && (setPerson.toLowerCase() == 'false')) {
+    isSetPerson = false;
+  }
+
+  if (isSetPerson == true) {
+    if (!prependRoute) {
+      prependRoute = "#Person";
+    }
+
+    //Check prependRoute starts with #
+    if (prependRoute[0] != '#') {
+      prependRoute = '#' + prependRoute;
+    }
+
+    if (personContainerDiv) {
+      //Check personContainerDiv starts with #
+      if (personContainerDiv[0] != '#') {
+        personContainerDiv = '#' + personContainerDiv;
+      }
+      //Vheck container div for controls
+      prependRoute = personContainerDiv + ' ' + prependRoute;
+    }
+
+    $(prependRoute).val(dataItem.Oid).change();
+
+    $(prependRoute + "_NameSingleLine").val(dataItem.NameSingleLine).attr('readonly', true);
+    $(prependRoute + "_AddressSingleLine").val(dataItem.AddressSingleLine).attr('readonly', true);
+  }
+
+  //close the parent dialog if necessary
+  if (dialogName != null && $("#" + dialogName).length > 0) {
+    $("#" + dialogName).data("kendoWindow").close();
+  }
+
+  //After setting all properties - need to call javascript callBack if it was defined in the calling control
+  if (personControlId) {
+    var callBack = $("#" + personControlId).data('jscallback');
+    if (callBack && callBack.length > 0) {
+      var fn = window[callBack];
+      fn(dataItem);
+    }
+  }
 }

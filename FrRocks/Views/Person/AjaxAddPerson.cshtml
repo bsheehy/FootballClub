@@ -1,0 +1,62 @@
+﻿@*NOTE: Please define the OnSuccess="setAddPerson(data)" method for pages that call this ajax page otherwise error will be thrown.*@
+@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@{ 
+  string ctrlId = System.Guid.NewGuid().ToString();
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+ }
+
+@using (Ajax.BeginForm("AjaxAddPerson", "Person", new AjaxOptions { OnFailure = "handleAjaxError", OnBegin = "validateAddPersonForm", OnComplete = "hideProgress()", OnSuccess = "setAjaxAddPerson(data)" }, new { @id = "frmAddPerson" }))
+{ 
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $(".dfw-addressBtn").on("click", function (e) {
+        openAddressDialog(this);
+      });
+
+      $(".dfw-clearContainerVals")
+      .bind("click", function () {
+        var container = $(this).data('containerdiv');
+        clearChildCtrls(container);
+      });
+    });
+
+    function validateAddPersonForm() {
+      showProgress();
+      var frmAjax = $("#frmAddPerson");
+      return frmAjax.validate().form();
+    }
+  </script>
+  
+  @Html.AntiForgeryToken()
+  
+  @*VERY IMPORTANT: Used for Dialogs and raising events on calling pages*@
+  <input type="hidden" value="@ViewBag.PersonControlId" id="PersonControlId" />
+  
+  <div id="dAddPerson_@(ctrlId)">
+    <div id="winContainer_@ctrlId"></div>
+    @(Html.Kendo().PanelBar()
+        .Name("pnlbAddPerson_" + ctrlId)
+        .ExpandMode(PanelBarExpandMode.Multiple)
+        .HtmlAttributes(new { style = "width:100%" })
+        .Items(panelbar =>
+        {
+          panelbar.Add().Text("Details:")
+            .ImageUrl("~/Images/16px/user1.png")
+              .Expanded(true)
+							.LinkHtmlAttributes(new {@class = "dfw-ignoreDirtyLink"})
+              .Content(@<div id="dAddPersonDetails_@(ctrlId)">
+                <table class="tbl4Cols">
+                  @Html.Partial("~/Views/Person/_EditPanel.cshtml", Model)
+                </table>
+              </div>);
+        })
+      )
+      <input type="submit" value="Save" class="k-button dfw-k-button" />
+      <input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.PersonControlId')" />
+  </div>
+}
+

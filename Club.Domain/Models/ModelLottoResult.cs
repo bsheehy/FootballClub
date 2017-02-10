@@ -26,7 +26,7 @@ namespace Club.Domain.Models
       if (lottoResult.Lotto != null)
       {
         this.LottoOid = lottoResult.Lotto.Oid;
-        this.LottoDrawDate = lottoResult.Lotto.DrawDate;
+        this.LottoDrawDate = lottoResult.Lotto.LottoDrawDate;
         this.LottoJackpot = lottoResult.Lotto.Jackpot;
         this.LottoMessage = lottoResult.Lotto.Message;
       }
@@ -65,7 +65,7 @@ namespace Club.Domain.Models
 
     public virtual Guid LottoOid { get; set; }
 
-    public virtual DateTime LottoDrawDate { get; set; }
+    public virtual DateTime? LottoDrawDate { get; set; }
 
     public virtual string LottoMessage { get; set; }
 

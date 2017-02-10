@@ -20,6 +20,171 @@ namespace FrRocks.Controllers
 {
   public class LottoController : ControllerBase
   {
+    #region Lotto Draw
+
+    //public ActionResult CreateLotto()
+    //{
+    //  LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+    //  if (this.UserController.EffectiveUser.GetClassAccess(typeof(Lotto)).Allows(Access.Create) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+    //  {
+    //    return RedirectToAction("View", "Error", new
+    //    {
+    //      errorMsg = "You do not have permission to 'Create' Lotto Draws.",
+    //      redirectUrl = Request.UrlReferrer
+    //    });
+    //  }
+    //  Lotto m = new Lotto();
+    //  return View(m);
+    //}
+
+    //[HttpPost]
+    //[ActionName("CreateLotto")]
+    //public ActionResult CreateLottoPost(Lotto m)
+    //{
+    //  LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+    //  if (this.UserController.EffectiveUser.GetClassAccess(typeof(Lotto)).Allows(Access.Create) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+    //  {
+    //    return RedirectToAction("View", "Error", new
+    //    {
+    //      errorMsg = "You do not have permission to 'Create' Lotto Draws.",
+    //      redirectUrl = Request.UrlReferrer
+    //    });
+    //  }
+
+    //  if (ModelState.IsValid)
+    //  {
+    //    if (service.SaveLotto(new ModelStateWrapper(this.ModelState), m))
+    //    {
+    //      //Sucessfully saved Lotto
+    //      return RedirectToAction("EditLotto", new { Oid = m.Oid });
+    //    }
+    //  }
+
+    //  return View(m);
+    //}
+
+    //public ActionResult EditLotto(Lotto m)
+    //{
+    //  LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+    //  if (this.UserController.EffectiveUser.GetClassAccess(typeof(Lotto)).Allows(Access.Update) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+    //  {
+    //    return RedirectToAction("View", "Error", new
+    //    {
+    //      errorMsg = "You do not have permission to 'Edit' Lotto Draws.",
+    //      redirectUrl = Request.UrlReferrer
+    //    });
+    //  }
+    //  return View(m);
+    //}
+
+    //[HttpPost]
+    //[ActionName("EditLotto")]
+    //public ActionResult EditLottoPost(Lotto m)
+    //{
+    //  LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+    //  if (this.UserController.EffectiveUser.GetClassAccess(typeof(Lotto)).Allows(Access.Update) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+    //  {
+    //    return RedirectToAction("View", "Error", new
+    //    {
+    //      errorMsg = "You do not have permission to 'Edit' Lotto Draws.",
+    //      redirectUrl = Request.UrlReferrer
+    //    });
+    //  }
+
+    //  if (ModelState.IsValid)
+    //  {
+    //    if (service.SaveLotto(new ModelStateWrapper(this.ModelState), m))
+    //    {
+    //      //Sucessfully saved Lotto
+    //      return RedirectToAction("EditLotto", new { Oid = m.Oid });
+    //    }
+    //  }
+
+    //  return View(m);
+    //}
+
+    public ActionResult CreateLotto([BoundModel(DontLoad = true, DontMerge = true)]TypedModel<Lotto> m)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Create) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        return RedirectToAction("View", "Error", new
+        {
+          errorMsg = "You do not have permission to 'Create' Lotto Draws.",
+          redirectUrl = Request.UrlReferrer
+        });
+      }
+
+      return View(m);
+    }
+
+    [HttpPost]
+    [ActionName("CreateLotto")]
+    public ActionResult CreateLottoPost(TypedModel<Lotto> m)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Create) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        return RedirectToAction("View", "Error", new
+        {
+          errorMsg = "You do not have permission to 'Create' Lotto Draws.",
+          redirectUrl = Request.UrlReferrer
+        });
+      }
+
+      if (ModelState.IsValid)
+      {
+        if (service.SaveLotto(new ModelStateWrapper(this.ModelState), m.Entity))
+        {
+          //Sucessfully saved Lotto
+          return RedirectToAction("EditLotto", new { Oid = m.Entity.Oid });
+        }
+      }
+      ViewBag.EditLotto = service.CanUserEditLotto();
+      return View(m);
+    }
+
+    public ActionResult EditLotto(TypedModel<Lotto> m)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Update) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        return RedirectToAction("View", "Error", new
+        {
+          errorMsg = "You do not have permission to 'Edit' Lotto Draws.",
+          redirectUrl = Request.UrlReferrer
+        });
+      }
+
+      ViewBag.EditLotto = service.CanUserEditLotto();
+      return View(m);
+    }
+
+    [HttpPost]
+    [ActionName("EditLotto")]
+    public ActionResult EditLottoPost(TypedModel<Lotto> m)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Update) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        return RedirectToAction("View", "Error", new
+        {
+          errorMsg = "You do not have permission to 'Edit' Lotto Draws.",
+          redirectUrl = Request.UrlReferrer
+        });
+      }
+
+      if (ModelState.IsValid)
+      {
+        service.SaveLotto(new ModelStateWrapper(this.ModelState), m.Entity);
+      }
+
+      ViewBag.EditLotto = service.CanUserEditLotto();
+      return View(m);
+    }
+
+    #endregion
+
     #region Lotto Results
 
     public PartialViewResult SearchLottoResults(string controlId = null, bool selectMany = false)
@@ -27,7 +192,7 @@ namespace FrRocks.Controllers
       LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
       TypedModel<LottoResultQry> model = new TypedModel<LottoResultQry>();
       model.Init();
-      ViewBag.LottoResultEdit = service.CanUserEditLottoResult();
+      ViewBag.LottoResultEdit = service.CanUserEditLotto();
       SetViewBagSelectLists_ForSearch(controlId);
       return PartialView(model);
     }
@@ -37,10 +202,68 @@ namespace FrRocks.Controllers
       return PartialView(m);
     }
 
+    public PartialViewResult CreateLottoResultAjax(Guid lottoOid)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        this.ModelState.AddModelError("Lotto", "You do not have permission to 'Create' Lotto Result.");
+        throw new ModelStateException(this.ModelState);
+      }
+
+      LottoResult m = new LottoResult();
+      m.Lotto = this.DbSession.Get<Lotto>(lottoOid);
+      return PartialView(m);
+    }
+
+    [HttpPost]
+    [ActionName("CreateLottoResultAjax")]
+    public ActionResult CreateLottoResultAjaxPost(TypedModel<LottoResult> m)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        this.ModelState.AddModelError("Lotto", "You do not have permission to 'Create' Lotto Result.");
+        throw new ModelStateException(this.ModelState);
+      }
+
+      if (ModelState.IsValid)
+      {
+        if (service.CreateLottoResult(new ModelStateWrapper(this.ModelState), m.Entity))
+        {
+          ModelJsonResult j = new ModelJsonResult();
+          j.success = true;
+          return Json(j, JsonRequestBehavior.AllowGet);
+        }
+      }
+      throw new ModelStateException(this.ModelState) { DisplayKeyInError = false };
+    }
+
+    //public JsonResult CreateLottoResultAjaxPost(LottoResult m)
+    //{
+    //  LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+    //  if (service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+    //  {
+    //    this.ModelState.AddModelError("Lotto", "You do not have permission to 'Create' Lotto Result.");
+    //    throw new ModelStateException(this.ModelState);
+    //  }
+
+    //  if (ModelState.IsValid)
+    //  {
+    //    if (service.CreateLottoResult(new ModelStateWrapper(this.ModelState), m))
+    //    {
+    //      ModelJsonResult j = new ModelJsonResult();
+    //      j.success = true;
+    //      return Json(j, JsonRequestBehavior.AllowGet);
+    //    }
+    //  }
+    //  throw new ModelStateException(this.ModelState);
+    //}
+
     public ActionResult CreateLottoResult([BoundModel(DontLoad = true, DontMerge = true)]TypedModel<LottoResult> m)
     {
       LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
-      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Create) == false || service.CanUserEditLottoResult(new ModelStateWrapper(this.ModelState)) == false)
+      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Create) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
       {
         return RedirectToAction("View", "Error", new
         {
@@ -56,7 +279,7 @@ namespace FrRocks.Controllers
     public ActionResult CreateLottoResultPost(TypedModel<LottoResult> m)
     {
       LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
-      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Create) == false || service.CanUserEditLottoResult(new ModelStateWrapper(this.ModelState)) == false)
+      if (this.UserController.EffectiveUser.GetClassAccess(m.EntityType).Allows(Access.Create) == false || service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
       {
         return RedirectToAction("View", "Error", new
         {
@@ -118,6 +341,83 @@ namespace FrRocks.Controllers
         result = filter.Entity.List(this.DbSession).Cast<LottoResult>();
       }
       return result;
+    }
+
+    #endregion
+
+    #region Lotto Result Winners
+
+    [AcceptVerbs(HttpVerbs.Post)]
+    public ActionResult LottoResultWinners_GridDelete([DataSourceRequest] DataSourceRequest request, ModelLottoResultWinner product)
+    {
+      if (this.UserController.EffectiveUser.GetClassAccess(typeof(TeamMember)).Allows(Access.Delete) == false)
+      {
+        return RedirectToAction("View", "Error", new
+        {
+          errorMsg = "You do not have permission to 'Delete' Team Members's.",
+          redirectUrl = Request.UrlReferrer
+        });
+      }
+
+      LottoResultWinner domainEntity = this.DbSession.Get<LottoResultWinner>(product.Oid);
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (service.DeleteLottoResultWinner(new ModelStateWrapper(this.ModelState), ref domainEntity))
+      {
+        return Json(new[] { product }.ToDataSourceResult(request, ModelState));
+      }
+      return Json(new[] { product }.ToDataSourceResult(request, ModelState));
+    }
+
+    public JsonResult LottoResultWinners_GridRead([DataSourceRequest]DataSourceRequest request, Guid lottoResultOid)
+    {
+      if (request.PageSize == 0)
+      {
+        request.PageSize = 10;
+      }
+
+      IEnumerable<LottoResultWinner> lottoResultWinners = this.DbSession.QueryOver<LottoResultWinner>().Where(x => x.LottoResult.Oid == lottoResultOid).List<LottoResultWinner>();
+      IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
+      IEnumerable<ModelLottoResultWinner> result = Mapper.Map<IEnumerable<ModelLottoResultWinner>>(lottoResultWinners);
+      return Json(result.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+    }
+
+    public PartialViewResult CreateLottoResultWinnerAjax(Guid lottoResultOid)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        this.ModelState.AddModelError("Lotto", "You do not have permission to 'Create' Lotto Result Winners.");
+        throw new ModelStateException(this.ModelState);
+      }
+
+      TypedModel<LottoResultWinner> m = new TypedModel<LottoResultWinner>();
+      m.Init();
+      m.Entity.LottoResult = this.DbSession.Get<LottoResult>(lottoResultOid);
+      return PartialView(m);
+    }
+
+    [HttpPost]
+    [ActionName("CreateLottoResultWinnerAjax")]
+    public ActionResult CreateLottoResultWinnerAjaxPost(TypedModel<LottoResultWinner> m)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (service.CanUserEditLotto(new ModelStateWrapper(this.ModelState)) == false)
+      {
+        this.ModelState.AddModelError("Lotto", "You do not have permission to 'Create' Lotto Result Winners.");
+        throw new ModelStateException(this.ModelState);
+      }
+
+      if (ModelState.IsValid)
+      {
+        if (service.CreateLottoResultWinner(new ModelStateWrapper(this.ModelState), ref m))
+        {
+          ModelJsonResult j = new ModelJsonResult();
+          j.success = true;
+          return Json(j, JsonRequestBehavior.AllowGet);
+        }
+      }
+
+      return View(m);
     }
 
     #endregion

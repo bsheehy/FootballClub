@@ -2209,12 +2209,22 @@
     <Content Include="Views\Membership\AddPersonMembershipGrid.cshtml" />
     <Content Include="Views\Person\SelectMembershipMember.cshtml" />
     <Content Include="Views\Lotto\CreateLottoResult.cshtml" />
-    <Content Include="Views\Lotto\_EditPanelResult.cshtml" />
+    <Content Include="Views\Lotto\_EditPanelLottoResult.cshtml" />
     <Content Include="Views\Lotto\SearchLottoResults.cshtml" />
     <Content Include="Views\Lotto\SearchLottoResultsCriteria.cshtml" />
     <Content Include="Views\Lotto\SearchLottoResultsResults.cshtml" />
     <Content Include="Views\Lotto\ViewLottoResult.cshtml" />
     <Content Include="Views\Lotto\EditLottoResult.cshtml" />
+    <Content Include="Views\Lotto\_EditPanelLotto.cshtml" />
+    <Content Include="Views\Lotto\CreateLotto.cshtml" />
+    <Content Include="Views\Lotto\EditLotto.cshtml" />
+    <Content Include="Views\Lotto\CreateLottoResultAjax.cshtml" />
+    <Content Include="Views\Lotto\_Lotto.cshtml" />
+    <Content Include="Views\Lotto\_ViewLottoResultWinnersGrid.cshtml" />
+    <Content Include="Views\Lotto\CreateLottoResultWinnerAjax.cshtml" />
+    <Content Include="Views\Person\SelectPerson.cshtml" />
+    <Content Include="Views\Person\AjaxAddPerson.cshtml" />
+    <Content Include="Views\Person\_View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />

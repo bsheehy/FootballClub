@@ -452,6 +452,62 @@ namespace FrRocks.Controllers
 
     #endregion
 
+    #region Lotto Winners
+
+    public PartialViewResult SelectLottoWinner(Guid lottoWinnerOid, string controlId = null)
+    {
+      LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+      if (service.CanUserEditLotto() == false)
+      {
+        this.ModelState.AddModelError("Lotto", "You do not have permissions to edit Lotto details.");
+        throw new ModelStateException(this.ModelState);
+      }
+
+      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
+      model.Init();
+      model.Entity.aq_CommitteeOid = lottoWinnerOid;
+      ViewBag.SelectLottoWinner = true;
+      ViewBag.PersonControlId = controlId;
+      ViewBag.CommitteeOid = lottoWinnerOid.ToString();
+      SetViewOptions();
+      SetViewBagSelectLists_ForSearch(controlId);
+      return PartialView(model);
+    }
+
+    //[HttpPost]
+    //[ActionName("SelectLottoWinner")]
+    //public ActionResult SelectLottoWinnerPost(Guid personOid, Guid lottoWinnerOid)
+    //{
+    //  if (this.UserController.EffectiveUser.GetClassAccess(typeof(Committee)).Allows(Access.Update) == true)
+    //  {
+    //    LottoServiceController service = (LottoServiceController)this.Injector.Activate(typeof(LottoServiceController));
+    //    if (service.SelectLottoResultWinner(new ModelStateWrapper(this.ModelState), personOid, lottoWinnerOid))
+    //    {
+    //      ModelJsonResult j = new ModelJsonResult();
+    //      j.success = true;
+    //      return Json(j, JsonRequestBehavior.AllowGet);
+    //    }
+    //    throw new ModelStateException(this.ModelState);
+    //  }
+    //  else
+    //  {
+    //    this.ModelState.AddModelError("Person", "You do not have permissions to edit Person guardians.");
+    //    throw new ModelStateException(this.ModelState);
+    //  }
+    //}
+
+    #endregion
+
+    public ActionResult SelectPerson(TypedModel<Person> m, string controlId = null, string pnlView = null, bool personView = false, bool personEdit = false, bool personSelect = false, bool checkCookie = false)
+    {
+      ViewBag.PersonControlId = controlId;
+      ViewBag.PersonSelect = true;
+      ViewBag.PersonEdit = true;
+      ViewBag.PnlView = Enum.GetName(typeof(PageViewType), PageViewType.Edit);
+      SetViewBagSelectLists(m);
+      return View(m);
+    }
+
     private void SetViewBagSelectLists_ForSearch(string controlId)
     {
       ViewBag.PersonControlId = controlId;

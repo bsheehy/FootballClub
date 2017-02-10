@@ -61,5 +61,7 @@ namespace Club.Domain.Models
     public virtual DateTime? EndDate { get; set; }
 
     public virtual int Matches { get; set; }
+
+    public virtual string Message { get; set; }
   }
 }

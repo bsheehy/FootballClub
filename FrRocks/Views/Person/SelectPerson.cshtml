@@ -1,0 +1,59 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.Entity.Oid.ToString();
+
+  RouteValueDictionary routeVals = new RouteValueDictionary();
+  routeVals.Add("controlId", Convert.ToString(ViewBag.PersonControlId));
+  routeVals.Add("pnlView", Convert.ToString(ViewBag.PnlView));
+  routeVals.Add("personView", Convert.ToString(ViewBag.PersonView));
+  routeVals.Add("personEdit", Convert.ToString(ViewBag.PersonEdit));
+  routeVals.Add("personSelect", Convert.ToString(ViewBag.PersonSelect));
+}
+@*VERY IMPORTANT: Used for Dialogs and raising events on calling pages*@
+<input type="hidden" value="@ViewBag.PersonControlId" id="PersonControlId" />
+@{
+  switch (pnlViewUserAccess)
+  {
+    case PageViewType.ReadOnly:
+    case PageViewType.NoAccess:
+  @Html.Partial("~/Views/Person/_View.cshtml", Model)
+      break;
+    case PageViewType.Edit:
+  @(Html.Kendo().TabStrip()
+    .Name("ts_" + ctrlId)
+    .Items(tabstrip =>
+    {
+      tabstrip.Add().Text("Select Existing Person").LoadContentFrom("Search", "Person",routeVals);
+      tabstrip.Add().Text("Edit Person:").Selected(true).Content(@Html.Partial("~/Views/Person/AjaxAddPerson.cshtml", Model, Html.ViewData).ToHtmlString());
+    })
+    )
+    break;
+    //Create
+    default:
+    @(Html.Kendo().TabStrip()
+      .Name("ts_" + ctrlId)
+      .Items(tabstrip =>
+      {
+        tabstrip.Add().Text("Select Existing Person:").Selected(true).LoadContentFrom("Search", "Person",routeVals);
+        tabstrip.Add().Text("Create Person:").Content(@Html.Partial("~/Views/Person/AjaxAddPerson.cshtml", Model, Html.ViewData).ToHtmlString());
+        
+      })
+    )
+    break;
+  }  
+}
+
+
+
+
+
+
+
