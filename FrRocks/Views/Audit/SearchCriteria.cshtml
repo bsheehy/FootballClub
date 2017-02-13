@@ -1,0 +1,61 @@
+﻿@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model TypedModel<AuditApexSql.Artifacts.AuditQuery>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  string auditType = ViewBag.AuditType;
+}
+<script type="text/javascript">
+  function getAuditSearchParams() {
+    return searchGetParams("searchCriteria@(ctrlId)");
+  }
+</script>
+
+
+<table id="searchCriteria@(ctrlId)" style="width: 100%; margin-bottom: 5px;" class="tbl4Cols">
+  <tr>
+    @if (!string.IsNullOrEmpty(auditType) && auditType.Equals("SingleEntity", StringComparison.CurrentCultureIgnoreCase))
+    {
+      @Html.TextBoxFor(Model.GetProperty(m => m.TableName), new { @class = "k-textbox", @style = "width:90%", @readonly = true })
+      @Html.TextBoxFor(Model.GetProperty(m => m.Where), new { @class = "k-textbox", @style = "width:90%", @readonly = true })
+    }
+    else
+    {
+      @Html.DropDownListFor(Model.GetProperty(m => m.TableName, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.AuditTableNames, Model.Entity.TableName, " ")), new { @style = "width:90%" })
+      @Html.DropDownListFor(Model.GetProperty(m => m.FieldName, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.AuditColumnNames, Model.Entity.FieldName, " ")), new { @style = "width:90%" })
+      @Html.HiddenFor(x => x.Entity.Where)
+    }
+  </tr>
+
+  <tr>
+    @Html.DropDownListFor(Model.GetProperty(m => m.ModifiedBy, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.AuditModifiedBys, Model.Entity.ModifiedBy, " ")), new { @style = "width:90%" })
+    @Html.DropDownListFor(Model.GetProperty(m => m.Host, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.AuditComputers, Model.Entity.Host, " ")), new { @style = "width:90%" })
+  </tr>
+
+  <tr>
+    @Html.DropDownListFor(Model.GetProperty(m => m.Application, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.AuditApplications, Model.Entity.Application, " ")), new { @style = "width:90%" })
+    @Html.DropDownListFor(Model.GetProperty(m => m.AuditAction, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.AuditActions, Model.Entity.AuditAction, " ")), new { @style = "width:90%" })
+  </tr>
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m => m.OldValue), new { @class = "k-textbox", @style = "width:90%" })
+    @Html.TextBoxFor(Model.GetProperty(m => m.NewValue), new { @class = "k-textbox", @style = "width:90%" })
+  </tr>
+  <tr>
+    @Html.DateFor(Model.GetProperty(m => m.FromDate), new { @style = "width:75%" })
+    @Html.DateFor(Model.GetProperty(m => m.ToDate), new { @style = "width:75%" })
+  </tr>
+  <tr>
+    @Html.NumericFor(Model.GetProperty(m => m.RowCount), new { @style = "width:50%", @max=500 })
+  </tr>
+  <tr>
+
+    <td></td>
+    <td colspan="3">
+      <div id="searchWrapper" class="float-right" style="display: inline-block">
+        <input type="submit" value="Go" class="k-button" id="btnSearchGo" style="width: auto; padding-top: 2px; padding-bottom: 2px;" onclick="searchBeginSearch()" />
+        <input type="button" value="Clear" class="k-button dfw-k-button " id="btnSearchClear" onclick="searchClearSearch('searchCriteria@(ctrlId)')" style="width: auto; padding-top: 2px; padding-bottom: 2px;" />
+      </div>
+    </td>
+  </tr>
+</table>

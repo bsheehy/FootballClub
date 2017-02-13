@@ -38,6 +38,9 @@ DBSETUP=../../DbTools/DbSetup/bin
 CURDIR=$(shell pwd)
 
 
+C:\development\FootballClub\db\audit\triggers\00_ApexSQLAuditTriggers.sql
+
+
 #ApexSQL Audit Trigger Command Line Interface 
 #http://knowledgebase.apexsql.com/using-apexsql-audit-command-line-interface-cli-switches/
 #NOTE: The ApexSQL CLI DOES NOT work with relative paths or non windows paths and it requires the FULL PATH to the project and template files.
@@ -113,7 +116,7 @@ installers: mkinstalldir installscripts dbsetupbin
 
 
 #Setup Database table structures with constraints, static data and audit-trail (no Diamond Fire - triggers, view, functions or stored procedures added)
-tables: clean cleanSqlLogs schema.sql tables.log add_constraints.log elmah sqlStoredprocs staticData
+tables: clean cleanSqlLogs schema.sql tables.log add_constraints.log auditTrail elmah sqlStoredprocs sqlTriggers staticData auditApexSQL_UseSqlScriptsOnly
 
 
 #.PHONY: add_constraints.log
@@ -139,6 +142,10 @@ installscripts: schema.sql mkinstalldir
 	cat ./elmah/storedprocs/*.sql >> setup/scripts/storedprocedures.sql
 	cat ../../AuditApexSql/db/storedprocs/*.sql >> setup/scripts/storedprocedures.sql
 	cat ./triggers/*.sql >> setup/scripts/triggers.sql
+
+
+#Remember to clean before creating this or it will not work - clean removes Log files - if log file exists the sql will not run.
+auditTrail: $(patsubst %.sql,%.log,$(sort $(wildcard ../../AuditApexSql/db/storedprocs/*.sql audit/tables/*.sql)))
 
 
 #elmah:	$(patsubst %.sql,%.log,$(wildcard ../../AuditTrail/dbLanceV2/functions/*.sql ../../AuditTrail/dbLanceV2/tables/*.sql ../../AuditTrail/dbLanceV2/storedprocs/*.sql  ../../AuditTrail/dbLanceV2/triggers/*.sql))

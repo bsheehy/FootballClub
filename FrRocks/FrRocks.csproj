@@ -214,6 +214,7 @@
     <Compile Include="Controllers\MembershipController.cs" />
     <Compile Include="Controllers\CommitteeController.cs" />
     <Compile Include="Controllers\ClubMinutesController.cs" />
+    <Compile Include="Controllers\AuditController.cs" />
     <Compile Include="Controllers\QualificationController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
@@ -952,6 +953,7 @@
     <Content Include="Scripts\club\UtilsClub.js" />
     <Content Include="Scripts\club\UtilsDynamicValidation.js" />
     <Content Include="Scripts\club\UtilsErrHandler.js" />
+    <None Include="Properties\PublishProfiles\frrocksgfc.com - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\club\UtilsKendo.js" />
     <Content Include="Scripts\jquery-2.2.4.js" />
@@ -1944,7 +1946,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="SqlServerTypes\readme.htm" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -2238,6 +2242,10 @@
     <Content Include="Views\Qualification\SearchPersonQualificationResults.cshtml" />
     <Content Include="Views\Qualification\SearchPersonQualification.cshtml" />
     <Content Include="Views\Qualification\SearchPersonQualificationCriteria.cshtml" />
+    <Content Include="Views\Audit\SearchCriteria.cshtml" />
+    <Content Include="Views\Audit\StandardReport.cshtml" />
+    <Content Include="Views\Audit\StandardReportResults.cshtml" />
+    <Content Include="Views\Audit\StandardReportResultsJavascripExample.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />
@@ -2251,6 +2259,10 @@
     <Folder Include="Views\Documents\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AuditApexSql\AuditApexSql.csproj">
+      <Project>{8e33197a-56c7-4f2d-8977-cf9186c92ea0}</Project>
+      <Name>AuditApexSql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DotNetLib\Resources\DotNet4.0\Resources.csproj">
       <Project>{1c4d316e-2bab-4406-b826-e8004679e5ef}</Project>
       <Name>Resources</Name>

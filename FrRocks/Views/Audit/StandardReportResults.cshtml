@@ -1,0 +1,59 @@
+﻿@using AuditApexSql.Artifacts
+@{
+  bool hideLayout = Convert.ToBoolean(ViewData["HideLayout"]);
+  string auditType = ViewBag.AuditType;
+  bool autoBind = false;
+
+  if (hideLayout == true && auditType.Equals("SingleEntity", StringComparison.CurrentCultureIgnoreCase))
+  {
+    autoBind = true;
+  }
+  
+}
+<div id="dAuditSearchResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+
+  @*IMPORTANT - This is required to make the Grid scroll Vertically and Horizontally within the page otherwise page is a mess*@
+  <style>
+    #searchGridResults .k-grid-content {
+      overflow-y: auto;
+    }
+
+    #searchGridResults .k-grid-header {
+      padding: 0 !important;
+    }
+  </style>
+
+
+  @(Html.Kendo().Grid<AuditData>()
+  .Name("searchGridResults")
+  .AutoBind(autoBind)
+  .Columns(columns =>
+  {
+    //columns.Command(command => { command.Edit(); });
+    columns.Bound(p => p.TransactionId).Title("Trans Id").Width(100);
+    columns.Bound(p => p.Action).Title("Action").Width(100);
+    columns.Bound(p => p.TableName).Title("Table Name").Width(250);
+    columns.Bound(p => p.ColumnName).Title("Column Name").Width(150);
+    columns.Bound(p => p.OldValue).Title("Old Value").Width(200).HtmlAttributes(new { style = "max-width:300px;" });
+    columns.Bound(p => p.NewValue).Title("New Value").Width(200).HtmlAttributes(new { style = "max-width:300px;" });
+    columns.Bound(p => p.ModifiedBy).Title("Modified By").Width(300);
+    columns.Bound(p => p.ModifiedDate).Title("Modified Date").Width(200).Format("{0:dd/MMM/yyyy HH:mm}");
+    columns.Bound(p => p.Key1).Title("Key (oid)").Width(200);
+  })
+  .DataSource(ds => ds
+    .Ajax()
+    .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+    .Read(read => read.Action("StandardReport_ReadData", "Audit").Data("getAuditSearchParams"))
+    .PageSize(20)
+  )
+  .Scrollable(scrollable => scrollable.Enabled(true).Height(500))
+  .Reorderable(reorderable => reorderable.Columns(true))
+  .Resizable(resizable => resizable.Columns(true))
+  .Pageable(x => { x.PageSizes(new int[] { 20, 40 }); })
+  .Filterable()
+  .Sortable()
+  .Groupable()
+  )
+</div>

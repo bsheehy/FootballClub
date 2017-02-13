@@ -244,6 +244,58 @@ END
 
 
 
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'ab8289e9-a727-4fef-9f4c-a71800fc36c7', 1, N'e845cfe8-4a4a-4201-b030-a90986469e81', N'a576fe6a-711a-4db2-9588-c6b7f55a0352')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'9bee0289-0626-452c-b42b-a71800fc3b63', 1, N'f338788a-8e95-4799-98c4-a70f00e2dd00', N'a576fe6a-711a-4db2-9588-c6b7f55a0352')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'a7de7f27-f785-4da1-9c98-a71800fc3e0f', 1, N'9cb95b88-d35d-451d-a59f-a70f00e250b5', N'a576fe6a-711a-4db2-9588-c6b7f55a0352')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'bafa7e43-c055-45ef-a184-a71800fc610d', 1, N'561f455c-843a-4f06-b2af-df5456d3b5b5', N'a576fe6a-711a-4db2-9588-c6b7f55a0352')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'b75ad76d-f0dc-4cbc-a380-a71800fc7faa', 1, N'9cb95b88-d35d-451d-a59f-a70f00e250b5', N'a576fe6a-711a-4db2-9588-c6b7f55a0354')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'a9e9a38c-8b86-4de0-b6d5-a71800fc8395', 1, N'f338788a-8e95-4799-98c4-a70f00e2dd00', N'a576fe6a-711a-4db2-9588-c6b7f55a0354')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'74aa9d3f-80e1-4ea0-83aa-a71800fca0e1', 1, N'561f455c-843a-4f06-b2af-df5456d3b5b5', N'a576fe6a-711a-4db2-9588-c6b7f55a0354')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'6a566165-e3c7-4fbe-ba40-a71800fcbc74', 1, N'd8a75dd0-b864-4153-bf29-790d16f63745', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe0')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'b2ac9ba7-f60a-4931-a2d8-a71800fcc35f', 1, N'2adc084f-c38c-4f6e-adfa-00c5e87809e7', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe0')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'6e44a1db-14de-4a85-9726-a71800ff3f3c', 1, N'afc2dd49-aee4-48e8-a4f0-748fa0fa7827', N'a576fe6a-711a-4db2-9588-c6b7f55a0355')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'2614d192-69a2-4a9d-8b77-a71800ff5316', 1, N'4dd48dc4-38c2-4118-bb69-0e8e848303b5', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe4')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'51370947-f466-474c-822a-a71800ff6462', 1, N'9cb95b88-d35d-451d-a59f-a70f00e250b5', N'a576fe6a-711a-4db2-9588-c6b7f55a0351')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'66147e21-7bb4-4e11-a7b5-a71800ff77cc', 1, N'c582bf3a-8be2-4e09-954c-a202c163461b', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe3')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'ddf8ed81-0e44-4cd9-b520-a71800ff96d7', 1, N'2adc084f-c38c-4f6e-adfa-00c5e87809e7', N'a576fe6a-711a-4db2-9588-c6b7f55a0350')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'a66df220-52e3-4bf3-8da5-a71800ff9975', 1, N'986b55af-b092-4142-94b0-1e52c18224dc', N'a576fe6a-711a-4db2-9588-c6b7f55a0350')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'c9b1c50a-29d0-4361-95de-a71800ffc40f', 1, N'2198874b-47c8-4969-bc69-f1654ef071b3', N'a576fe6a-711a-4db2-9588-c6b7f55a0353')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'ad42e46a-38b8-4523-a336-a71800ffc6c8', 1, N'f338788a-8e95-4799-98c4-a70f00e2dd00', N'a576fe6a-711a-4db2-9588-c6b7f55a0353')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'f699255f-61d4-4a6c-bb1e-a71800ffe8a1', 1, N'd8a75dd0-b864-4153-bf29-790d16f63745', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe1')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'cface6e3-0118-43c5-bfdf-a71801009693', 1, N'c168ee5d-a9b0-46f2-ba8b-ebbd84f8845f', N'a576fe6a-711a-4db2-9588-c6b7f55a0357')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'986ee2c1-bfc6-45a6-ba11-a7180100bb38', 1, N'561f455c-843a-4f06-b2af-df5456d3b5b5', N'a576fe6a-711a-4db2-9588-c6b7f55a0356')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'cbc3f529-53b4-4a51-9a34-a7180100bdd2', 1, N'e845cfe8-4a4a-4201-b030-a90986469e81', N'a576fe6a-711a-4db2-9588-c6b7f55a0356')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'68fc2537-f633-4dc9-b7e8-a7180101857c', 1, N'e4147d9c-d685-44db-8510-36673abc77db', N'a576fe6a-711a-4db2-9588-c6b7f55a0356')
+
+INSERT [dbo].[club_team_admin] ([oid], [orev], [user], [team]) VALUES (N'96caf9f6-b884-45f7-812b-a71801019a44', 1, N'afc2dd49-aee4-48e8-a4f0-748fa0fa7827', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe6')
+
+
+
+
+
+
 END TRY
 BEGIN CATCH
 	IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
