@@ -26,6 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resources", "..\DotNetLib\R
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "db", "db", "{4D759B1B-86FD-47B1-9AA9-026FFB74EB88}"
 	ProjectSection(SolutionItems) = preProject
+		db\FrRocksUsers.txt = db\FrRocksUsers.txt
 		db\makefile = db\makefile
 		db\ReadMe.txt = db\ReadMe.txt
 		db\schema.sql = db\schema.sql
@@ -41,6 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "staticdata", "staticdata", 
 		db\staticdata\01_StaticData.sql = db\staticdata\01_StaticData.sql
 		db\staticdata\02_StaticUsers.sql = db\staticdata\02_StaticUsers.sql
 		db\staticdata\03_FrRocksData.sql = db\staticdata\03_FrRocksData.sql
+		db\staticdata\04_FrRocksImportedData.sql = db\staticdata\04_FrRocksImportedData.sql
 		db\staticdata\99_StaticData_End.sql = db\staticdata\99_StaticData_End.sql
 	EndProjectSection
 EndProject

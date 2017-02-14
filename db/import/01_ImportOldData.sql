@@ -5,6 +5,8 @@
 BEGIN TRANSACTION;
 BEGIN TRY
 
+  EXEC [dbo].[sp_Audit_DisableAuditTriggers]
+
 /*
 DELETE FROM [club_lotto_ticket_direct_debit]
 DELETE FROM [club_person]
@@ -147,7 +149,7 @@ Begin
     Drop Table #TempNumbers
 End
 
-
+  EXEC [dbo].[sp_Audit_EnableAuditTriggers]
 
 END TRY
 BEGIN CATCH

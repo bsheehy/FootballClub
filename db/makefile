@@ -116,7 +116,7 @@ installers: mkinstalldir installscripts dbsetupbin
 
 
 #Setup Database table structures with constraints, static data and audit-trail (no Diamond Fire - triggers, view, functions or stored procedures added)
-tables: clean cleanSqlLogs schema.sql tables.log add_constraints.log auditTrail elmah sqlStoredprocs sqlTriggers staticData auditApexSQL_UseSqlScriptsOnly
+tables: clean cleanSqlLogs schema.sql tables.log add_constraints.log auditTrail elmah sqlStoredprocs staticData sqlTriggers auditApexSQL_UseSqlScriptsOnly
 
 
 #.PHONY: add_constraints.log
@@ -225,12 +225,12 @@ importExistingData: $(patsubst %.sql,%.log,$(sort $(wildcard import/*.sql)))
 	@echo ok > $@
 
 
-  # Builds for testing various components
-all_NewDatabaseTest: boot clean tables importExistingData
+  # Builds for testing various components all_NewDatabaseTest: boot clean tables importExistingData
+all_NewDatabaseTest: boot clean tables
 	
 
 # Builds for testing various components
-all_NewDatabase: boot clean tables importExistingData auditApexSQL
+all_NewDatabase: boot clean tables auditApexSQL
 
 
 
