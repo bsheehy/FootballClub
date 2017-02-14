@@ -53,7 +53,7 @@ namespace FrRocks.Utils
 
     public static SelectList MembershipTypesForAdmin(ISession session, User user, bool? activeOnly = null, int? yearLimit = null)
     {
-      if (user.HasRole(user, Constants.AddPersonMembershipRoleNames) == false)
+      if (user.HasRole(user, Constants.CommitteOrAboveRoleNames) == false)
       {
         return null;
       }

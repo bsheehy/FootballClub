@@ -151,15 +151,25 @@ namespace Club.Services.Controllers
       return false;
     }
 
+    /// <summary>
+    /// Person must be a member of Committe Role or higher to delete Person Membership
+    /// </summary>
+    /// <param name="validatonDictionary"></param>
+    /// <param name="entity"></param>
+    /// <returns></returns>
     public bool PersonMembershipDelete(IValidationDictionary validatonDictionary, ref PersonMembershipType entity)
     {
       try
       {
-        entity.Active = false;
+        if (userController.LoggedOnUser.HasRole(userController.LoggedOnUser, Constants.CommitteOrAboveRoleNames) == false)
+        {
+          validatonDictionary.AddError("Permissions", "User must be in Committee Role or higher to delete Membership Details.");
+        }
+        //entity.Active = false;
         if (validatonDictionary.IsValid)
         {
           this.session.BeginTransaction();
-          this.session.SaveOrUpdate(entity);
+          this.session.Delete(entity);
           this.session.Transaction.Commit();
           return true;
         }
@@ -193,6 +203,10 @@ namespace Club.Services.Controllers
         validatonDictionary.AddError("MembershipOid", "You can not enter duplicate memberships.");
       }
 
+      if (userController.LoggedOnUser.HasRole(userController.LoggedOnUser, Constants.CommitteOrAboveRoleNames) == false)
+      {
+        validatonDictionary.AddError("Permissions", "User must be in Committee Role or higher to delete Membership Details.");
+      }
       //No Year membership duplicates
     }
 
@@ -202,7 +216,7 @@ namespace Club.Services.Controllers
     /// <returns></returns>
     public bool CanUserEditMembership()
     {
-      if (userController.LoggedOnUser.HasRole(userController.LoggedOnUser, Constants.AddPersonMembershipRoleNames))
+      if (userController.LoggedOnUser.HasRole(userController.LoggedOnUser, Constants.CommitteOrAboveRoleNames))
       {
         return true;
       }

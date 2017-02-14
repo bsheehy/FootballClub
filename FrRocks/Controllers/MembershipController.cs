@@ -204,6 +204,7 @@ namespace FrRocks.Controllers
       MembershipServiceController service = (MembershipServiceController)this.Injector.Activate(typeof(MembershipServiceController));
       if (service.PersonMembershipDelete(new ModelStateWrapper(this.ModelState), ref domainEntity))
       {
+        IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
         Mapper.Map<PersonMembershipType, ModelPersonMembershipType>(domainEntity, product);
         return Json(new[] { product }.ToDataSourceResult(request, ModelState));
       }

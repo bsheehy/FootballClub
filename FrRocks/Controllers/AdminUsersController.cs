@@ -48,11 +48,9 @@ namespace FrRocks.Controllers
             //check if hosted
             try
             {
+              model.Entity.Email = model.Entity.Login;
               if (Convert.ToBoolean(ConfigurationManager.AppSettings["mallon.HostedInCloud"]))
               {
-                model.Entity.Email = model.Entity.Login;
-
-
                 //check if account was locked but is now unlocked
                 if (accountWasLocked && !model.Entity.AccountLocked)
                 {

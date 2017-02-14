@@ -7,6 +7,11 @@
 @model Mallon.Core.Web.Models.TypedModel<Person>
 @{
   PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  bool editPersonRelatedEntities = false;
+  if (ViewBag.EditPersonRelatedEntities != null)
+  {
+    editPersonRelatedEntities = ViewBag.EditPersonRelatedEntities;
+  }
 }
 
 <div id="dMembershipGrid">
@@ -15,7 +20,7 @@
   .HtmlAttributes(new { @class = "ignore" })
   .ToolBar(toolbar =>
   {
-    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    if (editPersonRelatedEntities && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
     {
       toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
     }
@@ -29,7 +34,7 @@
     columns.Bound(p => p.Active).Title("Active").Width(80);
     columns.ForeignKey(p => p.MembershipTypeOid, (System.Collections.IEnumerable)ViewData["MembershipTypes"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Membership Type").Width(250);
     columns.Bound(p => p.Date).Title("Paid Date").Format("{0:dd/MMM/yyyy}").Width(150);
-    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    if (editPersonRelatedEntities && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
     {
       //columns.Command(command => command.Custom("Edit Person").Click("editPersonNewTab")).Width(100).HtmlAttributes(new { style = "min-width:90px;max-width:90px;" });
       columns.Command(command => { command.Edit(); command.Destroy(); }).Width(150);

@@ -85,6 +85,15 @@ namespace Club.Services.Utils
       return userController.LoggedOnUser.HasRole(userController.LoggedOnUser, Constants.SuperAdministrationRoleOids);
     }
 
+    public static bool UserIsCommitteeOrAbove(IUserController userController)
+    {
+      /// <summary>
+      /// Predfined list of Roles that are allowed to access the Administration section
+      /// </summary>
+      return userController.LoggedOnUser.HasRole(userController.LoggedOnUser, Constants.SuperAdministrationRoleOids);
+    }
+
+
     public static string WelcomeUserMessage(IUserController userController)
     {
       DateTime now = DateTime.Now;

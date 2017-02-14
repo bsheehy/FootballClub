@@ -51,7 +51,7 @@
     })
     .Events(e =>
       {
-        e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+        e.Error("kendoGridErrorHandler('#gridPersonQualifications')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
       })
     .Update(update => update.Action("PersonQualification_Update", "Person"))
     .Destroy(update => update.Action("PersonQualification_Delete", "Person"))

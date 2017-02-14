@@ -537,19 +537,19 @@ namespace Club.Services.Controllers
       }
       if (ValidateLottoNumber(entity.No1) == false)
       {
-        validatonDictionary.AddError("No1", "No1 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No1", "No1 must be a number between 1 and 34.");
       }
       if (ValidateLottoNumber(entity.No2) == false)
       {
-        validatonDictionary.AddError("No2", "No2 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No2", "No2 must be a number between 1 and 34.");
       }
       if (ValidateLottoNumber(entity.No3) == false)
       {
-        validatonDictionary.AddError("No3", "No3 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No3", "No3 must be a number between 1 and 34.");
       }
       if (ValidateLottoNumber(entity.No4) == false)
       {
-        validatonDictionary.AddError("No4", "No4 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No4", "No4 must be a number between 1 and 34.");
       }
 
       if (entity.No1.Equals(entity.No2) || entity.No1.Equals(entity.No3) || entity.No1.Equals(entity.No4)
@@ -580,7 +580,7 @@ namespace Club.Services.Controllers
 
     private bool ValidateLottoNumber(int number)
     {
-      if (number > 0 && number <= 30)
+      if (number > 0 && number <= 34)
       {
         return true;
       }

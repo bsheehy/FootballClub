@@ -7,6 +7,11 @@
 @model Mallon.Core.Web.Models.TypedModel<Person>
 @{
   PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  bool editPersonRelatedEntities = false;
+  if (ViewBag.EditPersonRelatedEntities != null)
+  {
+    editPersonRelatedEntities = ViewBag.EditPersonRelatedEntities;
+  }
 }
 
 <div id="dDirectDebitsGrid">
@@ -15,7 +20,7 @@
   .HtmlAttributes(new { @class = "ignore" })
   .ToolBar(toolbar =>
   {
-    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    if (editPersonRelatedEntities && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
     {
       toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
     }
@@ -33,7 +38,7 @@
     columns.Bound(p => p.No4).Title("No 4").EditorTemplateName("Integer").Width(100);
     columns.Bound(p => p.StartDate).Title("Start Date").Format("{0:dd/MMM/yyyy}").Width(150);
     columns.Bound(p => p.EndDate).Title("End Date").Format("{0:dd/MMM/yyyy}").Width(150);
-    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    if (editPersonRelatedEntities && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
     {
       columns.Command(command => { command.Edit(); command.Destroy(); }).Width(172);
     }
@@ -50,7 +55,8 @@
     })
     .Events(e =>
       {
-        e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+        e.Error("kendoGridErrorHandler('#gridLottoTicketDirectDebit')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+        //e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
       })
     .Update(update => update.Action("LottoTicketDirectDebit_Update", "Lotto"))
     .Destroy(update => update.Action("LottoTicketDirectDebit_Delete", "Lotto"))

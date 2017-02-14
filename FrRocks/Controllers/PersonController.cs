@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Club.Domain;
 using Club.Domain.Artifacts;
 using Club.Domain.Models;
 using Club.Domain.Queries;
@@ -10,7 +11,6 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Mallon.Core.Artifacts;
 using Mallon.Core.Web.Models;
-using Mallon.Documents.Artifacts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -88,8 +88,11 @@ namespace FrRocks.Controllers
         ViewBag.PnlView = Enum.GetName(typeof(PageViewType), PageViewType.Edit);
       }
 
-      ViewBag.EditLottoDirectDebits = UserController.EffectiveUser.GetClassAccess(typeof(AttachedDocument)).Allows(Access.Update);
-      ViewBag.EditAttachedDocs = UserController.EffectiveUser.GetClassAccess(typeof(AttachedDocument)).Allows(Access.Update);
+      bool editPersonRelatedEntities = this.UserController.LoggedOnUser.HasRole(UserController.LoggedOnUser, Constants.CommitteOrAboveRoleNames);
+      ViewBag.EditPersonRelatedEntities = editPersonRelatedEntities;
+      ViewBag.EditAttachedDocs = editPersonRelatedEntities;
+
+      //ViewBag.EditAttachedDocs = UserController.EffectiveUser.GetClassAccess(typeof(AttachedDocument)).Allows(Access.Update);
       UtilsAttachedDocuments.SetViewDataAttachedDocuments(this.DbSession, ViewData, typeof(Person), m.Entity.Oid);
       SetViewBagSelectLists(m);
       return View(m);
@@ -116,6 +119,9 @@ namespace FrRocks.Controllers
       }
 
       //If not sucessful saved Person then return to View
+      bool editPersonRelatedEntities = this.UserController.LoggedOnUser.HasRole(UserController.LoggedOnUser, Constants.CommitteOrAboveRoleNames);
+      ViewBag.EditPersonRelatedEntities = editPersonRelatedEntities;
+      ViewBag.EditAttachedDocs = editPersonRelatedEntities;
       SetViewBagSelectLists(m);
       return View(m);
     }
@@ -498,7 +504,6 @@ namespace FrRocks.Controllers
 
     #endregion
 
-
     #region Qualification Members
 
     public PartialViewResult SelectQualificationMember(Guid qualificationOid, string controlId = null)
@@ -518,7 +523,7 @@ namespace FrRocks.Controllers
     [ActionName("SelectQualificationMember")]
     public ActionResult SelectQualificationMemberPost(Guid personOid, Guid qualificationOid)
     {
-      if (this.UserController.EffectiveUser.GetClassAccess(typeof(Team)).Allows(Access.Update) == true)
+      if (this.UserController.EffectiveUser.GetClassAccess(typeof(Team)).Allows(Access.Update) == true && this.UserController.LoggedOnUser.HasRole(UserController.LoggedOnUser, Constants.CommitteOrAboveRoleNames))
       {
         QualificationServiceController service = (QualificationServiceController)this.Injector.Activate(typeof(QualificationServiceController));
         if (service.SelectPersonQualification(new ModelStateWrapper(this.ModelState), personOid, qualificationOid))
@@ -535,6 +540,10 @@ namespace FrRocks.Controllers
         throw new ModelStateException(this.ModelState);
       }
     }
+
+    //bool editPersonRelatedEntities = this.UserController.LoggedOnUser.HasRole(UserController.LoggedOnUser, Constants.CommitteOrAboveRoleNames);
+    //  ViewBag.EditLottoDirectDebits = editPersonRelatedEntities;
+    //  ViewBag.EditAttachedDocs = editPersonRelatedEntities;
 
     #endregion
 

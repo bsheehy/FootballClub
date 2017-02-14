@@ -182,6 +182,7 @@ namespace FrRocks.Controllers
     [AcceptVerbs(HttpVerbs.Post)]
     public ActionResult TeamMember_Update([DataSourceRequest] DataSourceRequest request, ModelTeamMember product)
     {
+      TeamServiceController service = (TeamServiceController)this.Injector.Activate(typeof(TeamServiceController));
       if (this.UserController.EffectiveUser.GetClassAccess(typeof(TeamMember)).Allows(Access.Update) == false)
       {
         return RedirectToAction("View", "Error", new
@@ -195,7 +196,6 @@ namespace FrRocks.Controllers
       domainEntity.TeamMemberType = this.DbSession.Get<TeamMemberType>(product.TeamMemberTypeOid);
       IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
       Mapper.Map<ModelTeamMember, TeamMember>(product, domainEntity);
-      TeamServiceController service = (TeamServiceController)this.Injector.Activate(typeof(TeamServiceController));
       if (service.SaveTeamMember(new ModelStateWrapper(this.ModelState), ref domainEntity))
       {
         Mapper.Map<TeamMember, ModelTeamMember>(domainEntity, product);

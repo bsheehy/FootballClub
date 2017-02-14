@@ -58,7 +58,7 @@
     })
     .Events(e =>
       {
-        e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+        e.Error("kendoGridErrorHandler('#gridPersonGuardian')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
       })
     .Destroy(update => update.Action("PersonGuardian_GridDelete", "Person"))
     .Read(read => read.Action("PersonGuardian_GridRead", "Person", new { personOid = Model.Entity.Oid }))

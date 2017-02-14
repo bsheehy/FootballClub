@@ -1,71 +1,131 @@
+Web site:
+https://frrocksgfc.com/
+
+
+Folks various peoples login details are on this email. Please be patient when using the system I’ve a few kinks to sort out and a few changes to improve performance. Any suggestions or feedback is welcome and any bugs you encounter just email me about them.
+
+The first thing everyone should do is:
+1.	Change your password
+a.	To do this login with your username and password and click on the ‘My Account’ button at top of screen. You can change your password in there.
+2.	Administer your team
+a.	I’ve added most people as Team Admins for their respective teams. If I’ve missed you then send me an email and I’ll sort that out.
+b.	If you are over a team you should add your Players as People then add these players to the team.
+c.	NOTE: Always Search for a Person before adding a New One otherwise we will end up with duplicate Person records.
+3.	Committee Members
+a.	Committee Members can add Committee Minutes  through the system. 
+b.	After completing your minutes you might want to print them off to keep a hard copy.
+
+Every User has a Role which are Administrator, Committee Role, Club Role these roles are explained below:
+•	Administrator – can do anything in the system include add\update User accounts,  add users to teams admins, add\edit lotto, add person membership
+•	Committee Role - add\edit lotto, add person membership. Administer any teams where they have been added as a Team Admin.
+•	Club Role – add documents and administer their teams.
+
+
+List of User names and Password:
+
+User names and Password:
+ 
+Aidrian Gilmore
+adrian.gilmore@hotmail.com
+gilly124!
+ 
+ 
+Seamus Coyle
+seamiecoyle@hotmail.co.uk
+sCoyle286!
+ 
+ 
 Stephen Mulligan
 stephen_mulligan@hotmail.com
 Stephen123!
-
-
-Column Quinn
-colliequinn@hotmail.com
+ 
+ 
+Colin Quinn
+treasurer.cookstownfrrocks.tyrone@gaa.ie 
 Cquinn5544!
-
-
+ 
+ 
 Donald Neeson
-neesond@staffordlynch.ie
+neesond@staffordlynch.ie 
 Dneeson999
-
-
-Eoin Devlin
-eoindevlin@hotmail.com
+ 
+ 
+Eoin Devlin 
+eoindevlin@hotmail.com 
 Eoin789!
-
-
+ 
+ 
 Ryan Pickering
-pickering-r@email.ulster.ac.uk
+pickering-r@email.ulster.ac.uk 
 Ryan1234$
-
-
+ 
+ 
 Caroline Sheehy
-Caroline.Sheehy@midulstercouncil.org
+Caroline.Sheehy@midulstercouncil.org 
 Caroline432$
-
-
+ 
+ 
 Connor Mc Fadden
-conormcfadden25@btinternet.com
+conormcfadden25@btinternet.com 
 Connor555!
-
-
+ 
+ 
 Stephen Conway 
-sconway57@yahoo.co.uk
+sconway57@yahoo.co.uk 
 Conway678!
-
-
+ 
+ 
 Gary Fitzpatrick
-fitzpatrickgj@hotmail.com
+fitzpatrickgj@hotmail.com 
 Fitzpatrick856!
-
-
+ 
+ 
 Collin Hampshey
-colinhampsey@aol.com
+colinhampsey@aol.com 
 cHampshey889!
-
-
-Mark Mc Meal
-markmcmeal@hotmail.com
+ 
+ 
+Mark Mc Neill
+Mark.mcneill@asmmagherafelt.com 
 Mark887!
-
-
+ 
+ 
 Clodagh Mc Cracken
-ClodaghMcCracken@hotmail.com
+clodagh_mc_cracken@outlook.com 
 Clodagh775!
-
-
+ 
+ 
 Claire Bell
-ClaireBell@hotmail.com
+Clairemcg7@hotmail.co.uk 
 Cbell487!
-
-
+ 
+ 
 Rory Mc Garrity
-RoryMcGarrity@hotmail.com
+Shazza10@tiscali.co.uk 
 McGarrity443!
+ 
+ 
+Matthew Carberry
+mcarberry1712@hotmail.com 
+mCarberry777!
+ 
+ 
+Nicky Doris
+Nicky.doris@midulstercouncil.org 
+nDoris609!
+ 
+ 
+Raymond Donnelly
+raymond-donnelly77@yahoo.com
+rDonnelly765!
 
 
 
+ 
+
+
+
+
+
+
+	

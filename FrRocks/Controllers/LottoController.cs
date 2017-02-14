@@ -514,6 +514,7 @@ namespace FrRocks.Controllers
         Mapper.Map<LottoTicketDirectDebit, ModelLottoTicketDirectDebit>(domainEntity, product);
         return Json(new[] { product }.ToDataSourceResult(request, ModelState));
       }
+      //throw new ModelStateException(this.ModelState);
       return Json(new[] { product }.ToDataSourceResult(request, ModelState));
     }
 
