@@ -135,7 +135,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<Committee> teams = GetCommittees(filter);
@@ -163,7 +163,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<CommitteeMember> teamMembers = GetCommitteeMembers(filter);
@@ -237,20 +237,22 @@ namespace FrRocks.Controllers
     {
       CommitteeServiceController service = (CommitteeServiceController)this.Injector.Activate(typeof(CommitteeServiceController));
       CommitteeMinute committeeMinute = new CommitteeMinute();
+      ModelCommitteeMinute m;
+
       if (committeeMinuteOid.HasValue && committeeMinuteOid != Guid.Empty)
       {
         committeeMinute = this.DbSession.Get<CommitteeMinute>(committeeMinuteOid);
+        IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
+        m = Mapper.Map<ModelCommitteeMinute>(committeeMinute);
       }
       else
       {
-        committeeMinute.Committee = this.DbSession.Get<Committee>(committeeOid);
+        m = new ModelCommitteeMinute(this.DbSession.Get<Committee>(committeeOid));
       }
       ViewBag.EditCommitteeMinute = service.CanUserEditCommittee(committeeMinute.Committee);
       ViewBag.CommitteeMinutesControlId = controlId;
-      IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
-      ModelCommitteeMinute result = Mapper.Map<ModelCommitteeMinute>(committeeMinute);
 
-      return PartialView(result);
+      return PartialView(m);
     }
 
     public ActionResult CommitteeMinuteCreate(Guid committeeOid)
@@ -258,7 +260,7 @@ namespace FrRocks.Controllers
       Committee committee = this.DbSession.Get<Committee>(committeeOid);
       ModelCommitteeMinute m = new ModelCommitteeMinute(committee);
       CommitteeServiceController service = (CommitteeServiceController)this.Injector.Activate(typeof(CommitteeServiceController));
-      ViewBag.CreateCommitteeMinute = service.CanUserEditCommittee(committee); ;
+      ViewBag.CreateCommitteeMinute = service.CanUserEditCommittee(committee);
       ViewBag.Committees = UtilsSelectLists.CommitteesWhereUserIsAdminOrAdministrator(this.DbSession, this.UserController.EffectiveUser, true);
       return View(m);
     }

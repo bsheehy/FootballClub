@@ -51,6 +51,7 @@
     .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
     .Model(model => model.Id(p => p.Oid))
     .Read(read => read.Action("SearchPersonQualificationResults_ReadData", "Qualification").Data("getQualificationMemberSearchParams"))
+        .PageSize(30)
     )
   )
 </div>

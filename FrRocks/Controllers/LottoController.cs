@@ -304,7 +304,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<LottoResult> lottoResults = GetLottoResults(filter);
@@ -372,7 +372,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<LottoResultWinner> lottoResultWinners = this.DbSession.QueryOver<LottoResultWinner>().Where(x => x.LottoResult.Oid == lottoResultOid).List<LottoResultWinner>();
@@ -531,7 +531,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<LottoTicketDirectDebit> entities = GetLottoTicketDirectDebits(filter);

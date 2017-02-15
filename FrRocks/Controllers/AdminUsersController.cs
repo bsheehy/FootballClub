@@ -163,16 +163,23 @@ namespace FrRocks.Controllers
       IEnumerable<KeyValuePair<string, Guid>> result;
 
       var current = this.UserController.LoggedOnUser;
-      if (this.UserController.LoggedOnUser.HasRole(current, "Super Administrator"))
+      if (this.UserController.LoggedOnUser.HasRole(current, Constants.SuperAdministrationRoleOids))
       {
         result = qry.List()
         .Select(x => new KeyValuePair<string, Guid>(GetText(x), x.Oid));
       }
       else
       {
-        result = qry.List()
-          .Where(x => x.Login != "dfwSuperAdmin@mallontechnology.com")
-          .Select(x => new KeyValuePair<string, Guid>(GetText(x), x.Oid));
+        //All users except Super Admins
+        List<User> users = new List<User>();
+        foreach (User user in qry.List())
+        {
+          if (user.HasRole(user, Constants.SuperAdministrationRoleOids) == false)
+          {
+            users.Add(user);
+          }
+        }
+        result = users.Select(x => new KeyValuePair<string, Guid>(GetText(x), x.Oid));
       }
       // Return it to the view
       SelectList list = new SelectList(result, "Value", "Key", oid);

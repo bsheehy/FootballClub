@@ -80,17 +80,19 @@
       columns.Bound(p => p.Phone).Title("Phone").Width("100px");
       columns.Bound(p => p.Email).Title("Email").Width("100px");
     })
+  
   .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
   .Sortable()
   .Filterable()
   .Groupable()
   .Scrollable(s => s.Enabled(true).Height("auto"))
   .Selectable(x => x.Type(GridSelectionType.Cell))
-  .DataSource(ds => ds
+  .DataSource(ds => ds   
     .Ajax()
     .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
     .Model(model => model.Id(p => p.Oid))
     .Read(read => read.Action("SearchResults_ReadData", "Person").Data("getPersonSearchParams"))
+    .PageSize(30)
   )
   )
 </div>

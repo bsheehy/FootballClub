@@ -15,7 +15,7 @@
   <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
   @(Html.Kendo().Grid<ModelCommittee>()
   .Name("searchGridResults")
-  .AutoBind(false)
+  .AutoBind(true)
   .ToolBar(tools =>
   {
     tools.Excel();
@@ -41,6 +41,7 @@
     .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
     .Model(model => model.Id(p => p.Oid))
     .Read(read => read.Action("SearchResults_ReadData", "Committee").Data("getCommitteeMemberSearchParams"))
+        .PageSize(30)
   )
   )
 </div>

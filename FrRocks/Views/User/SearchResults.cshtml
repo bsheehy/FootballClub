@@ -53,6 +53,7 @@
     .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
     .Model(model => model.Id(p => p.Oid))
     .Read(read => read.Action("SearchResults_ReadData", "User").Data("getUserSearchParams"))
+        .PageSize(30)
   )
   )
 </div>

@@ -133,7 +133,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<Qualification> qualifications = GetQualifications(filter);
@@ -242,7 +242,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<PersonQualification> personQualifications = GetPersonQualifications(filter);

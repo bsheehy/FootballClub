@@ -134,7 +134,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<PersonMembershipType> people = GetPersonMembership(filter);

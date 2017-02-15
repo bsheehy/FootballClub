@@ -46,6 +46,7 @@
   .HtmlAttributes(new { @class = "ignore" })
   .ToolBar(toolbar =>
   {
+    toolbar.Excel();
     if (teamEdit && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
     {
       toolbar.Template(@<text>

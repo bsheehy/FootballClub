@@ -46,6 +46,7 @@
     .Model(model => model.Id(p => p.Oid))
     .Read(read => read.Action("LottoResult_GridRead", "Lotto").Data("getLottoResultSearchParams"))
     .Destroy(read => read.Action("LottoResult_Delete", "Lotto"))
+        .PageSize(30)
     )
   )
 </div>

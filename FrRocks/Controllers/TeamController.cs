@@ -318,7 +318,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<Team> teams = GetTeams(filter);
@@ -346,7 +346,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 10;
+        request.PageSize = 30;
       }
 
       IEnumerable<TeamMember> teamMembers = GetTeamMembers(filter);
