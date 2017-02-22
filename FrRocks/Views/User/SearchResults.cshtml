@@ -42,7 +42,7 @@
       columns.Bound(p => p.Login).Title("Login").Width("150px");
       columns.Bound(p => p.Email).Title("Email").Width("150px");
     })
-  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()
   .Filterable()
   .Groupable()

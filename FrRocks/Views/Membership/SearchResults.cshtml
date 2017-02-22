@@ -42,7 +42,7 @@
       columns.Bound(p => p.MembershipTypeStartDate).Title("Start Date").Format("{0:dd/MMM/yyyy}").Width(150);
       columns.Bound(p => p.MembershipTypeEndDate).Title("End Date").Format("{0:dd/MMM/yyyy}").Width(150);
     })
-  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()
   .Filterable()
   .Groupable()

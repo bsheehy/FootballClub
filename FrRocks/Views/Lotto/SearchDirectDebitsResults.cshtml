@@ -37,7 +37,7 @@
       columns.Bound(p => p.No4).Title("No 4").Width("80px");
       columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width("200px");
     })
-  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()
   .Filterable()
   .Groupable()

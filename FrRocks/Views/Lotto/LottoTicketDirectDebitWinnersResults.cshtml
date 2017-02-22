@@ -15,7 +15,7 @@
   <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
   @(Html.Kendo().Grid<ModelLottoTicketDirectDebit>()
   .Name("searchGridResults")
-  .AutoBind(true)
+  .AutoBind(false)
   .ToolBar(tools =>
   {
     tools.Excel();
@@ -38,7 +38,7 @@
       columns.Bound(p => p.No4).Title("No 4").Width("80px");
       columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width("200px");
     })
-  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()
   .Filterable()
   .Groupable()
@@ -53,43 +53,3 @@
   )
   )
 </div>
-
-
-@*<div id="dPremSearchResults">
-  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
-  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
-  @(Html.Kendo().Grid<ModelLottoTicketDirectDebit>()
-  .Name("searchGridResults")
-  .AutoBind(false)
-  .ToolBar(tools =>
-  {
-    tools.Excel();
-  })
-  .Columns(columns =>
-    {
-      columns.Bound(p => p.Oid).Hidden();
-      columns.Bound(p => p.Active).Title("Active").Width("80px");
-      //columns.Bound(p => p.ResultMatches).Title("Result Matches").Width("150px");
-      columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("200px");
-      columns.Bound(p => p.No1).Title("No 1").Width("80px");
-      columns.Bound(p => p.No2).Title("No 2").Width("80px");
-      columns.Bound(p => p.No3).Title("No 3").Width("80px");
-      columns.Bound(p => p.No4).Title("No 4").Width("80px");
-      columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width("200px");
-    })
-  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
-  .Sortable()
-  .Filterable()
-  .Groupable()
-  .Scrollable(s => s.Enabled(true).Height("auto"))
-  .Selectable(x => x.Type(GridSelectionType.Cell))
-  .DataSource(ds => ds
-  .Ajax()
-  .Events(e => e.Error("kendoGridErrorHandler").RequestEnd("hideProgress").Change("searchOnChange"))
-    //.Events(e => e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChange"))
-  .Model(model => model.Id(p => p.Oid))
-      .Read(read => read.Action("LottoTicketDirectDebitWinners_Read", "Lotto").Data("getLottoTicketDirectDebitSearchParams"))
-  )
-  )
-</div>*@
-

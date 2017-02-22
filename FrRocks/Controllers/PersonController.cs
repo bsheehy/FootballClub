@@ -122,6 +122,7 @@ namespace FrRocks.Controllers
       bool editPersonRelatedEntities = this.UserController.LoggedOnUser.HasRole(UserController.LoggedOnUser, Constants.CommitteOrAboveRoleNames);
       ViewBag.EditPersonRelatedEntities = editPersonRelatedEntities;
       ViewBag.EditAttachedDocs = editPersonRelatedEntities;
+      UtilsAttachedDocuments.SetViewDataAttachedDocuments(this.DbSession, ViewData, typeof(Person), m.Entity.Oid);
       SetViewBagSelectLists(m);
       return View(m);
     }

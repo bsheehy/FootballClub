@@ -43,6 +43,10 @@ namespace Club.Domain.Models
 
     public virtual string PersonEmail { get; set; }
 
+    public virtual bool PersonAlergies { get; set; }
+
+    public virtual string PersonAlergiesDetails { get; set; }
+
     public virtual string PersonComments { get; set; }
 
     [DisplayName("Name")]

@@ -107,17 +107,17 @@
   .Expanded(true)
   .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
   .Content(@<div id="dPerson" class="dfw-colorText">
-              <div id="headerSubMenu">
-                @(Html.Kendo().Button()
-      .Name("frmSubmit")
-      .Enable(false)
-      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
-      .ImageUrl(Url.Content("~/Images/16px/check.png"))
-      .Content("Save")
-      .Events(x => x.Click("clickHiddenSubmit")))
+    <div id="headerSubMenu">
+      @(Html.Kendo().Button()
+        .Name("frmSubmit")
+        .Enable(true)
+        .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+        .ImageUrl(Url.Content("~/Images/16px/check.png"))
+        .Content("Save")
+        .Events(x => x.Click("clickHiddenSubmit")))
 
-                <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
-              </div>
+      <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+    </div>
 
     <table class="tbl2Cols">
       <tr>

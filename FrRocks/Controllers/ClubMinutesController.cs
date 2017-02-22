@@ -159,6 +159,7 @@ namespace FrRocks.Controllers
       }
 
       //If not sucessful saved ClubMinutes then return to View
+      UtilsAttachedDocuments.SetViewDataAttachedDocuments(this.DbSession, ViewData, typeof(CommitteeMinute), m.Entity.Oid);
       SetViewBagSelectLists(m);
       return View(m);
     }

@@ -117,6 +117,7 @@ namespace FrRocks.Controllers
       }
 
       //If not sucessful saved Committee then return to View
+      UtilsAttachedDocuments.SetViewDataAttachedDocuments(this.DbSession, ViewData, typeof(Committee), m.Entity.Oid);
       SetViewBagSelectLists(m);
       return View(m);
     }

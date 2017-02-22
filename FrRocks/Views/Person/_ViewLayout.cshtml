@@ -69,34 +69,3 @@
 )
 
 </div>
-
-
-
-@*<div>
-  @(Html.Kendo().PanelBar()
-  .Name("pnlPerson")
-  .ExpandMode(PanelBarExpandMode.Multiple)
-  .HtmlAttributes(new { style = "width:100%" })
-  .Items(panelbar =>
-  {
-    panelbar.Add().Text("Person Details")
-        //.ImageUrl("~/Images/16px/view.png")
-        .Expanded(true)
-        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
-        .Content(@<div>
-          @Html.Partial("~/Views/Person/_EditPanel.cshtml")
-        <br/></div>);
-
-    if (pnlViewUserAccess == PageViewType.Edit)
-    {
-      panelbar.Add().Text("Lotto Direct Debits")
-        //.ImageUrl("~/Images/16px/view.png")
-      .Expanded(true)
-      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
-      .Content(@<div>
-        @Html.Partial("~/Views/Person/PersonDirectDebitsGrid.cshtml", Model)
-      </div>);
-    }
-  })
-)
-</div>*@

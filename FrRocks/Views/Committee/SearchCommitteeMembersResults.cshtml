@@ -41,7 +41,7 @@
       columns.Bound(p => p.PersonAddressSingleLine).Title("Person Address").Width("300px");
       columns.Bound(p => p.CommitteeYear).Title("Committee Year").Width("150px");
     })
-  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()
   .Filterable()
   .Groupable()

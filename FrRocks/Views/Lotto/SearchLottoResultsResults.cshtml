@@ -27,14 +27,14 @@
       {
         columns.Bound(p => p.Oid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("ViewLottoResult", "Lotto") + "?Oid=#= Oid #' class='k-button'>View Details</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
-      columns.Bound(p => p.DrawDate).Title("Draw Date").Format("{0:dd/MMM/yyyy}").Width(150);
+      columns.Bound(p => p.LottoDrawDate).Title("Draw Date").Format("{0:dd/MMM/yyyy}").Width(150);
       columns.Bound(p => p.WinnersToString).Title("Winners").Width("200px");
       columns.Bound(p => p.No1).Title("No 1").Width("80px");
       columns.Bound(p => p.No2).Title("No 2").Width("80px");
       columns.Bound(p => p.No3).Title("No 3").Width("80px");
       columns.Bound(p => p.No4).Title("No 4").Width("80px");
     })
-  .Pageable(x => { x.PageSizes(new int[] { 30, 60}); })
+  .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()
   .Filterable()
   .Groupable()
