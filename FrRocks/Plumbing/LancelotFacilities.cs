@@ -1,4 +1,6 @@
-﻿using Castle.MicroKernel.Facilities;
+﻿using AuditApexSql.Controller;
+using AuditApexSql.Interfaces;
+using Castle.MicroKernel.Facilities;
 using Castle.MicroKernel.Registration;
 using Mallon.Core.Interfaces;
 using Mallon.Core.Logic;
@@ -53,6 +55,12 @@ namespace DiamondFireWeb.Gui.Plumbing
       Kernel.Register(
        Component.For<IAttachedDocsController>()
        .ImplementedBy<AttachedDocumentsController>()
+       .LifestylePerWebRequest()
+       );
+
+      Kernel.Register(
+       Component.For<IAuditController>()
+       .ImplementedBy<AuditController>()
        .LifestylePerWebRequest()
        );
 

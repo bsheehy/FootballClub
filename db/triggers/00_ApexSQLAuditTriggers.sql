@@ -166,15 +166,14 @@
 			[dbo].[tr_i_AUDIT_documents_type_path_configuration] [dbo].[tr_u_AUDIT_documents_type_path_configuration] [dbo].[tr_d_AUDIT_documents_type_path_configuration] 
      
    DATABASE:    .\SQL2012.ClubFrRocks
-   DATE:        12/02/2017 18:28:50
+   DATE:        22/02/2017 11:37:03
    =============================================================*/
-USE [ClubFrRocks]
 GO
 -- --------------------------------------------------------------------------------------------------------------
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_club_details]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:03
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -200,7 +199,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_club_details]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:03
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -217,7 +216,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -241,10 +240,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -252,7 +251,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -271,26 +270,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -309,7 +289,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[key] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -328,7 +308,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -347,7 +327,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -366,7 +346,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[history] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -385,7 +365,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_number] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -404,7 +384,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_street] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -423,7 +403,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_town] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -442,7 +422,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_county] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -461,7 +441,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_country] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -480,7 +460,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_post_code] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -499,7 +479,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_xlng_coord] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -573,7 +553,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_club_details]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -591,7 +571,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -615,10 +595,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -631,7 +611,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -673,57 +653,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([key])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -769,7 +703,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -815,7 +749,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -861,7 +795,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -907,7 +841,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -953,7 +887,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -999,7 +933,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -1045,7 +979,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -1091,7 +1025,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -1137,7 +1071,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -1183,7 +1117,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -1229,7 +1163,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -1277,7 +1211,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -1329,7 +1263,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_club_details]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -1346,7 +1280,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -1370,10 +1304,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -1382,7 +1316,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1403,28 +1337,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1445,7 +1358,7 @@ BEGIN
 		OLD.[key] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1466,7 +1379,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1487,7 +1400,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1508,7 +1421,7 @@ BEGIN
 		OLD.[history] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1529,7 +1442,7 @@ BEGIN
 		OLD.[address_number] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1550,7 +1463,7 @@ BEGIN
 		OLD.[address_street] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1571,7 +1484,7 @@ BEGIN
 		OLD.[address_town] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1592,7 +1505,7 @@ BEGIN
 		OLD.[address_county] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1613,7 +1526,7 @@ BEGIN
 		OLD.[address_country] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1634,7 +1547,7 @@ BEGIN
 		OLD.[address_post_code] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1655,7 +1568,7 @@ BEGIN
 		OLD.[address_xlng_coord] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1711,7 +1624,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_committee]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -1737,7 +1650,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_committee]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -1754,7 +1667,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -1778,10 +1691,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -1789,7 +1702,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1808,26 +1721,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1846,7 +1740,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1865,7 +1759,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[year] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1884,7 +1778,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1903,7 +1797,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[start_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1922,7 +1816,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[end_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -1941,7 +1835,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2015,7 +1909,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_committee]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -2033,7 +1927,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -2057,10 +1951,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -2073,7 +1967,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2115,57 +2009,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2211,7 +2059,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2257,7 +2105,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2303,7 +2151,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2349,7 +2197,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2395,7 +2243,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2441,7 +2289,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -2489,7 +2337,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -2541,7 +2389,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_committee]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -2558,7 +2406,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -2582,10 +2430,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -2594,7 +2442,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2615,28 +2463,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2657,7 +2484,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2678,7 +2505,7 @@ BEGIN
 		OLD.[year] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2699,7 +2526,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2720,7 +2547,7 @@ BEGIN
 		OLD.[start_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2741,7 +2568,7 @@ BEGIN
 		OLD.[end_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2762,7 +2589,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2818,7 +2645,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_committee_admin]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -2844,7 +2671,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_committee_admin]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -2861,7 +2688,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -2885,10 +2712,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -2896,7 +2723,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2915,26 +2742,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -2953,7 +2761,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[user] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3027,7 +2835,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_committee_admin]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -3045,7 +2853,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -3069,10 +2877,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -3085,7 +2893,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -3127,57 +2935,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([user])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -3223,7 +2985,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -3271,7 +3033,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -3323,7 +3085,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_committee_admin]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -3340,7 +3102,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -3364,10 +3126,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -3376,7 +3138,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3397,28 +3159,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3439,7 +3180,7 @@ BEGIN
 		OLD.[user] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3495,7 +3236,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_committee_member]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -3521,7 +3262,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_committee_member]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -3538,7 +3279,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -3562,10 +3303,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -3573,7 +3314,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3592,26 +3333,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3630,7 +3352,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[person] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3649,7 +3371,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[committee] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -3723,7 +3445,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_committee_member]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -3741,7 +3463,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -3765,10 +3487,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -3781,7 +3503,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -3823,57 +3545,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([person])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -3919,7 +3595,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -3965,7 +3641,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -4013,7 +3689,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -4065,7 +3741,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_committee_member]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -4082,7 +3758,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -4106,10 +3782,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -4118,7 +3794,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4139,28 +3815,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4181,7 +3836,7 @@ BEGIN
 		OLD.[person] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4202,7 +3857,7 @@ BEGIN
 		OLD.[committee] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4258,7 +3913,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_committee_member_type]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -4284,7 +3939,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_committee_member_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -4301,7 +3956,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -4325,10 +3980,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -4336,7 +3991,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4355,26 +4010,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4393,7 +4029,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4412,7 +4048,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[default] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4431,7 +4067,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4505,7 +4141,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_committee_member_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -4523,7 +4159,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -4547,10 +4183,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -4563,7 +4199,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -4605,57 +4241,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([active])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -4701,7 +4291,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -4747,7 +4337,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -4793,7 +4383,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -4841,7 +4431,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -4893,7 +4483,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_committee_member_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -4910,7 +4500,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -4934,10 +4524,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -4946,7 +4536,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -4967,28 +4557,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5009,7 +4578,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5030,7 +4599,7 @@ BEGIN
 		OLD.[default] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5051,7 +4620,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5107,7 +4676,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_committee_minute]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -5133,7 +4702,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_committee_minute]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -5150,7 +4719,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -5174,10 +4743,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -5185,7 +4754,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5204,26 +4773,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5242,7 +4792,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5261,7 +4811,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[minutes_text] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5280,7 +4830,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5354,7 +4904,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_committee_minute]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -5372,7 +4922,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -5396,10 +4946,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -5412,7 +4962,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -5454,57 +5004,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([date])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -5550,7 +5054,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -5596,7 +5100,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -5642,7 +5146,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -5690,7 +5194,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -5742,7 +5246,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_committee_minute]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -5759,7 +5263,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -5783,10 +5287,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -5795,7 +5299,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5816,28 +5320,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5858,7 +5341,7 @@ BEGIN
 		OLD.[date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5879,7 +5362,7 @@ BEGIN
 		OLD.[minutes_text] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5900,7 +5383,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -5956,7 +5439,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_lotto]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -5982,7 +5465,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_lotto]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -5999,7 +5482,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -6023,10 +5506,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -6034,7 +5517,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6053,26 +5536,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6091,7 +5555,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[lotto_draw_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6110,7 +5574,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[message] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6129,7 +5593,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[jackpot] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6203,7 +5667,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_lotto]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -6221,7 +5685,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -6245,10 +5709,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -6261,7 +5725,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -6303,57 +5767,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([lotto_draw_date])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -6399,7 +5817,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -6445,7 +5863,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -6491,7 +5909,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -6539,7 +5957,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -6591,7 +6009,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_lotto]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -6608,7 +6026,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -6632,10 +6050,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -6644,7 +6062,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6665,28 +6083,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6707,7 +6104,7 @@ BEGIN
 		OLD.[lotto_draw_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6728,7 +6125,7 @@ BEGIN
 		OLD.[message] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6749,7 +6146,7 @@ BEGIN
 		OLD.[jackpot] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6805,7 +6202,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_lotto_result]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -6831,7 +6228,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_lotto_result]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -6848,7 +6245,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -6872,10 +6269,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -6883,7 +6280,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6902,26 +6299,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6940,7 +6318,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no1] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6959,7 +6337,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no2] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6978,7 +6356,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no3] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -6997,7 +6375,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no4] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7016,7 +6394,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no5] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7090,7 +6468,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_lotto_result]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -7108,7 +6486,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -7132,10 +6510,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -7148,7 +6526,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -7190,57 +6568,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([no1])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -7286,7 +6618,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -7332,7 +6664,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -7378,7 +6710,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -7424,7 +6756,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -7470,7 +6802,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -7518,7 +6850,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -7570,7 +6902,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_lotto_result]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -7587,7 +6919,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -7611,10 +6943,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -7623,7 +6955,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7644,28 +6976,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7686,7 +6997,7 @@ BEGIN
 		OLD.[no1] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7707,7 +7018,7 @@ BEGIN
 		OLD.[no2] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7728,7 +7039,7 @@ BEGIN
 		OLD.[no3] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7749,7 +7060,7 @@ BEGIN
 		OLD.[no4] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7770,7 +7081,7 @@ BEGIN
 		OLD.[no5] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7826,7 +7137,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_lotto_result_winner]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:50
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -7852,7 +7163,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_lotto_result_winner]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -7869,7 +7180,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -7893,10 +7204,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -7904,7 +7215,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7923,26 +7234,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7961,7 +7253,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[message] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7980,7 +7272,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[matches] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -7999,7 +7291,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no1] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8018,7 +7310,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no2] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8037,7 +7329,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no3] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8056,7 +7348,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no4] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8075,7 +7367,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[lotto_result] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8149,7 +7441,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_lotto_result_winner]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -8167,7 +7459,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -8191,10 +7483,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -8207,7 +7499,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8249,57 +7541,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([message])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8345,7 +7591,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8391,7 +7637,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8437,7 +7683,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8483,7 +7729,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8529,7 +7775,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8575,7 +7821,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8621,7 +7867,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -8669,7 +7915,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -8721,7 +7967,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_lotto_result_winner]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:50
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -8738,7 +7984,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -8762,10 +8008,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -8774,7 +8020,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8795,28 +8041,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8837,7 +8062,7 @@ BEGIN
 		OLD.[message] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8858,7 +8083,7 @@ BEGIN
 		OLD.[matches] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8879,7 +8104,7 @@ BEGIN
 		OLD.[no1] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8900,7 +8125,7 @@ BEGIN
 		OLD.[no2] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8921,7 +8146,7 @@ BEGIN
 		OLD.[no3] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8942,7 +8167,7 @@ BEGIN
 		OLD.[no4] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -8963,7 +8188,7 @@ BEGIN
 		OLD.[lotto_result] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9019,7 +8244,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_lotto_ticket_direct_debit]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -9045,7 +8270,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_lotto_ticket_direct_debit]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -9062,7 +8287,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -9086,10 +8311,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -9097,7 +8322,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9116,26 +8341,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9154,7 +8360,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[key] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9173,7 +8379,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no1] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9192,7 +8398,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no2] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9211,7 +8417,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no3] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9230,7 +8436,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no4] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9249,7 +8455,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9268,7 +8474,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[start_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9287,7 +8493,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[end_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -9361,7 +8567,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_lotto_ticket_direct_debit]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -9379,7 +8585,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -9403,10 +8609,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -9419,7 +8625,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9461,57 +8667,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([key])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9557,7 +8717,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9603,7 +8763,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9649,7 +8809,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9695,7 +8855,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9741,7 +8901,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9787,7 +8947,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9833,7 +8993,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9879,7 +9039,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -9927,7 +9087,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -9979,7 +9139,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_lotto_ticket_direct_debit]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -9996,7 +9156,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -10020,10 +9180,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -10032,7 +9192,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10053,28 +9213,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10095,7 +9234,7 @@ BEGIN
 		OLD.[key] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10116,7 +9255,7 @@ BEGIN
 		OLD.[no1] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10137,7 +9276,7 @@ BEGIN
 		OLD.[no2] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10158,7 +9297,7 @@ BEGIN
 		OLD.[no3] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10179,7 +9318,7 @@ BEGIN
 		OLD.[no4] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10200,7 +9339,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10221,7 +9360,7 @@ BEGIN
 		OLD.[start_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10242,7 +9381,7 @@ BEGIN
 		OLD.[end_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10298,7 +9437,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_membership_type]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -10324,7 +9463,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_membership_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -10341,7 +9480,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -10365,10 +9504,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -10376,7 +9515,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10395,26 +9534,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10433,7 +9553,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10452,7 +9572,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[year] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10471,7 +9591,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[time_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10490,7 +9610,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[sex] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10509,7 +9629,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[key] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10528,7 +9648,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10547,7 +9667,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[start_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10566,7 +9686,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[end_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -10640,7 +9760,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_membership_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -10658,7 +9778,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -10682,10 +9802,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -10698,7 +9818,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -10740,57 +9860,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -10836,7 +9910,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -10882,7 +9956,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -10928,7 +10002,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -10974,7 +10048,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -11020,7 +10094,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -11066,7 +10140,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -11112,7 +10186,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -11158,7 +10232,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -11206,7 +10280,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -11258,7 +10332,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_membership_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -11275,7 +10349,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -11299,10 +10373,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -11311,7 +10385,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11332,28 +10406,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11374,7 +10427,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11395,7 +10448,7 @@ BEGIN
 		OLD.[year] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11416,7 +10469,7 @@ BEGIN
 		OLD.[time_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11437,7 +10490,7 @@ BEGIN
 		OLD.[sex] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11458,7 +10511,7 @@ BEGIN
 		OLD.[key] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11479,7 +10532,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11500,7 +10553,7 @@ BEGIN
 		OLD.[start_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11521,7 +10574,7 @@ BEGIN
 		OLD.[end_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11577,7 +10630,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_person]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -11603,7 +10656,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_person]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -11620,7 +10673,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -11644,10 +10697,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -11655,7 +10708,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11674,26 +10727,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11712,7 +10746,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[key] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11731,7 +10765,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[sex] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11750,7 +10784,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11769,7 +10803,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[forename] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11788,7 +10822,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[surname] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11807,7 +10841,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[dob] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11826,7 +10860,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[phone] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11845,7 +10879,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[mobile_no] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11864,7 +10898,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[email] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11883,7 +10917,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[alergies] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11902,7 +10936,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[alergies_details] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11921,7 +10955,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[comments] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11940,7 +10974,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[player_profile] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11959,7 +10993,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_number] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11978,7 +11012,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_street] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -11997,7 +11031,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_town] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -12016,7 +11050,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_county] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -12035,7 +11069,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_country] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -12054,7 +11088,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_post_code] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -12073,7 +11107,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_xlng_coord] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -12092,7 +11126,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[address_ylat_coord] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -12166,7 +11200,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_person]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -12184,7 +11218,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -12208,10 +11242,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -12224,7 +11258,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12266,57 +11300,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([key])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12362,7 +11350,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12408,7 +11396,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12454,7 +11442,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12500,7 +11488,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12546,7 +11534,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12592,7 +11580,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12638,7 +11626,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12684,7 +11672,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12730,7 +11718,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12776,7 +11764,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12822,7 +11810,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12868,7 +11856,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12914,7 +11902,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -12960,7 +11948,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13006,7 +11994,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13052,7 +12040,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13098,7 +12086,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13144,7 +12132,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13190,7 +12178,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13236,7 +12224,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13282,7 +12270,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -13330,7 +12318,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -13382,7 +12370,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_person]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -13399,7 +12387,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -13423,10 +12411,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -13435,7 +12423,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13456,28 +12444,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13498,7 +12465,7 @@ BEGIN
 		OLD.[key] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13519,7 +12486,7 @@ BEGIN
 		OLD.[sex] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13540,7 +12507,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13561,7 +12528,7 @@ BEGIN
 		OLD.[forename] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13582,7 +12549,7 @@ BEGIN
 		OLD.[surname] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13603,7 +12570,7 @@ BEGIN
 		OLD.[dob] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13624,7 +12591,7 @@ BEGIN
 		OLD.[phone] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13645,7 +12612,7 @@ BEGIN
 		OLD.[mobile_no] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13666,7 +12633,7 @@ BEGIN
 		OLD.[email] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13687,7 +12654,7 @@ BEGIN
 		OLD.[alergies] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13708,7 +12675,7 @@ BEGIN
 		OLD.[alergies_details] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13729,7 +12696,7 @@ BEGIN
 		OLD.[comments] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13750,7 +12717,7 @@ BEGIN
 		OLD.[player_profile] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13771,7 +12738,7 @@ BEGIN
 		OLD.[address_number] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13792,7 +12759,7 @@ BEGIN
 		OLD.[address_street] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13813,7 +12780,7 @@ BEGIN
 		OLD.[address_town] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13834,7 +12801,7 @@ BEGIN
 		OLD.[address_county] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13855,7 +12822,7 @@ BEGIN
 		OLD.[address_country] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13876,7 +12843,7 @@ BEGIN
 		OLD.[address_post_code] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13897,7 +12864,7 @@ BEGIN
 		OLD.[address_xlng_coord] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13918,7 +12885,7 @@ BEGIN
 		OLD.[address_ylat_coord] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -13974,7 +12941,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_person_guardian]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -14000,7 +12967,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_person_guardian]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -14017,7 +12984,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -14041,10 +13008,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -14052,7 +13019,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14071,26 +13038,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14109,7 +13057,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[person] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14183,7 +13131,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_person_guardian]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:04
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -14201,7 +13149,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -14225,10 +13173,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -14241,7 +13189,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -14283,57 +13231,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([person])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -14379,7 +13281,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -14427,7 +13329,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -14479,7 +13381,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_person_guardian]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -14496,7 +13398,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -14520,10 +13422,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -14532,7 +13434,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14553,28 +13455,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14595,7 +13476,7 @@ BEGIN
 		OLD.[person] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14651,7 +13532,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_person_membership_type]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -14677,7 +13558,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_person_membership_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -14694,7 +13575,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -14718,10 +13599,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -14729,7 +13610,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14748,26 +13629,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14786,7 +13648,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14805,7 +13667,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14824,7 +13686,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[person] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -14898,7 +13760,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_person_membership_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -14916,7 +13778,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -14940,10 +13802,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -14956,7 +13818,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -14998,57 +13860,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([date])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -15094,7 +13910,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -15140,7 +13956,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -15186,7 +14002,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -15234,7 +14050,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -15286,7 +14102,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_person_membership_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -15303,7 +14119,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -15327,10 +14143,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -15339,7 +14155,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15360,28 +14176,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15402,7 +14197,7 @@ BEGIN
 		OLD.[date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15423,7 +14218,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15444,7 +14239,7 @@ BEGIN
 		OLD.[person] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15500,7 +14295,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_person_qualification]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -15526,7 +14321,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_person_qualification]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -15543,7 +14338,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -15567,10 +14362,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -15578,7 +14373,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15597,26 +14392,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15635,7 +14411,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[date_taken] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15654,7 +14430,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15673,7 +14449,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[result] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15692,7 +14468,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[person] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -15766,7 +14542,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_person_qualification]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -15784,7 +14560,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -15808,10 +14584,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -15824,7 +14600,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -15866,57 +14642,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([date_taken])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -15962,7 +14692,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -16008,7 +14738,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -16054,7 +14784,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -16100,7 +14830,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -16148,7 +14878,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -16200,7 +14930,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_person_qualification]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -16217,7 +14947,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -16241,10 +14971,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -16253,7 +14983,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16274,28 +15004,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16316,7 +15025,7 @@ BEGIN
 		OLD.[date_taken] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16337,7 +15046,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16358,7 +15067,7 @@ BEGIN
 		OLD.[result] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16379,7 +15088,7 @@ BEGIN
 		OLD.[person] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16435,7 +15144,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_person_title]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -16461,7 +15170,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_person_title]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -16478,7 +15187,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -16502,10 +15211,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -16513,7 +15222,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16532,26 +15241,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16570,7 +15260,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -16644,7 +15334,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_person_title]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -16662,7 +15352,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -16686,10 +15376,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -16702,7 +15392,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -16744,57 +15434,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([description])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -16840,7 +15484,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -16888,7 +15532,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -16940,7 +15584,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_person_title]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -16957,7 +15601,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -16981,10 +15625,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -16993,7 +15637,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17014,28 +15658,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17056,7 +15679,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17112,7 +15735,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_qualification]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -17138,7 +15761,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_qualification]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -17155,7 +15778,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -17179,10 +15802,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -17190,7 +15813,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17209,26 +15832,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17247,7 +15851,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17266,7 +15870,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17285,7 +15889,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17359,7 +15963,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_qualification]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -17377,7 +15981,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -17401,10 +16005,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -17417,7 +16021,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -17459,57 +16063,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -17555,7 +16113,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -17601,7 +16159,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -17647,7 +16205,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -17695,7 +16253,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -17747,7 +16305,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_qualification]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -17764,7 +16322,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -17788,10 +16346,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -17800,7 +16358,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17821,28 +16379,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17863,7 +16400,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17884,7 +16421,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17905,7 +16442,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -17961,7 +16498,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_team]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -17987,7 +16524,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_team]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -18004,7 +16541,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -18028,10 +16565,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -18039,7 +16576,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18058,26 +16595,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18096,7 +16614,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18115,7 +16633,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18134,7 +16652,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[time_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18153,7 +16671,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[sex] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18172,7 +16690,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[year] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18191,7 +16709,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[start_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18265,7 +16783,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_team]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -18283,7 +16801,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -18307,10 +16825,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -18323,7 +16841,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18365,57 +16883,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([active])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18461,7 +16933,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18507,7 +16979,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18553,7 +17025,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18599,7 +17071,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18645,7 +17117,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18691,7 +17163,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -18739,7 +17211,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -18791,7 +17263,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_team]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -18808,7 +17280,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -18832,10 +17304,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -18844,7 +17316,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18865,28 +17337,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18907,7 +17358,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18928,7 +17379,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18949,7 +17400,7 @@ BEGIN
 		OLD.[time_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18970,7 +17421,7 @@ BEGIN
 		OLD.[sex] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -18991,7 +17442,7 @@ BEGIN
 		OLD.[year] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19012,7 +17463,7 @@ BEGIN
 		OLD.[start_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19068,7 +17519,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_team_admin]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -19094,7 +17545,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_team_admin]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -19111,7 +17562,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -19135,10 +17586,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -19146,7 +17597,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19165,26 +17616,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19203,7 +17635,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[user] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19277,7 +17709,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_team_admin]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -19295,7 +17727,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -19319,10 +17751,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -19335,7 +17767,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -19377,57 +17809,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([user])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -19473,7 +17859,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -19521,7 +17907,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -19573,7 +17959,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_team_admin]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -19590,7 +17976,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -19614,10 +18000,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -19626,7 +18012,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19647,28 +18033,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19689,7 +18054,7 @@ BEGIN
 		OLD.[user] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19745,7 +18110,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_team_member]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -19771,7 +18136,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_team_member]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -19788,7 +18153,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -19812,10 +18177,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -19823,7 +18188,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19842,26 +18207,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19880,7 +18226,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[person] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19899,7 +18245,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[team] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -19973,7 +18319,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_team_member]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -19991,7 +18337,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -20015,10 +18361,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -20031,7 +18377,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -20073,57 +18419,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([person])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -20169,7 +18469,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -20215,7 +18515,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -20263,7 +18563,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -20315,7 +18615,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_team_member]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -20332,7 +18632,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -20356,10 +18656,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -20368,7 +18668,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20389,28 +18689,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20431,7 +18710,7 @@ BEGIN
 		OLD.[person] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20452,7 +18731,7 @@ BEGIN
 		OLD.[team] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20508,7 +18787,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[club_team_member_type]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -20534,7 +18813,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[club_team_member_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -20551,7 +18830,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -20575,10 +18854,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -20586,7 +18865,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20605,26 +18884,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20643,7 +18903,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20662,7 +18922,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[admin_member] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20681,7 +18941,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[playing_member] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20700,7 +18960,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[default] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20719,7 +18979,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -20793,7 +19053,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[club_team_member_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -20811,7 +19071,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -20835,10 +19095,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -20851,7 +19111,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -20893,57 +19153,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([active])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -20989,7 +19203,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -21035,7 +19249,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -21081,7 +19295,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -21127,7 +19341,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -21173,7 +19387,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -21221,7 +19435,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -21273,7 +19487,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[club_team_member_type]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -21290,7 +19504,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -21314,10 +19528,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -21326,7 +19540,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21347,28 +19561,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21389,7 +19582,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21410,7 +19603,7 @@ BEGIN
 		OLD.[admin_member] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21431,7 +19624,7 @@ BEGIN
 		OLD.[playing_member] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21452,7 +19645,7 @@ BEGIN
 		OLD.[default] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21473,7 +19666,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21529,7 +19722,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_application_session]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:51
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -21555,7 +19748,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_application_session]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -21572,7 +19765,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -21596,10 +19789,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -21607,7 +19800,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21626,26 +19819,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21664,7 +19838,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21683,7 +19857,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[session_id] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21702,7 +19876,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[host] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21721,7 +19895,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[id] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21740,7 +19914,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[process_id] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21759,7 +19933,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[end_date] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -21833,7 +20007,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_application_session]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:51
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -21851,7 +20025,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -21875,10 +20049,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -21891,7 +20065,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -21933,57 +20107,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([date])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22029,7 +20157,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22075,7 +20203,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22121,7 +20249,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22167,7 +20295,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22213,7 +20341,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22259,7 +20387,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22307,7 +20435,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -22359,7 +20487,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_application_session]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -22376,7 +20504,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -22400,10 +20528,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -22412,7 +20540,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22433,28 +20561,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22475,7 +20582,7 @@ BEGIN
 		OLD.[date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22496,7 +20603,7 @@ BEGIN
 		OLD.[session_id] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22517,7 +20624,7 @@ BEGIN
 		OLD.[host] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22538,7 +20645,7 @@ BEGIN
 		OLD.[id] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22559,7 +20666,7 @@ BEGIN
 		OLD.[process_id] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22580,7 +20687,7 @@ BEGIN
 		OLD.[end_date] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22636,7 +20743,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_category_access]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -22662,7 +20769,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_category_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -22679,7 +20786,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -22703,10 +20810,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -22714,7 +20821,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22733,26 +20840,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22771,7 +20859,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[category] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22790,7 +20878,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[access] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -22864,7 +20952,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_category_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -22882,7 +20970,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -22906,10 +20994,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -22922,7 +21010,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -22964,57 +21052,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([category])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23060,7 +21102,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23106,7 +21148,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23154,7 +21196,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -23206,7 +21248,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_category_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -23223,7 +21265,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -23247,10 +21289,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -23259,7 +21301,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23280,28 +21322,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23322,7 +21343,7 @@ BEGIN
 		OLD.[category] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23343,7 +21364,7 @@ BEGIN
 		OLD.[access] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23399,7 +21420,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_class_access]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -23425,7 +21446,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_class_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -23442,7 +21463,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -23466,10 +21487,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -23477,7 +21498,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23496,26 +21517,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23534,7 +21536,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[class_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23553,7 +21555,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[property] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23572,7 +21574,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[value] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23591,7 +21593,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[access] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -23665,7 +21667,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_class_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -23683,7 +21685,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -23707,10 +21709,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -23723,7 +21725,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23765,57 +21767,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([class_type])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23861,7 +21817,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23907,7 +21863,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23953,7 +21909,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -23999,7 +21955,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -24047,7 +22003,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -24099,7 +22055,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_class_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -24116,7 +22072,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -24140,10 +22096,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -24152,7 +22108,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24173,28 +22129,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24215,7 +22150,7 @@ BEGIN
 		OLD.[class_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24236,7 +22171,7 @@ BEGIN
 		OLD.[property] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24257,7 +22192,7 @@ BEGIN
 		OLD.[value] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24278,7 +22213,7 @@ BEGIN
 		OLD.[access] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24334,7 +22269,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_class_command]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -24360,7 +22295,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_class_command]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -24377,7 +22312,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -24401,10 +22336,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -24412,7 +22347,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24431,26 +22366,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24469,7 +22385,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[class_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24488,7 +22404,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[command_index] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24507,7 +22423,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[point] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24526,7 +22442,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[order] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24545,7 +22461,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[command_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24564,7 +22480,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[init_data] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -24638,7 +22554,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_class_command]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -24656,7 +22572,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -24680,10 +22596,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -24696,7 +22612,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -24738,57 +22654,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([class_type])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -24834,7 +22704,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -24880,7 +22750,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -24926,7 +22796,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -24972,7 +22842,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -25018,7 +22888,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -25064,7 +22934,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -25112,7 +22982,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -25164,7 +23034,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_class_command]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -25181,7 +23051,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -25205,10 +23075,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -25217,7 +23087,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25238,28 +23108,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25280,7 +23129,7 @@ BEGIN
 		OLD.[class_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25301,7 +23150,7 @@ BEGIN
 		OLD.[command_index] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25322,7 +23171,7 @@ BEGIN
 		OLD.[point] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25343,7 +23192,7 @@ BEGIN
 		OLD.[order] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25364,7 +23213,7 @@ BEGIN
 		OLD.[command_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25385,7 +23234,7 @@ BEGIN
 		OLD.[init_data] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25441,7 +23290,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_command]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -25467,7 +23316,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_command]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -25484,7 +23333,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -25508,10 +23357,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -25519,7 +23368,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25538,26 +23387,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25576,7 +23406,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[icon] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25595,7 +23425,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25614,7 +23444,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[concrete_command] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -25688,7 +23518,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_command]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -25706,7 +23536,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -25730,10 +23560,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -25746,7 +23576,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -25788,57 +23618,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([icon])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -25884,7 +23668,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -25930,7 +23714,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -25976,7 +23760,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -26024,7 +23808,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -26076,7 +23860,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_command]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:05
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -26093,7 +23877,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -26117,10 +23901,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -26129,7 +23913,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26150,28 +23934,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26192,7 +23955,7 @@ BEGIN
 		OLD.[icon] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26213,7 +23976,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26234,7 +23997,7 @@ BEGIN
 		OLD.[concrete_command] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26290,7 +24053,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_criterion]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -26316,7 +24079,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_criterion]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -26333,7 +24096,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -26357,10 +24120,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -26368,7 +24131,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26387,7 +24150,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26406,26 +24169,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26444,7 +24188,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[field_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26463,7 +24207,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[caption] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26482,7 +24226,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[field_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26501,7 +24245,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[match_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26520,7 +24264,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[is_mandatory] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26539,7 +24283,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[is_visible] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26558,7 +24302,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[check_for_null] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26577,7 +24321,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[lookup_index] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26596,7 +24340,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[dictionary_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26615,7 +24359,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[lookup_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26634,7 +24378,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[display_format] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26653,7 +24397,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[use_specified_value] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26672,7 +24416,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[lookup_property_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26691,7 +24435,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[replacement_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26710,7 +24454,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[ascending] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26729,7 +24473,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[parent] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -26803,7 +24547,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_criterion]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -26821,7 +24565,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -26845,10 +24589,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -26861,7 +24605,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -26907,7 +24651,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -26949,57 +24693,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([field_name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27045,7 +24743,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27091,7 +24789,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27137,7 +24835,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27183,7 +24881,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27229,7 +24927,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27275,7 +24973,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27321,7 +25019,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27367,7 +25065,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27413,7 +25111,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27459,7 +25157,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27505,7 +25203,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27551,7 +25249,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27597,7 +25295,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27643,7 +25341,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27689,7 +25387,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27735,7 +25433,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -27783,7 +25481,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -27835,7 +25533,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_criterion]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -27852,7 +25550,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -27876,10 +25574,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -27888,7 +25586,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -27909,7 +25607,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -27930,28 +25628,7 @@ BEGIN
 		OLD.[type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -27972,7 +25649,7 @@ BEGIN
 		OLD.[field_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -27993,7 +25670,7 @@ BEGIN
 		OLD.[caption] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28014,7 +25691,7 @@ BEGIN
 		OLD.[field_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28035,7 +25712,7 @@ BEGIN
 		OLD.[match_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28056,7 +25733,7 @@ BEGIN
 		OLD.[is_mandatory] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28077,7 +25754,7 @@ BEGIN
 		OLD.[is_visible] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28098,7 +25775,7 @@ BEGIN
 		OLD.[check_for_null] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28119,7 +25796,7 @@ BEGIN
 		OLD.[lookup_index] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28140,7 +25817,7 @@ BEGIN
 		OLD.[dictionary_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28161,7 +25838,7 @@ BEGIN
 		OLD.[lookup_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28182,7 +25859,7 @@ BEGIN
 		OLD.[display_format] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28203,7 +25880,7 @@ BEGIN
 		OLD.[use_specified_value] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28224,7 +25901,7 @@ BEGIN
 		OLD.[lookup_property_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28245,7 +25922,7 @@ BEGIN
 		OLD.[replacement_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28266,7 +25943,7 @@ BEGIN
 		OLD.[ascending] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28287,7 +25964,7 @@ BEGIN
 		OLD.[parent] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28343,7 +26020,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_display_format]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -28369,7 +26046,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_display_format]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -28386,7 +26063,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -28410,10 +26087,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -28421,7 +26098,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28440,26 +26117,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28478,7 +26136,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[class_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28497,7 +26155,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[display_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28516,7 +26174,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[default_sort] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28535,7 +26193,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[summary_format] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28554,7 +26212,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[list_format] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -28628,7 +26286,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_display_format]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -28646,7 +26304,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -28670,10 +26328,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -28686,7 +26344,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -28728,57 +26386,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([class_type])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -28824,7 +26436,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -28870,7 +26482,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -28916,7 +26528,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -28962,7 +26574,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -29008,7 +26620,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -29056,7 +26668,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -29108,7 +26720,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_display_format]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -29125,7 +26737,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -29149,10 +26761,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -29161,7 +26773,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29182,28 +26794,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29224,7 +26815,7 @@ BEGIN
 		OLD.[class_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29245,7 +26836,7 @@ BEGIN
 		OLD.[display_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29266,7 +26857,7 @@ BEGIN
 		OLD.[default_sort] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29287,7 +26878,7 @@ BEGIN
 		OLD.[summary_format] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29308,7 +26899,7 @@ BEGIN
 		OLD.[list_format] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29364,7 +26955,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_field_access]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -29390,7 +26981,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_field_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -29407,7 +26998,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -29431,10 +27022,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -29442,7 +27033,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29461,26 +27052,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29499,7 +27071,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[access] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29573,7 +27145,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_field_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -29591,7 +27163,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -29615,10 +27187,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -29631,7 +27203,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -29673,57 +27245,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([access])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -29769,7 +27295,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -29817,7 +27343,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -29869,7 +27395,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_field_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -29886,7 +27412,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -29910,10 +27436,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -29922,7 +27448,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29943,28 +27469,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -29985,7 +27490,7 @@ BEGIN
 		OLD.[access] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30041,7 +27546,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_field_access_roles]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -30067,7 +27572,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_field_access_roles]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -30084,7 +27589,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -30108,10 +27613,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -30119,7 +27624,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30138,7 +27643,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[field_access] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30212,7 +27717,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_field_access_roles]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -30230,7 +27735,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -30254,10 +27759,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -30270,7 +27775,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -30316,7 +27821,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -30364,7 +27869,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -30416,7 +27921,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_field_access_roles]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -30433,7 +27938,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -30457,10 +27962,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -30469,7 +27974,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30490,7 +27995,7 @@ BEGIN
 		OLD.[field_access] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30546,7 +28051,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_field_view_map]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -30572,7 +28077,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_field_view_map]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -30589,7 +28094,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -30613,10 +28118,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -30624,7 +28129,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30643,26 +28148,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30681,7 +28167,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[display_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30700,7 +28186,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[field_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30719,7 +28205,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[is_hidden] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30738,7 +28224,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[view_class] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30757,7 +28243,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[row] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30776,7 +28262,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[col] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30795,7 +28281,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[col_span] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30814,7 +28300,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[row_span] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30833,7 +28319,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[max_length] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30852,7 +28338,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[min_length] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30871,7 +28357,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[show_display_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30890,7 +28376,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[prefix_label] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -30964,7 +28450,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_field_view_map]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -30982,7 +28468,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -31006,10 +28492,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -31022,7 +28508,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31064,57 +28550,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([display_name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31160,7 +28600,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31206,7 +28646,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31252,7 +28692,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31298,7 +28738,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31344,7 +28784,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31390,7 +28830,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31436,7 +28876,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31482,7 +28922,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31528,7 +28968,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31574,7 +29014,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31620,7 +29060,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31666,7 +29106,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -31714,7 +29154,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -31766,7 +29206,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_field_view_map]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -31783,7 +29223,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -31807,10 +29247,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -31819,7 +29259,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -31840,28 +29280,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -31882,7 +29301,7 @@ BEGIN
 		OLD.[display_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -31903,7 +29322,7 @@ BEGIN
 		OLD.[field_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -31924,7 +29343,7 @@ BEGIN
 		OLD.[is_hidden] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -31945,7 +29364,7 @@ BEGIN
 		OLD.[view_class] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -31966,7 +29385,7 @@ BEGIN
 		OLD.[row] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -31987,7 +29406,7 @@ BEGIN
 		OLD.[col] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32008,7 +29427,7 @@ BEGIN
 		OLD.[col_span] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32029,7 +29448,7 @@ BEGIN
 		OLD.[row_span] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32050,7 +29469,7 @@ BEGIN
 		OLD.[max_length] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32071,7 +29490,7 @@ BEGIN
 		OLD.[min_length] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32092,7 +29511,7 @@ BEGIN
 		OLD.[show_display_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32113,7 +29532,7 @@ BEGIN
 		OLD.[prefix_label] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32169,7 +29588,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_function]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -32195,7 +29614,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_function]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -32212,7 +29631,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -32236,10 +29655,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -32247,7 +29666,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32266,26 +29685,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32304,7 +29704,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32378,7 +29778,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_function]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -32396,7 +29796,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -32420,10 +29820,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -32436,7 +29836,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -32478,57 +29878,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -32574,7 +29928,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -32622,7 +29976,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -32674,7 +30028,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_function]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -32691,7 +30045,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -32715,10 +30069,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -32727,7 +30081,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32748,28 +30102,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32790,7 +30123,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32846,7 +30179,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_incrementing_id]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -32872,7 +30205,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_incrementing_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -32889,7 +30222,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -32913,10 +30246,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -32924,7 +30257,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32943,26 +30276,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -32981,7 +30295,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33055,7 +30369,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_incrementing_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -33073,7 +30387,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -33097,10 +30411,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -33113,7 +30427,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -33155,57 +30469,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([applies_to])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -33251,7 +30519,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -33299,7 +30567,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -33351,7 +30619,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_incrementing_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -33368,7 +30636,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -33392,10 +30660,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -33404,7 +30672,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33425,28 +30693,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33467,7 +30714,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33523,7 +30770,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_incrementing_property_config]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:52
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -33549,7 +30796,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_incrementing_property_config]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -33566,7 +30813,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -33590,10 +30837,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -33601,7 +30848,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33620,26 +30867,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33658,7 +30886,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33677,7 +30905,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[property] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33696,7 +30924,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[format] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -33770,7 +30998,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_incrementing_property_config]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -33788,7 +31016,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -33812,10 +31040,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -33828,7 +31056,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -33870,57 +31098,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([applies_to])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -33966,7 +31148,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -34012,7 +31194,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -34058,7 +31240,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -34106,7 +31288,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -34158,7 +31340,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_incrementing_property_config]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:52
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -34175,7 +31357,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -34199,10 +31381,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -34211,7 +31393,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34232,28 +31414,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34274,7 +31435,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34295,7 +31456,7 @@ BEGIN
 		OLD.[property] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34316,7 +31477,7 @@ BEGIN
 		OLD.[format] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34372,7 +31533,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_incrementing_property_id]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -34398,7 +31559,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_incrementing_property_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -34415,7 +31576,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -34439,10 +31600,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -34450,7 +31611,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34469,26 +31630,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34507,7 +31649,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34526,7 +31668,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[current] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -34600,7 +31742,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_incrementing_property_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -34618,7 +31760,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -34642,10 +31784,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -34658,7 +31800,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -34700,57 +31842,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([applies_to])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -34796,7 +31892,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -34842,7 +31938,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -34890,7 +31986,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -34942,7 +32038,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_incrementing_property_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -34959,7 +32055,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -34983,10 +32079,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -34995,7 +32091,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35016,28 +32112,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35058,7 +32133,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35079,7 +32154,7 @@ BEGIN
 		OLD.[current] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35135,7 +32210,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_incrementing_property_yearly_id]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -35161,7 +32236,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_incrementing_property_yearly_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -35178,7 +32253,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -35202,10 +32277,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -35213,7 +32288,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35232,26 +32307,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35270,7 +32326,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[year] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35289,7 +32345,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[short_year] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35308,7 +32364,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35327,7 +32383,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[current] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35401,7 +32457,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_incrementing_property_yearly_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -35419,7 +32475,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -35443,10 +32499,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -35459,7 +32515,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -35501,57 +32557,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([year])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -35597,7 +32607,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -35643,7 +32653,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -35689,7 +32699,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -35735,7 +32745,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -35783,7 +32793,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -35835,7 +32845,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_incrementing_property_yearly_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -35852,7 +32862,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -35876,10 +32886,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -35888,7 +32898,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35909,28 +32919,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35951,7 +32940,7 @@ BEGIN
 		OLD.[year] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35972,7 +32961,7 @@ BEGIN
 		OLD.[short_year] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -35993,7 +32982,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36014,7 +33003,7 @@ BEGIN
 		OLD.[current] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36070,7 +33059,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_incrementing_yearly_id]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -36096,7 +33085,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_incrementing_yearly_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -36113,7 +33102,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -36137,10 +33126,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -36148,7 +33137,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36167,26 +33156,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36205,7 +33175,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[year] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36224,7 +33194,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[short_year] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36243,7 +33213,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36317,7 +33287,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_incrementing_yearly_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -36335,7 +33305,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -36359,10 +33329,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -36375,7 +33345,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -36417,57 +33387,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([year])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -36513,7 +33437,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -36559,7 +33483,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -36605,7 +33529,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -36653,7 +33577,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -36705,7 +33629,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_incrementing_yearly_id]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -36722,7 +33646,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -36746,10 +33670,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -36758,7 +33682,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36779,28 +33703,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36821,7 +33724,7 @@ BEGIN
 		OLD.[year] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36842,7 +33745,7 @@ BEGIN
 		OLD.[short_year] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36863,7 +33766,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -36919,7 +33822,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_log_entry]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -36945,7 +33848,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_log_entry]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -36962,7 +33865,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -36986,10 +33889,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -36997,7 +33900,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37016,26 +33919,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37054,7 +33938,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[level] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37073,7 +33957,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[sub_system] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37092,7 +33976,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37111,7 +33995,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[details] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37130,7 +34014,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[dismissed] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37204,7 +34088,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_log_entry]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -37222,7 +34106,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -37246,10 +34130,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -37262,7 +34146,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -37304,57 +34188,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([level])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -37400,7 +34238,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -37446,7 +34284,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -37492,7 +34330,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -37538,7 +34376,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -37584,7 +34422,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -37632,7 +34470,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -37684,7 +34522,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_log_entry]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -37701,7 +34539,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -37725,10 +34563,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -37737,7 +34575,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37758,28 +34596,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37800,7 +34617,7 @@ BEGIN
 		OLD.[level] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37821,7 +34638,7 @@ BEGIN
 		OLD.[sub_system] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37842,7 +34659,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37863,7 +34680,7 @@ BEGIN
 		OLD.[details] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37884,7 +34701,7 @@ BEGIN
 		OLD.[dismissed] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -37940,7 +34757,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_log_entry_viewed_by]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -37966,7 +34783,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_log_entry_viewed_by]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -37983,7 +34800,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -38007,10 +34824,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -38018,7 +34835,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38037,7 +34854,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[log_entry] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38111,7 +34928,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_log_entry_viewed_by]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -38129,7 +34946,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -38153,10 +34970,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -38169,7 +34986,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -38215,7 +35032,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -38263,7 +35080,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -38315,7 +35132,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_log_entry_viewed_by]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:06
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -38332,7 +35149,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -38356,10 +35173,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -38368,7 +35185,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38389,7 +35206,7 @@ BEGIN
 		OLD.[log_entry] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38445,7 +35262,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_profile]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -38471,7 +35288,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_profile]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -38488,7 +35305,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -38512,10 +35329,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -38523,7 +35340,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38542,7 +35359,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38561,7 +35378,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[option] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38580,7 +35397,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[application] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -38654,7 +35471,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_profile]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -38672,7 +35489,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -38696,10 +35513,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -38712,7 +35529,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -38758,7 +35575,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -38804,7 +35621,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -38850,7 +35667,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -38898,7 +35715,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -38950,7 +35767,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_profile]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -38967,7 +35784,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -38991,10 +35808,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -39003,7 +35820,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39024,7 +35841,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39045,7 +35862,7 @@ BEGIN
 		OLD.[option] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39066,7 +35883,7 @@ BEGIN
 		OLD.[application] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39122,7 +35939,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_profile_items]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -39148,7 +35965,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_profile_items]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -39165,7 +35982,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -39189,10 +36006,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -39200,7 +36017,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39219,7 +36036,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[profile] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39238,7 +36055,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[value] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39312,7 +36129,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_profile_items]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -39330,7 +36147,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -39354,10 +36171,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -39370,7 +36187,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -39416,7 +36233,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -39462,7 +36279,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -39510,7 +36327,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -39562,7 +36379,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_profile_items]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -39579,7 +36396,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -39603,10 +36420,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -39615,7 +36432,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39636,7 +36453,7 @@ BEGIN
 		OLD.[profile] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39657,7 +36474,7 @@ BEGIN
 		OLD.[value] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39713,7 +36530,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_property_description]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -39739,7 +36556,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_property_description]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -39756,7 +36573,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -39780,10 +36597,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -39791,7 +36608,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39810,26 +36627,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39848,7 +36646,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[class_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39867,7 +36665,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[property] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -39941,7 +36739,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_property_description]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -39959,7 +36757,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -39983,10 +36781,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -39999,7 +36797,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -40041,57 +36839,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([class_type])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -40137,7 +36889,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -40183,7 +36935,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -40231,7 +36983,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -40283,7 +37035,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_property_description]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -40300,7 +37052,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -40324,10 +37076,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -40336,7 +37088,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40357,28 +37109,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40399,7 +37130,7 @@ BEGIN
 		OLD.[class_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40420,7 +37151,7 @@ BEGIN
 		OLD.[property] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40476,7 +37207,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_role]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -40502,7 +37233,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_role]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -40519,7 +37250,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -40543,10 +37274,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -40554,7 +37285,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40573,26 +37304,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40611,7 +37323,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40630,7 +37342,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[active] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40649,7 +37361,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -40723,7 +37435,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_role]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -40741,7 +37453,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -40765,10 +37477,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -40781,7 +37493,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -40823,57 +37535,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -40919,7 +37585,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -40965,7 +37631,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -41011,7 +37677,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -41059,7 +37725,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -41111,7 +37777,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_role]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -41128,7 +37794,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -41152,10 +37818,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -41164,7 +37830,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41185,28 +37851,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41227,7 +37872,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41248,7 +37893,7 @@ BEGIN
 		OLD.[active] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41269,7 +37914,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41325,7 +37970,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_role_function_access]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -41351,7 +37996,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_role_function_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -41368,7 +38013,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -41392,10 +38037,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -41403,7 +38048,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41422,7 +38067,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[role] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41496,7 +38141,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_role_function_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -41514,7 +38159,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -41538,10 +38183,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -41554,7 +38199,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -41600,7 +38245,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -41648,7 +38293,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -41700,7 +38345,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_role_function_access]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -41717,7 +38362,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -41741,10 +38386,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -41753,7 +38398,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41774,7 +38419,7 @@ BEGIN
 		OLD.[role] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41830,7 +38475,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_role_start_page_commands]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -41856,7 +38501,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_role_start_page_commands]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -41873,7 +38518,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -41897,10 +38542,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -41908,7 +38553,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41927,7 +38572,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[role] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -41946,7 +38591,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[command] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42020,7 +38665,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_role_start_page_commands]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -42038,7 +38683,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -42062,10 +38707,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -42078,7 +38723,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -42124,7 +38769,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -42170,7 +38815,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -42218,7 +38863,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -42270,7 +38915,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_role_start_page_commands]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -42287,7 +38932,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -42311,10 +38956,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -42323,7 +38968,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42344,7 +38989,7 @@ BEGIN
 		OLD.[role] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42365,7 +39010,7 @@ BEGIN
 		OLD.[command] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42421,7 +39066,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_search_spec]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -42447,7 +39092,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_search_spec]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -42464,7 +39109,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -42488,10 +39133,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -42499,7 +39144,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42518,26 +39163,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42556,7 +39182,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[header_fields] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42575,7 +39201,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[command_class] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42594,7 +39220,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[description] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42613,7 +39239,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -42687,7 +39313,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_search_spec]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -42705,7 +39331,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -42729,10 +39355,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -42745,7 +39371,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -42787,57 +39413,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([header_fields])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -42883,7 +39463,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -42929,7 +39509,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -42975,7 +39555,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -43021,7 +39601,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -43069,7 +39649,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -43121,7 +39701,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_search_spec]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -43138,7 +39718,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -43162,10 +39742,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -43174,7 +39754,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43195,28 +39775,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43237,7 +39796,7 @@ BEGIN
 		OLD.[header_fields] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43258,7 +39817,7 @@ BEGIN
 		OLD.[command_class] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43279,7 +39838,7 @@ BEGIN
 		OLD.[description] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43300,7 +39859,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43356,7 +39915,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_system_info]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -43382,7 +39941,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_system_info]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -43399,7 +39958,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -43423,10 +39982,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -43434,7 +39993,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43453,26 +40012,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43491,7 +40031,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[application_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43510,7 +40050,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[customer_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43529,7 +40069,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[ver_major] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43548,7 +40088,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[ver_minor] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43567,7 +40107,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[ver_schema] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -43641,7 +40181,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_system_info]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -43659,7 +40199,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -43683,10 +40223,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -43699,7 +40239,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -43741,57 +40281,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([application_name])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -43837,7 +40331,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -43883,7 +40377,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -43929,7 +40423,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -43975,7 +40469,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -44021,7 +40515,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -44069,7 +40563,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -44121,7 +40615,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_system_info]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -44138,7 +40632,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -44162,10 +40656,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -44174,7 +40668,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44195,28 +40689,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44237,7 +40710,7 @@ BEGIN
 		OLD.[application_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44258,7 +40731,7 @@ BEGIN
 		OLD.[customer_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44279,7 +40752,7 @@ BEGIN
 		OLD.[ver_major] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44300,7 +40773,7 @@ BEGIN
 		OLD.[ver_minor] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44321,7 +40794,7 @@ BEGIN
 		OLD.[ver_schema] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44377,7 +40850,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_user]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:53
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -44403,7 +40876,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_user]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -44420,7 +40893,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -44444,10 +40917,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -44455,7 +40928,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44474,26 +40947,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44512,7 +40966,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[login] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44531,7 +40985,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[password] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44550,7 +41004,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[full_name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44569,7 +41023,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[email] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44588,7 +41042,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[title] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44607,7 +41061,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[no_of_failed_logins] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44626,7 +41080,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[account_locked] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -44700,7 +41154,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_user]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:53
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -44718,7 +41172,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -44742,10 +41196,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -44758,7 +41212,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -44800,57 +41254,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([login])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -44896,7 +41304,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -44942,7 +41350,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -44988,7 +41396,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45034,7 +41442,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45080,7 +41488,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45126,7 +41534,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45172,7 +41580,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45220,7 +41628,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -45272,7 +41680,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_user]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -45289,7 +41697,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -45313,10 +41721,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -45325,7 +41733,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45346,28 +41754,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45388,7 +41775,7 @@ BEGIN
 		OLD.[login] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45409,7 +41796,7 @@ BEGIN
 		OLD.[password] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45430,7 +41817,7 @@ BEGIN
 		OLD.[full_name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45451,7 +41838,7 @@ BEGIN
 		OLD.[email] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45472,7 +41859,7 @@ BEGIN
 		OLD.[title] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45493,7 +41880,7 @@ BEGIN
 		OLD.[no_of_failed_logins] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45514,7 +41901,7 @@ BEGIN
 		OLD.[account_locked] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45570,7 +41957,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_user_roles]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:54
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -45596,7 +41983,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_user_roles]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -45613,7 +42000,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -45637,10 +42024,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -45648,7 +42035,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45667,7 +42054,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[user] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45686,7 +42073,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[role] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -45760,7 +42147,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_user_roles]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -45778,7 +42165,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -45802,10 +42189,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -45818,7 +42205,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45864,7 +42251,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45910,7 +42297,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -45958,7 +42345,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -46010,7 +42397,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_user_roles]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -46027,7 +42414,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -46051,10 +42438,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -46063,7 +42450,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46084,7 +42471,7 @@ BEGIN
 		OLD.[user] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46105,7 +42492,7 @@ BEGIN
 		OLD.[role] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46161,7 +42548,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[core_version_info]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:54
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -46187,7 +42574,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[core_version_info]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -46204,7 +42591,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -46228,10 +42615,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -46239,7 +42626,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46258,26 +42645,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46296,7 +42664,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[database_version] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46370,7 +42738,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[core_version_info]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -46388,7 +42756,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -46412,10 +42780,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -46428,7 +42796,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -46470,57 +42838,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([database_version])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -46566,7 +42888,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -46614,7 +42936,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -46666,7 +42988,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[core_version_info]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -46683,7 +43005,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -46707,10 +43029,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -46719,7 +43041,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46740,28 +43062,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46782,7 +43083,7 @@ BEGIN
 		OLD.[database_version] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46838,7 +43139,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[documents_attached_document]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:54
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -46864,7 +43165,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[documents_attached_document]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -46881,7 +43182,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -46905,10 +43206,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -46916,7 +43217,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46935,26 +43236,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46973,7 +43255,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -46992,7 +43274,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to_oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47011,7 +43293,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[record_type_oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47030,7 +43312,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[date_added] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47104,7 +43386,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[documents_attached_document]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -47122,7 +43404,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -47146,10 +43428,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -47162,7 +43444,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -47204,57 +43486,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([applies_to])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -47300,7 +43536,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -47346,7 +43582,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -47392,7 +43628,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -47438,7 +43674,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -47486,7 +43722,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -47538,7 +43774,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[documents_attached_document]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -47555,7 +43791,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -47579,10 +43815,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -47591,7 +43827,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47612,28 +43848,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47654,7 +43869,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47675,7 +43890,7 @@ BEGIN
 		OLD.[applies_to_oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47696,7 +43911,7 @@ BEGIN
 		OLD.[record_type_oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47717,7 +43932,7 @@ BEGIN
 		OLD.[date_added] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47773,7 +43988,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[documents_scanned_document]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:54
+-- Date:        22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -47799,7 +44014,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[documents_scanned_document]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -47816,7 +44031,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -47840,10 +44055,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -47851,7 +44066,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47870,26 +44085,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47908,7 +44104,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47927,7 +44123,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to_oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47946,7 +44142,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[date_added] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47965,7 +44161,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[reference] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -47984,7 +44180,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[sub_path] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48003,7 +44199,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[document_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48022,7 +44218,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[module] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48096,7 +44292,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[documents_scanned_document]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:07
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -48114,7 +44310,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -48138,10 +44334,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -48154,7 +44350,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48196,57 +44392,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([applies_to])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48292,7 +44442,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48338,7 +44488,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48384,7 +44534,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48430,7 +44580,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48476,7 +44626,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48522,7 +44672,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48568,7 +44718,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -48616,7 +44766,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -48668,7 +44818,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[documents_scanned_document]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -48685,7 +44835,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -48709,10 +44859,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -48721,7 +44871,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48742,28 +44892,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48784,7 +44913,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48805,7 +44934,7 @@ BEGIN
 		OLD.[applies_to_oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48826,7 +44955,7 @@ BEGIN
 		OLD.[date_added] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48847,7 +44976,7 @@ BEGIN
 		OLD.[reference] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48868,7 +44997,7 @@ BEGIN
 		OLD.[sub_path] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48889,7 +45018,7 @@ BEGIN
 		OLD.[document_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48910,7 +45039,7 @@ BEGIN
 		OLD.[module] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -48966,7 +45095,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[documents_stored_file]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:54
+-- Date:        22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -48992,7 +45121,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[documents_stored_file]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -49009,7 +45138,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -49033,10 +45162,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -49044,7 +45173,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49063,7 +45192,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49082,26 +45211,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49120,7 +45230,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[mime_type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49139,7 +45249,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[name] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49158,7 +45268,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[data] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49177,7 +45287,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[sub_path] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49196,7 +45306,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[type_path_configuration] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49270,7 +45380,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[documents_stored_file]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -49288,7 +45398,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -49312,10 +45422,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -49328,7 +45438,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49374,7 +45484,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49416,57 +45526,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([mime_type])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49512,7 +45576,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49558,7 +45622,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49604,7 +45668,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49650,7 +45714,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49696,7 +45760,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -49744,7 +45808,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -49796,7 +45860,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[documents_stored_file]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -49813,7 +45877,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -49837,10 +45901,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -49849,7 +45913,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49870,7 +45934,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49891,28 +45955,7 @@ BEGIN
 		OLD.[type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49933,7 +45976,7 @@ BEGIN
 		OLD.[mime_type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49954,7 +45997,7 @@ BEGIN
 		OLD.[name] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49975,7 +46018,7 @@ BEGIN
 		OLD.[data] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -49996,7 +46039,7 @@ BEGIN
 		OLD.[sub_path] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50017,7 +46060,7 @@ BEGIN
 		OLD.[type_path_configuration] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50073,7 +46116,7 @@ GO
 -- Legal:       You may freely edit and modify this template and make copies of it.
 -- Description: Audit Triggers For table: [dbo].[documents_type_path_configuration]
 -- Author:      ApexSQL Software
--- Date:        12/02/2017 18:28:54
+-- Date:        22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 
 BEGIN TRANSACTION
@@ -50099,7 +46142,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  INSERT TRIGGER for Table:  [dbo].[documents_type_path_configuration]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -50116,7 +46159,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -50140,10 +46183,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -50151,7 +46194,7 @@ BEGIN
 	
 
 	
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50170,7 +46213,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[oid] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50189,26 +46232,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[type] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		NEW_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), NEW.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), NEW.[orev], 0),
-		'A'
-		, CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0))
-	FROM inserted NEW
-	WHERE NEW.[orev] Is Not Null
-    
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50227,7 +46251,7 @@ BEGIN
 	FROM inserted NEW
 	WHERE NEW.[applies_to] Is Not Null
     
-	INSERT INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INSERT INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50301,7 +46325,7 @@ As
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  UPDATE TRIGGER for Table:  [dbo].[documents_type_path_configuration]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -50319,7 +46343,7 @@ BEGIN
 	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -50343,10 +46367,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -50359,7 +46383,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -50405,7 +46429,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -50447,57 +46471,11 @@ BEGIN
 		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
 	END
 	
-	If UPDATE([orev])
-	BEGIN
-    
-		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-		(
-			AUDIT_LOG_TRANSACTION_ID,
-			PRIMARY_KEY_DATA,
-			COL_NAME,
-			OLD_VALUE_LONG,
-			NEW_VALUE_LONG,
-			DATA_TYPE
-			, KEY1
-		)
-		SELECT
-			@AUDIT_LOG_TRANSACTION_ID,
-		    convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), IsNull(OLD.[oid], NEW.[oid]), 0),'''' ,'''''')+'''', '[oid] Is Null')),
-		    'orev',
-			CONVERT(nvarchar(4000), OLD.[orev], 0),
-			CONVERT(nvarchar(4000), NEW.[orev], 0),
-			'A'
-			, IsNULL( CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0)), CONVERT(nvarchar(500), CONVERT(nvarchar(4000), NEW.[oid], 0)))
-			
-		FROM deleted OLD Inner Join inserted NEW On 
-			(CONVERT(nvarchar(4000), NEW.[oid], 0)=CONVERT(nvarchar(4000), OLD.[oid], 0) or (NEW.[oid] Is Null and OLD.[oid] Is Null))
-			where (
-			
-			
-				(
-					NEW.[orev] <>
-					OLD.[orev]
-				) Or
-			
-				(
-					NEW.[orev] Is Null And
-					OLD.[orev] Is Not Null
-				) Or
-				(
-					NEW.[orev] Is Not Null And
-					OLD.[orev] Is Null
-				)
-				)
-        
-		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
-	END
-	
 	If UPDATE([applies_to])
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -50543,7 +46521,7 @@ BEGIN
 	BEGIN
     
 		INSERT
-		INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+		INTO dbo.AUDIT_LOG_DATA
 		(
 			AUDIT_LOG_TRANSACTION_ID,
 			PRIMARY_KEY_DATA,
@@ -50591,7 +46569,7 @@ BEGIN
 	
 	IF @Inserted = 0
 	BEGIN
-		DELETE FROM [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+		DELETE FROM dbo.AUDIT_LOG_TRANSACTIONS WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
 	END
 
   -- Restore @@IDENTITY Value
@@ -50643,7 +46621,7 @@ AS
 -- Legal:        You may freely edit and modify this template and make copies of it.
 -- Description:  DELETE TRIGGER for Table:  [dbo].[documents_type_path_configuration]
 -- Author:       ApexSQL Software
--- Date:		 12/02/2017 18:28:54
+-- Date:		 22/02/2017 11:37:08
 -- --------------------------------------------------------------------------------------------------------------
 BEGIN
 	DECLARE 
@@ -50660,7 +46638,7 @@ BEGIN
 	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_TRANSACTIONS
+	INTO dbo.AUDIT_LOG_TRANSACTIONS
 	(
 		TABLE_NAME,
 		TABLE_SCHEMA,
@@ -50684,10 +46662,10 @@ BEGIN
 		  WHEN LEN(APP_NAME()) < 1 THEN ' '
 		  ELSE APP_NAME()
 		END,
-		SUSER_SNAME(),
+		dbo.fnc_Audit_UserGetCurrent(),
 		GETDATE(),
 		@ROWS_COUNT,
-		'ClubFrRocks'
+		'Diamond Fire'
 	)
 
 	
@@ -50696,7 +46674,7 @@ BEGIN
 
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50717,7 +46695,7 @@ BEGIN
 		OLD.[oid] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50738,28 +46716,7 @@ BEGIN
 		OLD.[type] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
-	(
-		AUDIT_LOG_TRANSACTION_ID,
-		PRIMARY_KEY_DATA,
-		COL_NAME,
-		OLD_VALUE_LONG,
-		DATA_TYPE
-		, KEY1
-	)
-	SELECT
-		@AUDIT_LOG_TRANSACTION_ID,
-		convert(nvarchar(1500), IsNull('[oid]=N'''+replace(CONVERT(nvarchar(4000), OLD.[oid], 0), '''', '''''')+'''', '[oid] Is Null')),
-		'orev',
-		CONVERT(nvarchar(4000), OLD.[orev], 0),
-		'A'
-		,  CONVERT(nvarchar(500), CONVERT(nvarchar(4000), OLD.[oid], 0))
-	FROM deleted OLD
-	WHERE
-		OLD.[orev] Is Not Null
-
-	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,
@@ -50780,7 +46737,7 @@ BEGIN
 		OLD.[applies_to] Is Not Null
 
 	INSERT
-	INTO [ClubFrRocks].dbo.AUDIT_LOG_DATA
+	INTO dbo.AUDIT_LOG_DATA
 	(
 		AUDIT_LOG_TRANSACTION_ID,
 		PRIMARY_KEY_DATA,

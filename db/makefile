@@ -16,6 +16,12 @@ DBSERVER=.\\SQL2012
 OSQL=osql -E -S $(DBSERVER) -d $(DB) 
 SQLCONNECTIONSTRING= "Server=$(DBSERVER);Database=$(DB);Trusted_Connection=True;"
 
+
+# Configurations for a specific Customer's startup data
+CUSTOMER_NAME=Cookstown_FrRocks
+CUSTOMER_DATA_DIR=../../FootballClub/Customer.Info/Customers/$(CUSTOMER_NAME)
+
+
 Assemblies=CoreSpatial.dll\
   Core.dll\
   Documents.dll\
@@ -38,21 +44,18 @@ DBSETUP=../../DbTools/DbSetup/bin
 CURDIR=$(shell pwd)
 
 
-C:\development\FootballClub\db\audit\triggers\00_ApexSQLAuditTriggers.sql
-
-
 #ApexSQL Audit Trigger Command Line Interface 
 #http://knowledgebase.apexsql.com/using-apexsql-audit-command-line-interface-cli-switches/
 #NOTE: The ApexSQL CLI DOES NOT work with relative paths or non windows paths and it requires the FULL PATH to the project and template files.
-ApexSQLTriggerDirWindows=C:\\development\\ApexSQLTrigger2015\\
-ApexSQLTriggerExe=C:\\development\\ApexSQLTrigger2015\\ApexSQLTrigger.com
-ApexSQLTriggerDir=../../ApexSQLTrigger2015/
+ApexSQLTriggerDirWindows=C:\\development\\ApexSQLTrigger2016\\
+ApexSQLTriggerExe=C:\\development\\ApexSQLTrigger2016\\ApexSQLTrigger.com
+ApexSQLTriggerDir=../../ApexSQLTrigger2016/
 ApexSQLTriggerTemplate=$(ApexSQLTriggerDirWindows)dfwTemplate_ApexSQL2053.audx
 ApexSQLTriggerProjectFile=$(ApexSQLTriggerDirWindows)dfwProject_ApexSQL2053.axap
 
 
 #http://knowledgebase.apexsql.com/using-apexsql-audit-command-line-interface-cli-switches/
-#cp command copies the ApexSQL arch template and project file to ApexSQLTrigger2015 repos that contains alls the ApexSQL stuff
+#cp command copies the ApexSQL arch template and project file to ApexSQLTrigger2016 repos that contains alls the ApexSQL stuff
 #First command line creates the Audit Tables, Stored Procs, Views and Functions
 #Second command line creates the Audi Triggers on each table in the ApexSQL project file.
 .PHONY: auditApexSQL
@@ -61,12 +64,6 @@ auditApexSQL:
 	cp ../../DiamondFireWeb/db/audit/dfwProject_ApexSQL2053.axap $(ApexSQLTriggerDir) --force
 	$(ApexSQLTriggerExe) /server:$(DBSERVER) /verbose /database:$(DB) /arch:$(ApexSQLTriggerTemplate) /project:$(ApexSQLTriggerProjectFile) /archinstall:a
 	$(ApexSQLTriggerExe) /server:$(DBSERVER) /verbose /database:$(DB) /arch:$(ApexSQLTriggerTemplate) /project:$(ApexSQLTriggerProjectFile) /addtrigger
-
-
-.PHONY: auditApexSQL_UseSqlScriptsOnly
-auditApexSQL_UseSqlScriptsOnly: $(patsubst %.sql,%.log,$(sort $(wildcard ../../AuditApexSql/db/ApexSchema/tables/*.sql ../../AuditApexSql/db/ApexSchema/views/*.sql ../../AuditApexSql/db/ApexSchema/sp/*.sql audit/triggers/*.sql)))
-
-
 
 # #########################################################################################################################
 
@@ -97,7 +94,8 @@ clean:
 	rm -f schema.sql
 	rm -f ./*/*.log
 	rm -f ./elmah/*/*.log
-	rm -f ../../AuditApexSql/db/ApexSchema/*/*.log
+	rm -f $(CUSTOMER_DATA_DIR)/db/*.log
+	rm -f ../../AuditApexSql/db/*/*.log
 
 	
 #DELETES ALL .Log files so SQL files can be run again
@@ -108,15 +106,24 @@ cleanSqlLogs:
 	rm -f ./storedprocs/*.log
 	rm -f ./functions/*.log
 	rm -f ./scripts/*.log
-	rm -f ../../AuditApexSql/db/storedprocs/*.log 
-	rm -f ../../AuditApexSql/db/ApexSchema/*/*.log
+	rm -f ../../AuditApexSql/db/*/*.log
+	
 
 # Setup the configuration required for the INSTALLER.
 installers: mkinstalldir installscripts dbsetupbin
 
 
 #Setup Database table structures with constraints, static data and audit-trail (no Diamond Fire - triggers, view, functions or stored procedures added)
-tables: clean cleanSqlLogs schema.sql tables.log add_constraints.log auditTrail elmah sqlStoredprocs staticData sqlTriggers auditApexSQL_UseSqlScriptsOnly
+tables: clean cleanSqlLogs schema.sql tables.log add_constraints.log elmah sqlStoredprocs staticData sqlFunctions sqlTriggers auditTrail
+
+
+#Remember to clean before creating this or it will not work - clean removes Log files - if log file exists the sql will not run.
+# auditTrail: $(patsubst %.sql,%.log,$(sort $(wildcard ../../AuditApexSql/db/ApexSchema/*.sql ../../AuditApexSql/db/storedprocs/*.sql)))
+auditTrail: $(patsubst %.sql,%.log,$(sort $(wildcard ../../AuditApexSql/db/ApexSchema/*.sql audit/tables/*.sql)))
+
+
+#.PHONY: auditApexSQL_AddTriggersSql  NOT USED ANYMORE - sqlTriggers adds the audit triggers
+#auditApexSQL_AddTriggersSql: $(patsubst %.sql,%.log,$(sort $(wildcard audit/triggers/*.sql)))
 
 
 #.PHONY: add_constraints.log
@@ -124,6 +131,7 @@ add_constraints.log: schema.sql
 	$(SCHEMASLICE) constraints schema.sql | $(OSQL) | sqlcheck
 	@echo ok > $@
 
+	
 # INFO: Create directories if not created
 mkinstalldir:
 	mkdir -p setup
@@ -142,10 +150,6 @@ installscripts: schema.sql mkinstalldir
 	cat ./elmah/storedprocs/*.sql >> setup/scripts/storedprocedures.sql
 	cat ../../AuditApexSql/db/storedprocs/*.sql >> setup/scripts/storedprocedures.sql
 	cat ./triggers/*.sql >> setup/scripts/triggers.sql
-
-
-#Remember to clean before creating this or it will not work - clean removes Log files - if log file exists the sql will not run.
-auditTrail: $(patsubst %.sql,%.log,$(sort $(wildcard ../../AuditApexSql/db/storedprocs/*.sql audit/tables/*.sql)))
 
 
 #elmah:	$(patsubst %.sql,%.log,$(wildcard ../../AuditTrail/dbLanceV2/functions/*.sql ../../AuditTrail/dbLanceV2/tables/*.sql ../../AuditTrail/dbLanceV2/storedprocs/*.sql  ../../AuditTrail/dbLanceV2/triggers/*.sql))
@@ -173,6 +177,10 @@ static_objects:
 
 # Add the static objects using the SQL generated from 'static_objects'
 staticData: static_objects $(patsubst %.sql,%.log,$(sort $(wildcard staticdata/*.sql)))
+
+
+.PHONY: importCustomerData
+importCustomerData: $(patsubst %.sql,%.log,$(sort $(wildcard $(CUSTOMER_DATA_DIR)/db/*.sql)))
 
 
 #.PHONY: deleteExistingTemplates
@@ -226,11 +234,11 @@ importExistingData: $(patsubst %.sql,%.log,$(sort $(wildcard import/*.sql)))
 
 
   # Builds for testing various components all_NewDatabaseTest: boot clean tables importExistingData
-all_NewDatabaseTest: boot clean tables
+all_NewDatabaseTest: boot clean tables importCustomerData
 	
 
 # Builds for testing various components
-all_NewDatabase: boot clean tables auditApexSQL
+all_NewDatabase: boot clean tables
 
 
 

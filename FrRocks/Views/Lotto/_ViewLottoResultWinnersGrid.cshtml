@@ -22,10 +22,10 @@
   .AutoBind(true)
   .ToolBar(tools =>
   {
-    tools.Excel();
     if (editLottoWinner)
     {
       tools.Template(@<text>
+        <a class="k-button k-button-icontext k-grid-excel" href="#"><span class="k-icon k-i-excel"></span>Export to Excel</a>
         @(Html.Kendo().Button()
           .Name("btnAddLottoWinner")
           .Icon("plus")
@@ -46,6 +46,7 @@
     else
     {
       tools.Template(@Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } }).ToHtmlString());
+      tools.Excel();
     }
   })
   .Columns(columns =>

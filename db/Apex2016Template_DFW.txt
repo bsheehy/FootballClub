@@ -1,0 +1,1011 @@
+{%
+'------------------------------------------------------------ 
+'	TEMPLATE : ApexSQL.audx
+'	PURPOSE  : Create auditing triggers for processing in ApexSQL Trigger
+'	VERSION  : 20.53
+'	EXPECTS  : TABLES
+'	OUTPUT   : ApexSQL Trigger triggers
+'	AUTHOR   : ApexSQL
+'	SCRIPT   : VBScript 
+'	LANGUAGE : SQL                                         
+'	MODIFIED : 16 May 2016
+'
+' DIAMOND FIRE WEB MODIFICATIONS:
+'	DFW_1.0 30 May 2016
+'			Replaced SUSER_SNAME() with dbo.fnc_Audit_UserGetCurrent() to get DFW user who changed the data.
+'			Replaced Audit.Print Audit.Database.Name% with Audit.Print DiamondFireDatabaseName
+'			Do not audit orev - And objTable.Fields.Item(j).Name<>"orev"
+'			Remove the Use [Database] GO at start of script
+'			Set the DatabaseName from DatabaseName = "[" & Audit.Database.Name & "]" to  DatabaseName = "" so Triggers definition is not associated to database.
+'
+'    16 May 2016
+'      - Added rollback feature when trigger cannot be set as last
+'		 20.53 16 June 2015
+'			- Added DDL report
+'        20.51 27 February 2013
+'           - Added support for Azure
+'        20.50 23 January 2013
+'           - Fixed: Displaying Unicode characters properly.
+'		     20.49 26 October 2009
+'           - Fixed: Support Undo for Delete operation for SQL server 2000.
+'		     20.48 22 January 2009
+'           - Fixed: Values format of Float and Real type do not correspond to initial ones from DB
+'			      - Fixed: Standard report shows smalldatetime type similar to datetime
+'        		- Fixed: Values of Time, DateTime and related data types have different format in reports
+'				 20.47  12 December 2008
+'						- Added support for SQL2008 datatypes
+'				 20.46	08 August 2008
+'						- Fixed identity check within Undo procedure
+'				 20.42	21 July 2007
+'						- Added using CompatibilityLevel to detect database for SQL Server 7.0
+'				 20.41	21 May 2007
+'						- Added checks of using SCOPE_IDENTITY() for SQL Server 7.0
+'				 20.39	15 Mar 2007
+'						- Add checks to write not null values in APP_NAME and HOST_NAME columns of AUDIT_LOG_TRANSACTIONS table
+'				 20.38	19 Feb 2007
+'						- Use SCOPE_IDENTITY() instead @@IDENITY to get correct value if storage tables would have triggers
+'						- Use converting values for correct writing KEY field values
+'
+'				 20.37	7 Feb 2007
+'						- Make storage tables' names definition at the top.
+'						- Make storage database name definition at the top.
+'						- Added writing to the log audit database name.
+'
+'				 20.36	9 Jan 2007
+'						- Make triggers' prefixes definition at the top.
+'
+'				 20.35	21 Dec 2006
+'						- Improve perfomance of the update trigger.
+'
+'				 20.34	19 Oct 2006
+'						- Fixed lookup writing for ntext and image types.
+'						- Fixed lookup writing in insert and delete triggers
+'
+'				 20.33	2 Oct 2006
+'						- Update Lookup writing conception. It writes if linked field changed.
+'						- Update Watches
+'
+'				 20.32	19 Sep 2006
+'						- Make format of key field 'field=value'
+'
+'				 20.31	25 Aug 2006
+'						- Add Watch fields support
+'						- Additional write row keys differently to KEY1-KEY4 fields in AUDIT_LOG_DATA
+'
+'                20.30
+'                       - Add support to fill DATA_TYPE column in AUDIT_LOG_DATA table
+'						- Fixed work lookup if lookup expression contains row key field and it is change
+'                20.29
+'                       - Fixed: use 'GO' clause after change database in template
+'                20.28
+'                       - Changed row key generation base on data in object model 
+'                       - Add lookup code creation 
+'                       - Change Reporing procedures for work with custom 'where' expression and multiple items filter
+'                       - Fixed: correct deleteing and analyze procedures
+'                       - Fixed: correct work with (var)binary and sql_variant datatypes 
+'
+'                20.27
+'                       - Changed: use static defined table names
+'                       - Fixed: raise error when try undo deleted audit row
+'
+'                20.26
+'                       - Fixed: update trigger write two rows on equal new and old values
+'
+'                20.25
+'                       - Fixed: undo disable/enable triggers that not exists or disable
+'
+' ------------------------------------------------------------ 
+
+	Dim i, j, k
+	Dim objTable
+	Dim objField
+	Dim objKey
+    Dim TableFullName
+	StartTriggerNameInsert = "tr_i_AUDIT_"
+	StartTriggerNameUpdate = "tr_u_AUDIT_"
+	StartTriggerNameDelete = "tr_d_AUDIT_"
+		
+	DiamondFireDatabaseName = "Diamond Fire"
+	DatabaseName = ""
+	TransactionsTableName = "dbo.AUDIT_LOG_TRANSACTIONS"
+	DataTableName = "dbo.AUDIT_LOG_DATA"
+	
+	InitTab 4
+	
+	Set objTable = Audit.Database.ActiveTable
+        TableFullName="[" & objTable.Owner & "].[" & objTable.Name & "]"
+
+	If objTable.IsSelectedForAudit Then
+    If objtable.IsFirstAuditedTable Then
+%}/* ============================================================
+   DESCRIPTION:  Triggers Creation Script
+   
+   Tables:
+     {%
+for i = 1 to Audit.Database.Tables.Count
+	Set objTmpTable = Audit.Database.Tables.Item(i)
+	if objTmpTable.IsSelectedForAudit and objTmpTable.IsChecked then
+		Audit.Print objTmpTable.Name%}
+	    Triggers:
+			{%
+		if objTmpTable.Audit4Insert then
+			Audit.Print "[" & objTmpTable.Owner & "].[" & StartTriggerNameInsert & objTmpTable.Name & "] "
+		end if
+		if objTmpTable.Audit4Update then
+			Audit.Print "[" & objTmpTable.Owner & "].[" & StartTriggerNameUpdate & objTmpTable.Name & "] "
+		end if
+		if objTmpTable.Audit4Delete then
+			Audit.Print "[" & objTmpTable.Owner & "].[" & StartTriggerNameDelete & objTmpTable.Name & "] "
+		end if
+		%}
+     {%
+	end if
+next%}
+   DATABASE:    {%Audit.Print Audit.Database.Server & "." & Audit.Database.Name%}
+   DATE:        {%Audit.Print Now%}
+   =============================================================*/
+GO{%
+	End If
+%}
+-- --------------------------------------------------------------------------------------------------------------
+-- Legal:       {%Audit.Print Audit.Legal%}
+-- Description: Audit Triggers For table: {%Audit.Print TableFullName%}
+-- Author:      {%Audit.Print Audit.Author%}
+-- Date:        {%Audit.Print Now%}
+-- --------------------------------------------------------------------------------------------------------------
+{%If objTable.Audit4Insert = True Then
+' ==================================================================================
+' ==================================================================================
+' INSERT	INSERT	INSERT	INSERT	INSERT	INSERT	INSERT	INSERT	INSERT	INSERT
+' ==================================================================================
+' ==================================================================================
+caption = "Create INSERT trigger " & "[" & objTable.Owner & "].[" & StartTriggerNameInsert & objTable.Name & "]" & _
+		" for Table " & TableFullName%}
+BEGIN TRANSACTION
+IF OBJECT_ID('{%Audit.Print replace("[" & objTable.Owner & "].[" & StartTriggerNameInsert & objTable.Name & "]", "'", "''") %}','TR') IS NOT NULL
+BEGIN
+   DROP TRIGGER {%Audit.Print "[" & objTable.Owner & "].[" & StartTriggerNameInsert & objTable.Name & "]" %}
+   PRINT '{% Audit.Print "Trigger dropped: " & StartTriggerNameInsert & Replace(objTable.Name,"'","''")%}'
+END
+GO
+-- {%Audit.Print caption%}
+Print '{%Audit.Print Replace(caption, "'", "''")%}'
+go
+CREATE TRIGGER {%Audit.Print "[" & objTable.Owner & "].[" & StartTriggerNameInsert & objTable.Name & "]" %}
+ON {%Audit.Print TableFullName%}
+FOR INSERT
+
+{%IF NOT Audit.ServerIsAzure Then %}
+	NOT FOR REPLICATION
+{%end if%}
+As
+-- "<TAG>SQLAUDIT GENERATED - DO NOT REMOVE</TAG>"
+-- --------------------------------------------------------------------------------------------------------------
+-- Legal:        {%Audit.Print Audit.Legal%}
+-- Description:  INSERT TRIGGER for Table:  {%Audit.Print TableFullName%}
+-- Author:       {%Audit.Print Audit.Author%}
+-- Date:		 {%Audit.Print Now%}
+-- --------------------------------------------------------------------------------------------------------------
+BEGIN
+	DECLARE 
+		@IDENTITY_SAVE				varchar(50),
+		@AUDIT_LOG_TRANSACTION_ID		Int,
+		@PRIM_KEY				nvarchar(4000),
+		--@TABLE_NAME				nvarchar(4000),
+		@ROWS_COUNT				int
+ 
+	SET NOCOUNT ON
+
+	--Set @TABLE_NAME = '{%Audit.Print Replace(TableFullName, "'", "''")%}'
+	Select @ROWS_COUNT=count(*) from inserted
+	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
+
+	INSERT
+	INTO {%Audit.Print TransactionsTableName%}
+	(
+		TABLE_NAME,
+		TABLE_SCHEMA,
+		AUDIT_ACTION_ID,
+		HOST_NAME,
+		APP_NAME,
+		MODIFIED_BY,
+		MODIFIED_DATE,
+		AFFECTED_ROWS,
+		[DATABASE]
+	)
+	values(
+		'{%Audit.Print Replace(objTable.Name, "'", "''")%}',
+		'{%Audit.Print Replace(objTable.Owner, "'", "''")%}',
+		2,	--	ACTION ID For INSERT
+		CASE 
+		  WHEN LEN(HOST_NAME()) < 1 THEN ' '
+		  ELSE HOST_NAME()
+		END,
+		CASE 
+		  WHEN LEN(APP_NAME()) < 1 THEN ' '
+		  ELSE APP_NAME()
+		END,
+		dbo.fnc_Audit_UserGetCurrent(),
+		GETDATE(),
+		@ROWS_COUNT,
+		'{%Audit.Print DiamondFireDatabaseName%}'
+	)
+
+	{%IF Audit.Database.CompatibilityLevel = 70 Then %}
+	Set @AUDIT_LOG_TRANSACTION_ID = @@IDENTITY
+	{%else%}
+	Set @AUDIT_LOG_TRANSACTION_ID = SCOPE_IDENTITY()
+	{%end if%}
+
+	{%RowKey = "convert(nvarchar(1500), " & KeyString(objTable, "NEW") & ")"
+	KeyEqualsNewOrd = KeyEqualFieldsWithNulls(objTable, "NEW", "ORD")
+	counter = 1
+	KeyFields=""
+	KeyValues=""
+	for KeyField = 1 to objTable.Fields.Count
+		if objTable.Fields.Item(KeyField).IsInRowKey then
+			KeyFields=KeyFields & ", KEY" & counter
+			KeyValues=KeyValues & ", CONVERT(nvarchar(500), " & GetConvertedField(objTable.Fields.Item(KeyField), "NEW", 0) & ")"
+			counter = counter + 1
+			if counter > 4 then
+				exit for
+			end if
+		end if
+	next
+	For j = 1 To objTable.Fields.Count
+	If (objTable.Fields.Item(j).IsChecked OR objTable.Fields.Item(j).IsWatch) _
+		And objTable.Fields.Item(j).Name<>"orev" _
+		And objTable.Fields.Item(j).SQL_Datatype<>"timestamp" Then
+		Set objField = objTable.Fields.Item(j)
+    If objField.SQL_Datatype="image" or objField.SQL_Datatype="text" _ 
+		or objField.SQL_Datatype="ntext" then%}
+  	INSERT INTO {%Audit.Print DataTableName%}
+	(
+		AUDIT_LOG_TRANSACTION_ID,
+		PRIMARY_KEY_DATA,
+		COL_NAME,
+        {%If objField.SQL_Datatype="image" then%}NEW_VALUE_BLOB{%else%}NEW_VALUE_LONG{%end if%},
+		DATA_TYPE
+		{%Audit.Print KeyFields%}
+	)
+	SELECT TOP 1
+		@AUDIT_LOG_TRANSACTION_ID,
+	    {%Audit.Print RowKey%},
+		{%Audit.Print "'" & replace(objfield.Name, "'", "''") & "'" %},
+		ORD.[{%Audit.Print objfield.Name%}],
+		'A'
+		{%Audit.Print KeyValues%}
+	FROM inserted NEW
+        INNER JOIN {%Audit.Print TableFullName%} ORD 
+            ON {%Audit.Print KeyEqualsNewOrd%}
+	WHERE
+		ORD.[{%Audit.Print objfield.Name%}] Is Not Null
+    {%else%}
+	INSERT INTO {%Audit.Print DataTableName%}
+	(
+		AUDIT_LOG_TRANSACTION_ID,
+		PRIMARY_KEY_DATA,
+		COL_NAME,
+		NEW_VALUE_LONG,
+		DATA_TYPE
+		{%Audit.Print KeyFields%}
+	)
+	SELECT
+		@AUDIT_LOG_TRANSACTION_ID,
+		{%Audit.Print RowKey%},
+		{%Audit.Print "'" & replace(objfield.Name, "'", "''") & "'"%},
+		{%Audit.Print GetConvertedField(objfield, "NEW", 0)%},
+		'A'
+		{%Audit.Print KeyValues%}
+	FROM inserted NEW
+	WHERE NEW.[{%Audit.Print objfield.Name%}] Is Not Null
+    {%end if
+	End If
+	Next%}
+	
+	-- Lookup 
+	{%If objTable.Lookups.Count > 0 Then
+	For lookupIndex=1 to objTable.Lookups.Count
+		Set lookup = objTable.Lookups.Item(lookupIndex)
+
+	IsBlob = False
+	if lookup.GetValueExpressionDatatype="image" OR lookup.GetValueExpressionDatatype="ntext" OR lookup.GetValueExpressionDatatype="text" _
+		OR lookup.GetValueExpressionDatatype="xml" then
+		IsBlob = True
+	end if
+	%}
+	INSERT
+	INTO {%Audit.Print DataTableName%}
+	(
+		AUDIT_LOG_TRANSACTION_ID,
+		PRIMARY_KEY_DATA,
+		COL_NAME,
+        {%If lookup.GetValueExpressionDatatype="image" then%}NEW_VALUE_BLOB{%else%}NEW_VALUE_LONG{%end if%}
+		,DATA_TYPE
+		{%Audit.Print KeyFields%}
+	)
+	SELECT
+		@AUDIT_LOG_TRANSACTION_ID,
+		{%Audit.Print RowKey%},
+		'{%Audit.Print replace(lookup.Name, "'", "''")%}',
+		{%Audit.Print GetConvertedFieldWithCustomNameDatatype( _
+			lookup.GetValueExpressionDatatype(), _
+			lookup.GetValueExpression("t_ord"), 1, True)%},
+		'L'
+		{%Audit.Print KeyValues%}
+	FROM inserted NEW Left Outer JOIN {%Audit.Print lookup.RelatedTable.FullTableName%} t_ord on
+		{%Audit.Print lookup.GetConditionExpression("NEW", "t_ord")%}
+	{%if not (lookup.GetValueExpressionDatatype() = "xml" or lookup.GetValueExpressionDatatype() = "text" _
+		or lookup.GetValueExpressionDatatype() = "ntext" or lookup.GetValueExpressionDatatype() = "image") then%}
+	Group By {%
+		exist = False
+		for KeyField = 1 to objTable.Fields.Count
+			if objTable.Fields.Item(KeyField).IsInRowKey then
+				if exist then Audit.Print ", "
+				
+				if objTable.Fields.Item(KeyField).SQL_Datatype<>"xml" and objTable.Fields.Item(KeyField).SQL_Datatype<>"geometry" and objTable.Fields.Item(KeyField).SQL_Datatype<>"geography" and objTable.Fields.Item(KeyField).SQL_Datatype<>"hierarchyid" then
+					Audit.Print "NEW.[" & objTable.Fields.Item(KeyField).Name & "]" 					
+				else
+					Audit.Print "CONVERT(nvarchar(max), NEW.[" & objTable.Fields.Item(KeyField).Name & "])"					
+				end if								
+				exist = True
+			end if
+		next
+		for KeyField = 1 to lookup.RelatedTable.Fields.Count 
+			if not lookup.RelatedTable.Fields.Item(KeyField).IsBLOB _
+				and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype <> "xml" then
+				if exist then Audit.Print ", "
+				if lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"xml" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"geometry" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"geography" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"hierarchyid" then						
+						Audit.Print "t_ord.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "]"
+					else						
+						Audit.Print "CONVERT(nvarchar(max), t_ord.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "])"
+					end if									
+				exist = True
+			end if
+		next%}
+	{%end if%}
+	{%Next
+	End If%}
+
+  -- Restore @@IDENTITY Value
+  {%IF NOT Audit.ServerIsAzure Then %}
+    DECLARE @maxprec AS varchar(2)
+    SET @maxprec=CAST(@@MAX_PRECISION as varchar(2))
+    EXEC('SELECT IDENTITY(decimal('+@maxprec+',0),'+@IDENTITY_SAVE+',1) id INTO #tmp')
+  {%else%}
+    CREATE TABLE #tmp (ID DECIMAL IDENTITY)
+    SET IDENTITY_INSERT #tmp ON
+    INSERT INTO #tmp (Id) VALUES (CAST(@IDENTITY_SAVE AS DECIMAL))
+    SET IDENTITY_INSERT #tmp OFF
+  {%end if%}
+	
+End
+GO
+
+-- Display the status of Trigger Created 
+If @@Error = 0 PRINT {%Audit.Print "'Trigger created: " & StartTriggerNameInsert & Replace(objTable.Name,"'","''") & "'" %} 
+Else PRINT '{%Audit.Print "Trigger Failed: " & StartTriggerNameInsert & Replace(objTable.Name,"'","''")%} Error on Creation'
+GO
+
+-- mark the trigger as last
+{%If Audit.Database.CompatibilityLevel > 70 Then%}
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE parent_obj=OBJECT_ID('{%Audit.Print REPLACE(TableFullName,"'","''")%}') AND OBJECTPROPERTY(id,'ExecIsLastInsertTrigger')=1 AND xtype='TR')
+BEGIN
+  DECLARE @ISERROR INT
+  EXEC @ISERROR = sp_settriggerorder '{%Audit.Print Replace("[" & objTable.Owner & "].[" & StartTriggerNameInsert & objTable.Name & "]","'","''")%}', 'Last', 'Insert'
+  If @ISERROR = 0 PRINT {%Audit.Print "'Trigger " & StartTriggerNameInsert & Replace(objTable.Name,"'","''") & " has been marked as Last'" %} 
+  ELSE PRINT {%Audit.Print "'Trigger " & StartTriggerNameInsert & Replace(objTable.Name,"'","''") & " cannot be marked as Last'+ CHAR(10)+'Trigger creation is rolled back'"%}
+  IF @ISERROR <> 0 ROLLBACK ELSE COMMIT
+END
+GO
+{%End If%}
+{%End If
+
+If objTable.Audit4Update = True Then
+' ==================================================================================
+' ==================================================================================
+' UPDATE	UPDATE	UPDATE	UPDATE	UPDATE	UPDATE	UPDATE	UPDATE	UPDATE	UPDATE
+' ==================================================================================
+' ==================================================================================
+caption = "Create UPDATE trigger " & "[" & objTable.Owner & "].[" & StartTriggerNameUpdate & objTable.Name & "]" & _
+		" for Table " & TableFullName%}
+BEGIN TRANSACTION
+IF OBJECT_ID('{%Audit.Print Replace("[" & objTable.Owner & "].[" & StartTriggerNameUpdate & objTable.Name & "]","'","''") %}','TR') IS NOT NULL
+BEGIN
+	DROP TRIGGER {%Audit.Print "[" & objTable.Owner & "].[" & StartTriggerNameUpdate & objTable.Name & "]" %}
+	PRINT '{%Audit.Print "Trigger dropped: " & StartTriggerNameUpdate & Replace(objTable.Name,"'","''")%} '
+END
+GO
+
+-- {%Audit.Print caption%}
+Print '{%Audit.Print Replace(caption, "'", "''")%}'
+go
+CREATE TRIGGER {%Audit.Print "[" & objTable.Owner & "].[" & StartTriggerNameUpdate & objTable.Name & "]" %}
+ON {%Audit.Print TableFullName%}
+FOR UPDATE
+{%IF NOT Audit.ServerIsAzure Then %}
+	NOT FOR REPLICATION
+{%end if%}
+As
+-- "<TAG>SQLAUDIT GENERATED - DO NOT REMOVE</TAG>"
+-- --------------------------------------------------------------------------------------------------------------
+-- Legal:        {%Audit.Print Audit.Legal%}
+-- Description:  UPDATE TRIGGER for Table:  {%Audit.Print TableFullName%}
+-- Author:       {%Audit.Print Audit.Author%}
+-- Date:		 {%Audit.Print Now%}
+-- --------------------------------------------------------------------------------------------------------------
+BEGIN
+	DECLARE 
+		@IDENTITY_SAVE			varchar(50),
+		@AUDIT_LOG_TRANSACTION_ID	Int,
+		@PRIM_KEY			nvarchar(4000),
+		@Inserted	    		bit,
+		--@TABLE_NAME				nvarchar(4000),
+ 		@ROWS_COUNT				int
+ 
+	SET NOCOUNT ON
+
+	--Set @TABLE_NAME = '{%Audit.Print Replace(TableFullName, "'", "''")%}'
+	Select @ROWS_COUNT=count(*) from inserted
+	SET @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
+
+	INSERT
+	INTO {%Audit.Print TransactionsTableName%} 
+	(
+		TABLE_NAME,
+		TABLE_SCHEMA,
+		AUDIT_ACTION_ID,
+		HOST_NAME,
+		APP_NAME,
+		MODIFIED_BY,
+		MODIFIED_DATE,
+		AFFECTED_ROWS,
+		[DATABASE]
+	)
+	values(
+		'{%Audit.Print Replace(objTable.Name, "'", "''")%}',
+		'{%Audit.Print Replace(objTable.Owner, "'", "''")%}',
+		1,	--	ACTION ID For UPDATE
+		CASE 
+		  WHEN LEN(HOST_NAME()) < 1 THEN ' '
+		  ELSE HOST_NAME()
+		END,
+		CASE 
+		  WHEN LEN(APP_NAME()) < 1 THEN ' '
+		  ELSE APP_NAME()
+		END,
+		dbo.fnc_Audit_UserGetCurrent(),
+		GETDATE(),
+		@ROWS_COUNT,
+		'{%Audit.Print DiamondFireDatabaseName%}'
+	)
+	
+	{%IF Audit.Database.CompatibilityLevel = 70 Then %}
+	Set @AUDIT_LOG_TRANSACTION_ID = @@IDENTITY
+	{%else%}
+	Set @AUDIT_LOG_TRANSACTION_ID = SCOPE_IDENTITY()
+	{%end if%}
+	
+	SET @Inserted = 0
+	{%RowKey1 = "convert(nvarchar(1500), " & KeyStringWithNotNull(objTable, "ORD", "NEW") & ")"
+	RowKey2 = "convert(nvarchar(1500), " & KeyStringWithNotNull(objTable, "OLD", "NEW") & ")"
+	KeyEqualsNewOrd = KeyEqualFieldsWithNulls(objTable, "NEW", "ORD")
+	KeyEqualsNewOld = KeyEqualFieldsWithNulls(objTable, "NEW", "OLD")
+	counter = 1
+	KeyFields=""
+	KeyValuesOLDNEW=""
+	KeyValuesORDNEW=""
+	for KeyField = 1 to objTable.Fields.Count
+		if objTable.Fields.Item(KeyField).IsInRowKey then
+			KeyFields=KeyFields & ", KEY" & counter
+			KeyValuesOLDNEW=KeyValuesOLDNEW & ", IsNULL(" & " CONVERT(nvarchar(500), " & GetConvertedField(objTable.Fields.Item(KeyField), "OLD", 0) & ")" & ", " & "CONVERT(nvarchar(500), " & GetConvertedField(objTable.Fields.Item(KeyField), "NEW", 0) & ")" & ")"
+			KeyValuesORDNEW=KeyValuesORDNEW & ", IsNULL(" & " CONVERT(nvarchar(500), " & GetConvertedField(objTable.Fields.Item(KeyField), "ORD", 0) & ")" & ", " & "CONVERT(nvarchar(500), " & GetConvertedField(objTable.Fields.Item(KeyField), "NEW", 0) & ")" & ")"
+			counter = counter + 1
+			if counter > 4 then
+				exit for
+			end if
+	end if
+	next
+	For j = 1 To objTable.Fields.Count
+		If objTable.Fields.Item(j).IsChecked And objTable.Fields.Item(j).Name<>"orev" And objTable.Fields.Item(j).SQL_Datatype<>"timestamp" Then
+			Set objField = objTable.Fields.Item(j)
+	%}
+	If UPDATE([{%Audit.Print objfield.Name%}])
+	BEGIN{%IncTabDepth%}
+    {%If objField.SQL_Datatype="image" or objField.SQL_Datatype="text" _
+		or objField.SQL_Datatype="ntext" then%}
+	  	INSERT
+		INTO {%Audit.Print DataTableName%} 
+		(
+			AUDIT_LOG_TRANSACTION_ID,
+			PRIMARY_KEY_DATA,
+			COL_NAME,
+            {%If objField.SQL_Datatype="image" then%}NEW_VALUE_BLOB{%else%}NEW_VALUE_LONG{%end if%},
+			DATA_TYPE
+			{%Audit.Print KeyFields%}
+		)
+		SELECT TOP 1
+			@AUDIT_LOG_TRANSACTION_ID,
+		    {%Audit.Print RowKey1%},
+		    '{%Audit.Print replace(objfield.Name, "'", "''")%}',
+			ORD.[{%Audit.Print objfield.Name%}],
+			'A'
+			{%Audit.Print KeyValuesORDNEW%}
+		FROM inserted NEW INNER JOIN {%Audit.Print TableFullName%} ORD 
+            ON {%Audit.Print KeyEqualsNewOrd%}
+        {%else%}
+		INSERT
+		INTO {%Audit.Print DataTableName%} 
+		(
+			AUDIT_LOG_TRANSACTION_ID,
+			PRIMARY_KEY_DATA,
+			COL_NAME,
+			OLD_VALUE_LONG,
+			NEW_VALUE_LONG,
+			DATA_TYPE
+			{%Audit.Print KeyFields%}
+		)
+		SELECT
+			@AUDIT_LOG_TRANSACTION_ID,
+		    {%Audit.Print RowKey2%},
+		    '{%Audit.Print replace(objfield.Name, "'", "''")%}',
+			{%Audit.Print GetConvertedField (objfield, "OLD", 0)%},
+			{%Audit.Print GetConvertedField (objfield, "NEW", 0)%},
+			'A'
+			{%Audit.Print KeyValuesOLDNEW%}
+			{%if objField.IsInRowKey then%}
+		FROM deleted OLD Full Outer Join inserted NEW On
+			{%Audit.Print KeyEqualsNewOld%}
+			WHERE (
+			{%else%}
+		FROM deleted OLD Inner Join inserted NEW On 
+			{%Audit.Print KeyEqualsNewOld%}
+			where (
+			{%end if%}
+			{%if objField.SQL_Datatype<>"xml" and objField.SQL_Datatype<>"geometry" and objField.SQL_Datatype<>"geography" and objField.SQL_Datatype<>"hierarchyid" then%}
+				(
+					NEW.[{%Audit.Print objfield.Name%}] <>
+					OLD.[{%Audit.Print objfield.Name%}]
+				) Or
+			{%else%}
+				(
+					CONVERT(nvarchar(max), NEW.[{%Audit.Print objfield.Name%}]) <>
+					CONVERT(nvarchar(max), OLD.[{%Audit.Print objfield.Name%}])
+				) Or
+			{%end if%}
+				(
+					NEW.[{%Audit.Print objfield.Name%}] Is Null And
+					OLD.[{%Audit.Print objfield.Name%}] Is Not Null
+				) Or
+				(
+					NEW.[{%Audit.Print objfield.Name%}] Is Not Null And
+					OLD.[{%Audit.Print objfield.Name%}] Is Null
+				)
+				)
+        {%End if%}
+		SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
+	END
+	{%End If
+	Next%}
+	-- Watch
+	{%
+	if objTable.HasWatches then%}
+	if @Inserted > 0
+	begin
+	{%'write Watches
+	For k = 1 To objTable.Watches.Count
+	Set watch = objTable.Watches.Item(k)
+	Set objField = watch.AuditField%}
+	IF UPDATE([{%Audit.Print objField.Name%}])
+	begin
+	INSERT INTO {%Audit.Print DataTableName%}
+		(
+			AUDIT_LOG_TRANSACTION_ID,
+			PRIMARY_KEY_DATA,
+			COL_NAME,
+			{%If watch.WatchField.SQL_Datatype="image" then
+			%}NEW_VALUE_BLOB{%
+			else 
+			if watch.WatchField.SQL_Datatype="text" or watch.WatchField.SQL_Datatype="ntext" then
+			%}NEW_VALUE_LONG{%
+			else
+			%}OLD_VALUE_LONG,
+			NEW_VALUE_LONG{%
+			end if
+			end if%},
+			DATA_TYPE
+			{%Audit.Print KeyFields%}
+		)
+		SELECT
+			@AUDIT_LOG_TRANSACTION_ID,
+		    {%Audit.Print RowKey2%},
+		    '{%Audit.Print replace(watch.WatchField.Name, "'", "''")%}',
+			{%if not(watch.WatchField.SQL_Datatype="image" or watch.WatchField.SQL_Datatype="text" or watch.WatchField.SQL_Datatype="ntext") then
+			Audit.Print GetConvertedField (watch.WatchField, "OLD", 0)%},
+			{%Audit.Print GetConvertedField (watch.WatchField, "NEW", 0)%},
+			{%else
+			Audit.Print "ORD.[" & watch.WatchFieldName & "]"%},
+			{%end if%}
+			'W'
+			{%Audit.Print KeyValuesOLDNEW%}
+		FROM inserted NEW 
+		{%if watch.WatchField.IsBLOB or watch.WatchField.SQL_Datatype="xml" then
+		%}INNER JOIN {%Audit.Print TableFullName%} ORD 
+            ON {%Audit.Print KeyEqualsNewOrd%}
+		{%
+		end if
+		%}Full Outer Join deleted OLD On
+			{%Audit.Print KeyEqualsNewOld%}
+		{%if not objField.IsBLOB and objField.SQL_Datatype<>"xml" then%}
+		WHERE
+			(
+			{%if objField.SQL_Datatype<>"xml" and objField.SQL_Datatype<>"geometry" and objField.SQL_Datatype<>"geography" and objField.SQL_Datatype<>"hierarchyid" then%}
+				( NEW.[{%Audit.Print objfield.Name%}] <> OLD.[{%Audit.Print objfield.Name%}] ) Or
+			{%else%}
+				( CONVERT(nvarchar(max), NEW.[{%Audit.Print objfield.Name%}]) <> CONVERT(nvarchar(max), OLD.[{%Audit.Print objfield.Name%}]) ) Or
+			{%end if%}
+			(NEW.[{%Audit.Print objField.Name%}] Is Null And OLD.[{%Audit.Print objField.Name%}] Is Not Null) Or
+			(NEW.[{%Audit.Print objField.Name%}] Is Not Null And OLD.[{%Audit.Print objField.Name%}] Is Null))
+		{%end if%}
+	end
+	{%
+	Next%}
+	end
+	{%end if%}
+	-- Lookup
+	{%If objTable.Lookups.Count > 0 Then
+	
+	For lookupIndex=1 to objTable.Lookups.Count
+		Set lookup = objTable.Lookups.Item(lookupIndex)
+
+	IsBlob = False
+	if lookup.GetValueExpressionDatatype="image" OR lookup.GetValueExpressionDatatype="ntext" OR lookup.GetValueExpressionDatatype="text" _
+		OR lookup.GetValueExpressionDatatype="xml" then
+		IsBlob = True
+	end if
+	%}
+	IF {%
+	For f = 1 to lookup.Relationships.Count
+		Set objLookupRelationship = lookup.Relationships.Item(f)
+		IF f > 1 then Audit.Print " OR "
+		Audit.Print "UPDATE([" & objLookupRelationship.BaseColumn & "])"
+	Next
+	%}
+	BEGIN
+	INSERT
+	INTO {%Audit.Print DataTableName%}
+	(
+		AUDIT_LOG_TRANSACTION_ID,
+		PRIMARY_KEY_DATA,
+		COL_NAME,
+ 		{%If Not lookup.GetValueExpressionDatatype="image" then%}OLD_VALUE_LONG,{%end if%}
+        {%If lookup.GetValueExpressionDatatype="image" then%}NEW_VALUE_BLOB{%else%}NEW_VALUE_LONG{%end if%}
+		,DATA_TYPE
+		{%Audit.Print KeyFields%}
+	)
+	SELECT
+		@AUDIT_LOG_TRANSACTION_ID,
+		{%Audit.Print RowKey2%},
+		'{%Audit.Print replace(lookup.Name, "'", "''")%}',
+		{%If NOT lookup.GetValueExpressionDatatype="image" then%}
+		{%Audit.Print GetConvertedFieldWithCustomNameDatatype( _
+			lookup.GetValueExpressionDatatype(), _
+			lookup.GetValueExpression("t_old"), 1, True)%},
+		{%end if%}
+		{%Audit.Print GetConvertedFieldWithCustomNameDatatype( _
+			lookup.GetValueExpressionDatatype(), _
+			lookup.GetValueExpression("t_new"), 1, True)%},
+		'L'
+		{%Audit.Print KeyValuesOLDNEW%}
+	FROM deleted OLD Full Outer Join inserted NEW On
+		{%Audit.Print KeyEqualsNewOld%}
+		Left Outer Join (select * from {%Audit.Print lookup.RelatedTable.FullTableName%}) t_new on
+		{%Audit.Print lookup.GetConditionExpression("NEW", "t_new")%}
+		Left Outer Join (select * from {%Audit.Print lookup.RelatedTable.FullTableName%}) t_old on
+		{%Audit.Print lookup.GetConditionExpression("OLD", "t_old")%}
+	{%if not (lookup.GetValueExpressionDatatype() = "xml" or lookup.GetValueExpressionDatatype() = "text" _
+		or lookup.GetValueExpressionDatatype() = "ntext" or lookup.GetValueExpressionDatatype() = "image") then%}
+	Group By {%
+		exist = False
+		for KeyField = 1 to objTable.Fields.Count
+		if objTable.Fields.Item(KeyField).IsInRowKey then
+			if exist then Audit.Print ", "
+				if objTable.Fields.Item(KeyField).SQL_Datatype<>"xml" and objTable.Fields.Item(KeyField).SQL_Datatype<>"geometry" and objTable.Fields.Item(KeyField).SQL_Datatype<>"geography" and objTable.Fields.Item(KeyField).SQL_Datatype<>"hierarchyid" then
+					Audit.Print "NEW.[" & objTable.Fields.Item(KeyField).Name & "], " 
+					Audit.Print "OLD.[" & objTable.Fields.Item(KeyField).Name & "]"
+				else
+					Audit.Print "CONVERT(nvarchar(max), NEW.[" & objTable.Fields.Item(KeyField).Name & "]), "
+					Audit.Print "CONVERT(nvarchar(max), OLD.[" & objTable.Fields.Item(KeyField).Name & "])"
+				end if	
+				exist = True
+		end if
+		next
+		for KeyField = 1 to lookup.RelatedTable.Fields.Count 
+			if not lookup.RelatedTable.Fields.Item(KeyField).IsBLOB _
+				and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype <> "xml" then
+				if exist then Audit.Print ", "
+					if lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"xml" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"geometry" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"geography" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"hierarchyid" then
+						Audit.Print "t_new.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "], " 
+						Audit.Print "t_old.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "]"
+					else
+						Audit.Print "CONVERT(nvarchar(max), t_new.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "]), "
+						Audit.Print "CONVERT(nvarchar(max), t_old.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "])"
+					end if					
+				exist = True
+			end if
+		next%}
+	{%end if%}
+
+
+	SET @Inserted = CASE WHEN @@ROWCOUNT > 0 Then 1 Else @Inserted End
+	END
+	{%Next
+	End If%}
+	IF @Inserted = 0
+	BEGIN
+		DELETE FROM {%Audit.Print TransactionsTableName%} WHERE AUDIT_LOG_TRANSACTION_ID = @AUDIT_LOG_TRANSACTION_ID
+	END
+
+  -- Restore @@IDENTITY Value
+  {%IF NOT Audit.ServerIsAzure Then %}
+    DECLARE @maxprec AS varchar(2)
+    SET @maxprec=CAST(@@MAX_PRECISION as varchar(2))
+    EXEC('SELECT IDENTITY(decimal('+@maxprec+',0),'+@IDENTITY_SAVE+',1) id INTO #tmp')
+  {%else%}
+    CREATE TABLE #tmp (ID DECIMAL IDENTITY)
+    SET IDENTITY_INSERT #tmp ON
+    INSERT INTO #tmp (Id) VALUES (CAST(@IDENTITY_SAVE AS DECIMAL))
+    SET IDENTITY_INSERT #tmp OFF
+  {%end if%}
+End
+GO
+
+-- Display the status of Trigger Created
+IF @@Error = 0 PRINT '{%Audit.Print "Trigger created: " & StartTriggerNameUpdate & Replace(objTable.Name,"'","''")%} '
+ELSE PRINT '{%Audit.Print "Trigger Failed: " & StartTriggerNameUpdate & Replace(objTable.Name,"'","''")%} Error on Creation'
+GO
+
+-- mark the trigger as last 
+{%If Audit.Database.CompatibilityLevel > 70 Then%}
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE parent_obj=OBJECT_ID('{%Audit.Print REPLACE(TableFullName,"'","''")%}') AND OBJECTPROPERTY(id,'ExecIsLastUpdateTrigger')=1 AND xtype='TR')
+BEGIN
+  DECLARE @ISERROR INT  
+  EXEC @ISERROR = sp_settriggerorder '{%Audit.Print Replace("[" & objTable.Owner & "].[" & StartTriggerNameUpdate & objTable.Name & "]","'","''")%}', 'Last', 'Update'
+  If @ISERROR = 0 PRINT {%Audit.Print "'Trigger " & StartTriggerNameUpdate & Replace(objTable.Name,"'","''") & " has been marked as Last'" %} 
+  ELSE PRINT {%Audit.Print "'Trigger " & StartTriggerNameUpdate & Replace(objTable.Name,"'","''") & " cannot be marked as Last'+ CHAR(10)+'Trigger creation is rolled back'"%}
+  IF @ISERROR <> 0 ROLLBACK ELSE COMMIT
+END
+{%End If%}
+GO
+{%End If
+
+If objTable.Audit4Delete = True Then
+' ==================================================================================
+' ==================================================================================
+' DELETE	DELETE	DELETE	DELETE	DELETE	DELETE	DELETE	DELETE	DELETE	DELETE	
+' ==================================================================================
+' ==================================================================================
+caption = "Create DELETE trigger " & "[" & objTable.Owner & "].[" & StartTriggerNameDelete & objTable.Name & "]" & _
+		" for Table " & TableFullName%}
+BEGIN TRANSACTION
+IF OBJECT_ID('{%Audit.Print Replace("[" & objTable.Owner & "].[" & StartTriggerNameDelete & objTable.Name & "]","'","''") %}','TR') IS NOT NULL
+BEGIN
+	DROP TRIGGER {%Audit.Print "[" & objTable.Owner & "].[" & StartTriggerNameDelete & objTable.Name & "]" %}
+	PRINT '{%Audit.Print "Trigger dropped: " & StartTriggerNameDelete & Replace(objTable.Name,"'","''")%} '
+END
+GO
+-- {%Audit.Print caption%}
+Print '{%Audit.Print Replace(caption, "'", "''")%}'
+go
+CREATE TRIGGER {%Audit.Print "[" & objTable.Owner & "].[" & StartTriggerNameDelete & objTable.Name & "]" %}
+ON {%Audit.Print TableFullName%}
+FOR DELETE
+{%IF NOT Audit.ServerIsAzure Then %}
+	NOT FOR REPLICATION
+{%end if%}
+AS
+-- "<TAG>SQLAUDIT GENERATED - DO NOT REMOVE</TAG>"
+-- --------------------------------------------------------------------------------------------------------------
+-- Legal:        {%Audit.Print Audit.Legal%}
+-- Description:  DELETE TRIGGER for Table:  {%Audit.Print TableFullName%}
+-- Author:       {%Audit.Print Audit.Author%}
+-- Date:		 {%Audit.Print Now%}
+-- --------------------------------------------------------------------------------------------------------------
+BEGIN{%IncTabDepth%}
+	DECLARE 
+		@IDENTITY_SAVE				varchar(50),
+		@AUDIT_LOG_TRANSACTION_ID		Int,
+		@PRIM_KEY				nvarchar(4000),
+		--@TABLE_NAME				nvarchar(4000),
+ 		@ROWS_COUNT				int
+ 
+	SET NOCOUNT ON
+
+	--Set @TABLE_NAME = '{%Audit.Print Replace(TableFullName, "'", "''")%}'
+	Select @ROWS_COUNT=count(*) from deleted
+	Set @IDENTITY_SAVE = CAST(IsNull(@@IDENTITY,1) AS varchar(50))
+
+	INSERT
+	INTO {%Audit.Print TransactionsTableName%}
+	(
+		TABLE_NAME,
+		TABLE_SCHEMA,
+		AUDIT_ACTION_ID,
+		HOST_NAME,
+		APP_NAME,
+		MODIFIED_BY,
+		MODIFIED_DATE,
+		AFFECTED_ROWS,
+		[DATABASE]
+	)
+	values(
+		'{%Audit.Print Replace(objTable.Name, "'", "''")%}',
+		'{%Audit.Print Replace(objTable.Owner, "'", "''")%}',
+		3,	--	ACTION ID For DELETE
+		CASE 
+		  WHEN LEN(HOST_NAME()) < 1 THEN ' '
+		  ELSE HOST_NAME()
+		END,
+		CASE 
+		  WHEN LEN(APP_NAME()) < 1 THEN ' '
+		  ELSE APP_NAME()
+		END,
+		dbo.fnc_Audit_UserGetCurrent(),
+		GETDATE(),
+		@ROWS_COUNT,
+		'{%Audit.Print DiamondFireDatabaseName%}'
+	)
+
+	{%IF Audit.Database.CompatibilityLevel = 70 Then %}
+	Set @AUDIT_LOG_TRANSACTION_ID = @@IDENTITY
+	{%else%}
+	Set @AUDIT_LOG_TRANSACTION_ID = SCOPE_IDENTITY()
+	{%end if%}
+
+{%RowKey = "convert(nvarchar(1500), " & KeyString(objTable, "OLD") & ")"
+	counter = 1
+	KeyFields=""
+	KeyValues=""
+	for KeyField = 1 to objTable.Fields.Count
+		if objTable.Fields.Item(KeyField).IsInRowKey then
+			KeyFields=KeyFields & ", KEY" & counter
+			KeyValues=KeyValues & ", " & " CONVERT(nvarchar(500), " & GetConvertedField(objTable.Fields.Item(KeyField), "OLD", 0) & ")"
+			counter = counter + 1
+			if counter > 4 then
+				exit for
+			end if
+		end if
+	next
+	For j = 1 To objTable.Fields.Count
+	If (objTable.Fields.Item(j).IsChecked OR objTable.Fields.Item(j).IsWatch) _
+		And objTable.Fields.Item(j).Name<>"orev" _
+		And objTable.Fields.Item(j).SQL_Datatype<>"timestamp" Then
+			Set objField = objTable.Fields.Item(j)
+		If not (objField.SQL_Datatype="image" or objField.SQL_Datatype="text" _
+		or objField.SQL_Datatype="ntext") then%}
+	INSERT
+	INTO {%Audit.Print DataTableName%}
+	(
+		AUDIT_LOG_TRANSACTION_ID,
+		PRIMARY_KEY_DATA,
+		COL_NAME,
+		OLD_VALUE_LONG,
+		DATA_TYPE
+		{%Audit.Print KeyFields%}
+	)
+	SELECT
+		@AUDIT_LOG_TRANSACTION_ID,
+		{%Audit.Print RowKey%},
+		'{%Audit.Print replace(objfield.Name, "'", "''")%}',
+		{%Audit.Print GetConvertedField(objfield, "OLD", 0)%},
+		'A'
+		{%Audit.Print KeyValues%}
+	FROM deleted OLD
+	WHERE
+		OLD.[{%Audit.Print objfield.Name%}] Is Not Null
+{%		end if
+	End If
+Next%}
+	-- Lookup
+	{%If objTable.Lookups.Count > 0 Then
+	For lookupIndex=1 to objTable.Lookups.Count
+		Set lookup = objTable.Lookups.Item(lookupIndex)
+
+	IsBlob = False
+	if lookup.GetValueExpressionDatatype="image" OR lookup.GetValueExpressionDatatype="ntext" OR lookup.GetValueExpressionDatatype="text" _
+		OR lookup.GetValueExpressionDatatype="xml" then
+		IsBlob = True
+	end if
+	%}
+	INSERT
+	INTO {%Audit.Print DataTableName%}
+	(
+		AUDIT_LOG_TRANSACTION_ID,
+		PRIMARY_KEY_DATA,
+		COL_NAME,
+        {%If lookup.GetValueExpressionDatatype="image" then%}NEW_VALUE_BLOB{%else%}OLD_VALUE_LONG{%end if%}
+		,DATA_TYPE
+		{%Audit.Print KeyFields%}
+	)
+	SELECT
+		@AUDIT_LOG_TRANSACTION_ID,
+		{%Audit.Print RowKey%},
+		'{%Audit.Print replace(lookup.Name, "'", "''")%}',
+		{%Audit.Print GetConvertedFieldWithCustomNameDatatype( _
+			lookup.GetValueExpressionDatatype(), _
+			lookup.GetValueExpression("t_ord"), 1, True)%},
+		'L'
+		{%Audit.Print KeyValues%}
+	FROM deleted OLD Left Outer JOIN {%Audit.Print lookup.RelatedTable.FullTableName%} t_ord on
+		{%Audit.Print lookup.GetConditionExpression("OLD", "t_ord")%}
+	{%if not (lookup.GetValueExpressionDatatype() = "xml" or lookup.GetValueExpressionDatatype() = "text" _
+		or lookup.GetValueExpressionDatatype() = "ntext" or lookup.GetValueExpressionDatatype() = "image") then%}
+	Group By {%
+		exist = False
+		for KeyField = 1 to objTable.Fields.Count
+			if objTable.Fields.Item(KeyField).IsInRowKey then
+				if exist then Audit.Print ", "
+					if objTable.Fields.Item(KeyField).SQL_Datatype<>"xml" and objTable.Fields.Item(KeyField).SQL_Datatype<>"geometry" and objTable.Fields.Item(KeyField).SQL_Datatype<>"geography" and objTable.Fields.Item(KeyField).SQL_Datatype<>"hierarchyid" then						
+						Audit.Print "OLD.[" & objTable.Fields.Item(KeyField).Name & "]"
+					else					
+						Audit.Print "CONVERT(nvarchar(max), OLD.[" & objTable.Fields.Item(KeyField).Name & "])"
+					end if							
+				exist = True
+			end if
+		next
+		for KeyField = 1 to lookup.RelatedTable.Fields.Count 
+			if not lookup.RelatedTable.Fields.Item(KeyField).IsBLOB _
+				and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype <> "xml" then
+				if exist then Audit.Print ", "				
+					if lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"xml" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"geometry" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"geography" and lookup.RelatedTable.Fields.Item(KeyField).SQL_Datatype<>"hierarchyid" then
+						Audit.Print "t_ord.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "]" 						
+					else
+						Audit.Print "CONVERT(nvarchar(max), t_ord.[" & lookup.RelatedTable.Fields.Item(KeyField).Name & "])"
+					end if
+				exist = True
+			end if
+		next%}
+	{%end if%}
+
+	{%Next
+	End If%}
+  
+  -- Restore @@IDENTITY Value
+  {%IF NOT Audit.ServerIsAzure Then %}
+    DECLARE @maxprec AS varchar(2)
+    SET @maxprec=CAST(@@MAX_PRECISION as varchar(2))
+    EXEC('SELECT IDENTITY(decimal('+@maxprec+',0),'+@IDENTITY_SAVE+',1) id INTO #tmp')
+  {%else%}
+    CREATE TABLE #tmp (ID DECIMAL IDENTITY)
+    SET IDENTITY_INSERT #tmp ON
+    INSERT INTO #tmp (Id) VALUES (CAST(@IDENTITY_SAVE AS DECIMAL))
+    SET IDENTITY_INSERT #tmp OFF
+  {%end if%}
+
+END{%DecTabDepth%}
+GO
+
+-- Display the status of Trigger Created
+IF @@Error = 0 PRINT '{%Audit.Print "Trigger created: " & StartTriggerNameDelete & Replace(objTable.Name,"'","''")%} '
+ELSE PRINT '{%Audit.Print "Trigger Failed: " & StartTriggerNameDelete & Replace(objTable.Name,"'","''")%} Error on Creation'
+GO
+
+-- mark the trigger as last
+{%If Audit.Database.CompatibilityLevel > 70 Then%}
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE parent_obj=OBJECT_ID('{%Audit.Print REPLACE(TableFullName,"'","''")%}') AND OBJECTPROPERTY(id,'ExecIsLastDeleteTrigger')=1 AND xtype='TR')
+BEGIN
+  DECLARE @ISERROR INT
+  EXEC @ISERROR = sp_settriggerorder '{%Audit.Print Replace("[" & objTable.Owner & "].[" & StartTriggerNameDelete & objTable.Name & "]","'","''")%}', 'Last', 'Delete'  
+  If @ISERROR = 0 PRINT {%Audit.Print "'Trigger " & StartTriggerNameDelete & Replace(objTable.Name,"'","''") & " has been marked as Last'" %} 
+  ELSE PRINT {%Audit.Print "'Trigger " & StartTriggerNameDelete & Replace(objTable.Name,"'","''") & " cannot be marked as Last'+ CHAR(10)+'Trigger creation is rolled back'"%}
+  IF @ISERROR <> 0 ROLLBACK ELSE COMMIT
+END
+GO
+{%End If%}
+{% 
+End If
+
+Else
+	Audit.Print "--	Table " & objtable.Name & " is not selected for auditing"
+End	If
+%}

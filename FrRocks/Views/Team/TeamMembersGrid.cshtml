@@ -75,7 +75,7 @@
     //.Scrollable(s => s.Height("500"))
   .Columns(columns =>
   {
-    if (personEdit)
+    if (teamEdit)
     {
       columns.Bound(p => p.PersonOid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
     }

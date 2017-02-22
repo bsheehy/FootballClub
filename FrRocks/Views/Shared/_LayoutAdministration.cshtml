@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-  <title>@ViewBag.Title - My Kendo UI MVC Application</title>
+  <title>@ViewBag.Title</title>
   <script id="confirmationTemplate" type="text/x-kendo-template">
     <div class="popupMessage"></div>
     <br />
@@ -148,6 +148,14 @@
                             .LinkHtmlAttributes(new { onclick = "handleTreeClicked('Roles')" });
                         }
                       });
+
+                      if (superUser)
+                      {
+                        items.Add()
+                        .Text("Audit Log")
+                        .Action("StandardReport", "Audit")
+                        .ImageUrl(Url.Content("~/Images/24px/briefcase.png"));
+                      }
                     })
                     .HtmlAttributes(new { @style = "border-radius: 5px;", @class = "dfw-menuSlim" })
                   )

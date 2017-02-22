@@ -41,9 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "staticdata", "staticdata", 
 		db\staticdata\00_StaticData_Start.sql = db\staticdata\00_StaticData_Start.sql
 		db\staticdata\01_StaticData.sql = db\staticdata\01_StaticData.sql
 		db\staticdata\02_StaticUsers.sql = db\staticdata\02_StaticUsers.sql
-		db\staticdata\03_FrRocksData.sql = db\staticdata\03_FrRocksData.sql
-		db\staticdata\04_FrRocksImportedData.sql = db\staticdata\04_FrRocksImportedData.sql
-		db\staticdata\05_FrRocksU12s.sql = db\staticdata\05_FrRocksU12s.sql
 		db\staticdata\99_StaticData_End.sql = db\staticdata\99_StaticData_End.sql
 	EndProjectSection
 EndProject
@@ -73,6 +70,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents", "..\Lancelot\Do
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D633D6A8-74CD-430B-BDD4-775804E8483F}"
 	ProjectSection(SolutionItems) = preProject
+		build.version = build.version
 		ToDo.txt = ToDo.txt
 	EndProjectSection
 EndProject
@@ -80,39 +78,26 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlTools", "..\SQLTools\Sql
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuditApexSql", "..\AuditApexSql\AuditApexSql.csproj", "{8E33197A-56C7-4F2D-8977-CF9186C92EA0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "audit", "audit", "{20889F66-C520-4187-BF52-5F2DE5B91FFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrRocks_GoDaddy", "FrRocks_GoDaddy\FrRocks_GoDaddy.csproj", "{B2D2D569-B903-4C0D-A02A-1A5BCC9D6E49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customer.Info", "Customer.Info\Customer.Info.csproj", "{46B8E582-8AC0-431E-9FB1-13DCC8864483}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{513DDB96-3E6C-418C-85C2-07FFB0DA6A9E}"
 	ProjectSection(SolutionItems) = preProject
-		db\audit\ReadMe.txt = db\audit\ReadMe.txt
-		db\audit\Utils2053.inc = db\audit\Utils2053.inc
+		Build\Build.build = Build\Build.build
+		Build\Build.number = Build\Build.number
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "artifacts", "artifacts", "{EEA3A61F-BD2C-458B-8549-23773325E6B5}"
-	ProjectSection(SolutionItems) = preProject
-		db\audit\artifacts\ReadMe.txt = db\audit\artifacts\ReadMe.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "storedprocs", "storedprocs", "{D2090A72-8DC7-402A-978C-DF250ADAFC49}"
-	ProjectSection(SolutionItems) = preProject
-		db\audit\storedprocs\ReadMe.txt = db\audit\storedprocs\ReadMe.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tables", "tables", "{9C6FFF05-E093-4F93-B9F1-98DF351D0761}"
-	ProjectSection(SolutionItems) = preProject
-		db\audit\tables\00_fnc_Audit_UserGetCurrent.sql = db\audit\tables\00_fnc_Audit_UserGetCurrent.sql
-		db\audit\tables\01_TablesUpdate.sql = db\audit\tables\01_TablesUpdate.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "triggers", "triggers", "{62429D74-ED2A-452E-B174-AC27A2A6EB4F}"
-	ProjectSection(SolutionItems) = preProject
-		db\audit\triggers\00_ApexSQLAuditTriggers.sql = db\audit\triggers\00_ApexSQLAuditTriggers.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "triggers", "triggers", "{0050AD80-48F0-4968-B3DD-818077826371}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "triggers", "triggers", "{79A62C24-D139-4D87-B11A-EA3E73C87710}"
 	ProjectSection(SolutionItems) = preProject
 		db\triggers\00_ApexSQLAuditTriggers.sql = db\triggers\00_ApexSQLAuditTriggers.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrRocks_GoDaddy", "FrRocks_GoDaddy\FrRocks_GoDaddy.csproj", "{B2D2D569-B903-4C0D-A02A-1A5BCC9D6E49}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "functions", "functions", "{349EBF42-3CE1-4A9E-A2FA-6CA240E0D875}"
+	ProjectSection(SolutionItems) = preProject
+		db\functions\00_TablesUpdate.sql = db\functions\00_TablesUpdate.sql
+		db\functions\01_fnc_Audit_UserGetCurrent.sql = db\functions\01_fnc_Audit_UserGetCurrent.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -172,6 +157,10 @@ Global
 		{B2D2D569-B903-4C0D-A02A-1A5BCC9D6E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2D2D569-B903-4C0D-A02A-1A5BCC9D6E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2D2D569-B903-4C0D-A02A-1A5BCC9D6E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46B8E582-8AC0-431E-9FB1-13DCC8864483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46B8E582-8AC0-431E-9FB1-13DCC8864483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46B8E582-8AC0-431E-9FB1-13DCC8864483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46B8E582-8AC0-431E-9FB1-13DCC8864483}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,11 +172,7 @@ Global
 		{908BE967-0FB0-445F-B230-3F27F6903F9B} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
 		{CE6DD63E-BEC6-43F8-8CE8-97D7BB25AADA} = {36164CB5-0E56-46B6-9DE5-1B36022AD151}
 		{1B237DC3-B16D-41DC-9F53-18A8D339D3BB} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
-		{20889F66-C520-4187-BF52-5F2DE5B91FFD} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
-		{EEA3A61F-BD2C-458B-8549-23773325E6B5} = {20889F66-C520-4187-BF52-5F2DE5B91FFD}
-		{D2090A72-8DC7-402A-978C-DF250ADAFC49} = {20889F66-C520-4187-BF52-5F2DE5B91FFD}
-		{9C6FFF05-E093-4F93-B9F1-98DF351D0761} = {20889F66-C520-4187-BF52-5F2DE5B91FFD}
-		{62429D74-ED2A-452E-B174-AC27A2A6EB4F} = {20889F66-C520-4187-BF52-5F2DE5B91FFD}
-		{0050AD80-48F0-4968-B3DD-818077826371} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
+		{79A62C24-D139-4D87-B11A-EA3E73C87710} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
+		{349EBF42-3CE1-4A9E-A2FA-6CA240E0D875} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
 	EndGlobalSection
 EndGlobal

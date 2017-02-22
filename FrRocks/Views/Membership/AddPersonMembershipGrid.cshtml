@@ -4,8 +4,8 @@
 @using Mallon.Core.Web.Models.HtmlExtensions
 @using Club.Domain.Models
 @model TypedModel<PersonMembershipQry>
-@functions{ 
-string ctrlId = System.Guid.NewGuid().ToString();
+@functions{
+  string ctrlId = System.Guid.NewGuid().ToString();
 }
 @{
   bool addPersonMembership = false;
@@ -53,14 +53,14 @@ string ctrlId = System.Guid.NewGuid().ToString();
   .AutoBind(true)
   .ToolBar(tools =>
   {
-    tools.Excel();
     if (addPersonMembership)
     {
       tools.Template(@<text>
+        <a class="k-button k-button-icontext k-grid-excel" href="#"><span class="k-icon k-i-excel"></span>Export to Excel</a>
         @(Html.Kendo().Button()
           .Name("btnAddNewMember")
           .Icon("plus")
-          .Content("Add")
+          .Content("Add New Member")
           .HtmlAttributes(new
           {
             type = "button",
@@ -72,39 +72,42 @@ string ctrlId = System.Guid.NewGuid().ToString();
             data_actionurl = Url.Action("SelectMembershipMember", "Person", new { membershipTypeOid = @Model.Entity.aq_MembershipOid, controlId = "btnAddNewMember" })
           })
           .Events(ev => ev.Click("openKendoEntityDialog")))
+ 
       </text>);
-      //toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
+    }
+    else
+    {
+      tools.Excel();
     }
   })
-            .Columns(columns =>
-              {
-                columns.Bound(p => p.Oid).Hidden();
-                //if (addPersonMembership)
-                //{
-                //  columns.Command(command => command.Custom("Select").Click("selectPersonMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
-                //  //columns.Bound(p => p.MembershipTypeOid).Title("Membership").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Membership") + "?Oid=#= MembershipTypeOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
-                //}
-                //if (personEdit)
-                //{
-                //  columns.Bound(p => p.PersonOid).Title("Person").ClientTemplate("<a href='" + Url.Action("Edit", "Membership") + "?Oid=#= PersonOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
-                //}
-                columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("200px");
-                columns.Bound(p => p.MembershipTypeName).Title("Membership").Width("300px");
-                columns.Bound(p => p.Date).Title("Paid Date").Format("{0:dd/MMM/yyyy}").Width("150px");
-              })
-            //.Pageable(x => { x.PageSizes(new int[] { 30, 60 }); })
-            .Sortable()
-            .Filterable()
-            .Groupable()
-            .Scrollable(s => s.Enabled(true).Height("auto"))
-            .Selectable(x => x.Type(GridSelectionType.Cell))
-            .DataSource(ds => ds
-            .Ajax()
-            .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
-            .Model(model => model.Id(p => p.Oid))
-                .Read(read => read.Action("SearchResults_ReadData", "Membership").Data("getMembershipSearchParams"))
-            )
+                      .Columns(columns =>
+                        {
+                          columns.Bound(p => p.Oid).Hidden();
+                          //if (addPersonMembership)
+                          //{
+                          //  columns.Command(command => command.Custom("Select").Click("selectPersonMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+                          //  //columns.Bound(p => p.MembershipTypeOid).Title("Membership").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Membership") + "?Oid=#= MembershipTypeOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+                          //}
+                          //if (personEdit)
+                          //{
+                          //  columns.Bound(p => p.PersonOid).Title("Person").ClientTemplate("<a href='" + Url.Action("Edit", "Membership") + "?Oid=#= PersonOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+                          //}
+                          columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("200px");
+                          columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width("250px");
+                          columns.Bound(p => p.MembershipTypeName).Title("Membership").Width("200px");
+                          columns.Bound(p => p.Date).Title("Paid Date").Format("{0:dd/MMM/yyyy}").Width("150px");
+                        })
+                      .Pageable(x => { x.PageSizes(new int[] { 30, 60,500 }); })
+                      .Sortable()
+                      .Filterable()
+                      .Groupable()
+                      .Scrollable(s => s.Enabled(true).Height("auto"))
+                      .Selectable(x => x.Type(GridSelectionType.Cell))
+                      .DataSource(ds => ds
+                      .Ajax()
+                      .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+                      .Model(model => model.Id(p => p.Oid))
+                          .Read(read => read.Action("SearchResults_ReadData", "Membership").Data("getMembershipSearchParams"))
+                      )
   )
 </div>
-
-
