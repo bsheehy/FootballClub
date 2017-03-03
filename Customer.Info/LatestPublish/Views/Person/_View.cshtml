@@ -1,0 +1,35 @@
+﻿@model Mallon.Core.Web.Models.TypedModel<Mallons.DomainFire.Entities.Person>
+@*Uses tbl4Cols style for table display*@
+<table class="tbl4Cols">
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m=>m.Title.Description),new { @class = "k-textbox", @style = "width:75%", @readonly = true})
+  </tr>
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m=>m.Forename),new { @class = "k-textbox", @style = "width:75%", @readonly = true})
+    @Html.TextBoxFor(Model.GetProperty(m=>m.Surname),new { @class = "k-textbox", @style = "width:75%", @readonly = true})
+  </tr>
+
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m=>m.Phone),new { @class = "k-textbox", @style = "width:75%", @readonly = true})
+    @Html.TextBoxFor(Model.GetProperty(m=>m.MobileNo),new { @class = "k-textbox", @style = "width:75%", @readonly = true})
+  </tr>
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m=>m.Fax),new { @class = "k-textbox", @style = "width:75%", @readonly = true})
+    @Html.TextBoxFor(Model.GetProperty(m=>m.Email),new { @class = "k-textbox", @style = "width:75%", @readonly = true})
+  </tr>
+</table>
+@if(Model.Entity.Address != null)
+{
+  <table class="tbl2Cols">
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m=>m.Address.AllDetails),new { @class = "k-textbox", @style = "width:75%", @readonly = true, @rows="6"})
+    </tr>
+  </table>
+}
+
+
+
+

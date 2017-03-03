@@ -1,0 +1,90 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Services.Utils
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Mallon.Core.Artifacts
+@model TypedModel<Committee>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+<script type="text/javascript">
+
+  if ('@Model.ExtraFields["op"]' == "n") {
+    $('#dManagersGrid').hide();
+  }
+  else {
+    $('#dManagersGrid').show();
+  }
+
+  function closeDialogCtrl() {
+    var dialogName = getDialogName("@(ctrlId)");
+    if (dialogName != null && $("#" + dialogName).length > 0) {
+      $("#" + dialogName).data("kendoWindow").close();
+    }
+  }
+</script>
+
+
+<table class="tbl2Cols">
+  <tr>
+    <h4>Committee Details</h4>
+  </tr>
+
+  <tr>
+    @Html.CheckBoxFor(Model.GetProperty(m => m.Active), new { @lblSecond = "false" })
+  </tr>
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(x => x.Name), new { @style = "width:75%;" })
+  </tr>
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(x => x.Description), new { @style = "width:75%;", @rows = "3" })
+  </tr>
+
+
+  <tr class="timeTypeYear">
+    @*@Html.NumericFor(Model.GetProperty(x => x.Year), new { @style = "width:75%;" })*@
+
+    <td>Year</td>
+    <td>
+      @(Html.Kendo().NumericTextBox<int>()
+            .Name("Year")
+            .Format("####")
+            .Value(Model.Entity.Year)
+            .Min(1800)
+            .Max(2400)
+            //.Placeholder("Enter numeric value")
+            .HtmlAttributes(new { style = "width: 75%" }))
+    </td>
+  </tr>
+
+  @*<tr>
+    @Html.DropDownListFor(Model.GetProperty(m => m.Sex, new Mallon.Core.Web.Models.ModelCtrlComboBoxOptions((SelectList)ViewBag.Sexs, Model.Entity.Sex, null)), new { @style = "width:75%", @min_width = "150px;" })
+  </tr>*@
+
+  @*<tr class="timeTypeDate">
+    @Html.DateFor(Model.GetProperty(m => m.StartDate), new { @style = "width:75%" })
+  </tr>
+    
+  <tr class="timeTypeDate">
+    @Html.DateFor(Model.GetProperty(m => m.EndDate), new { @style = "width:75%" })
+  </tr>*@
+ 
+</table>
+
+
+<div id="dManagersGrid">
+  <table>
+    <tr>
+      <h4>Add Managers</h4>
+    </tr>
+    <tr>
+      <td>
+        @Html.Partial("~/Views/Committee/CommitteeAdminsGrid.cshtml", Model, Html.ViewData)
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+
+

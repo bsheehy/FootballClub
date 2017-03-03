@@ -1,0 +1,95 @@
+﻿@model Mallon.Core.Web.Models.TypedModel<Mallon.Core.Artifacts.User>
+@{
+  ViewBag.Title = "Log In";
+  Layout = null;
+}
+
+<!DOCTYPE html>
+<html class="dfw-LoginHtml">
+<head>
+  <title>@ViewBag.Title</title>
+  @Styles.Render("~/Content/kendo/2016.3.914/kendocssbootstrap")
+
+  @Styles.Render("~/Content/css")
+
+  @Scripts.Render("~/bundles/jquery")
+
+  <script type="text/javascript">
+    function centerElem(e) {
+      var eleHeight = $(e).height();
+      var formHeight = $(window).height();
+      var topPadding = (formHeight - eleHeight) / 2;
+      $(e).css('padding-top', topPadding + "px");
+    }
+
+    $(document).ready(
+      function () {
+        centerElem('#frmLogin');
+        if ('@ViewBag.LogonFailed' == 'True') {
+          $("#frmLogin").effect("shake");
+        }
+      });
+
+    $(window).resize(
+      function (e) {
+        centerElem('#frmLogin');
+      });
+  </script>
+
+  <style>
+    .vertical-offset-100 {
+      padding-top: 100px;
+    }
+
+    html { 
+      background: url(~/Images/frRocks/gaa_background.jpg) no-repeat center center fixed !important;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+    }
+  </style>
+</head>
+<body class="dfw-LoginBody">
+  @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+  {
+    //Html.AntiForgeryToken – Balancing Security with Usability
+    //http://www.diaryofaninja.com/blog/2014/01/29/htmlantiforgerytoken-ndash-balancing-security-with-usability
+    //http://www.learnsharecorner.com/asp-net/fixed-httpantiforgeryexception-the-provided-anti-forgery-token-was-meant-for-user-but-the-current-user-is-username/
+    @Html.AntiForgeryToken()
+    @*<div class="container" style="background-size:cover; background:url( )">*@
+    <div class="container">
+      <div id="frmLogin" class="row vertical-offset-100 ">
+        <div class="col-md-6 col-md-offset-3 ">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <fieldset>
+                <div class="form-group text-center ">
+                  <img src="~/Images/frRocks/FrRockCrest_TransOutline.png" class="img-responsive center-block" style="max-height:80px" />
+                </div>
+
+                <div class="form-group">
+                  <h4 class="dfw-colorTextLogin">User Login</h4>
+                  @Html.TextBoxFor(m => m.Entity.Login, new { @class = "k-textbox", style = "width:100%", placeholder = "User Login" })
+                  @Html.ValidationMessageFor(m => m.Entity.Login)
+                </div>
+                <div class="form-group">
+                  <h4 class="dfw-colorTextLogin">Password</h4>
+                  @Html.PasswordFor(m => m.Entity.Password, new { @class = "k-textbox", type = "password", style = "width:100%", placeholder = "Password" })
+                  @Html.ValidationMessageFor(m => m.Entity.Password)
+                </div>
+
+                @*<input class="btn btn-lg btn-success btn-block" type="submit" value="Login">*@
+                <input type="submit" value="Login" class="k-button" style="width:100%" />
+                <div class="form-group">
+                  @Html.ValidationSummary()
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</body>
+</html>

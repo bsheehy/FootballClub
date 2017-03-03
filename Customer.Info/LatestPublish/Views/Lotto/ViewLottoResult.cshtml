@@ -1,0 +1,62 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<LottoResult>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+
+@Html.Hidden("dialogId")
+<div id="dLottoResult">
+  <div id="dLottoResult_@Model.Entity.Oid" class="pbContent">
+    <table class="tbl2Cols">
+      @Html.HiddenFor(Model.GetProperty(m => m.Oid))
+      @Html.HiddenFor(Model.GetProperty(m => m.Orev))
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.No1), new { @class = "k-textbox", @style = "width:75%", @readonly = true })
+      </tr>
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.No2), new { @class = "k-textbox", @style = "width:75%", @readonly = true })
+      </tr>
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.No3), new { @class = "k-textbox", @style = "width:75%", @readonly = true })
+      </tr>
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.No4), new { @class = "k-textbox", @style = "width:75%", @readonly = true })
+      </tr>
+    </table>
+  </div>
+</div>
+<br />
+<br />
+
+<div id="dWinnersResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+  @(Html.Kendo().Grid<LottoResultWinner>(Model.Entity.Winners)
+  .Name("lottoResultWinners")
+  .AutoBind(true)
+  .ToolBar(tools =>
+  {
+    tools.Excel();
+  })
+  .Columns(columns =>
+    {
+      columns.Bound(p => p.Matches).Title("Matches").Width("150px");
+      columns.Bound(p => p.Person.NameSingleLine).Title("Name").Width("200px");
+    })
+  .Sortable()
+  .Filterable()
+  .Groupable()
+  .Scrollable(s => s.Enabled(true).Height("auto"))
+  //.Selectable(x => x.Type(GridSelectionType.Cell))
+  //.DataSource(ds => ds
+  //  .Ajax()
+  //  .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+  //  .Model(model => model.Id(p => p.Oid))
+  //  .Read(read => read.Action("LottoTicketDirectDebitWinners_Read", "Lotto").Data("getLottoTicketDirectDebitSearchParams"))
+  //)
+  )
+</div>
+

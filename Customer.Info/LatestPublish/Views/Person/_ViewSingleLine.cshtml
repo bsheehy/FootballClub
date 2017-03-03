@@ -1,0 +1,15 @@
+﻿@using Mallon.Core.Web.Models.HtmlExtensions
+@model Mallon.Core.Web.Models.TypedModel<Club.Domain.Artifacts.Person>
+
+@Html.Hidden(string.IsNullOrEmpty(Model.PrependRoutPath)?"Person": Model.PrependRoutPath,Model.Entity.Oid == System.Guid.Empty?"":Model.Entity.Oid.ToString())
+
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m => m.NameSingleLine), new { @class = "k-textbox", @rows = "2", @style = "width:75%", @disabled = "disabled" })
+  </tr>
+
+  <tr>
+    @Html.TextBoxFor(Model.GetProperty(m => m.AddressSingleLine), new { @class = "k-textbox", @rows = "2", @style = "width:75%", @disabled = "disabled" })
+  </tr>
+
+

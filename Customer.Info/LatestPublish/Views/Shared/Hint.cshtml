@@ -1,0 +1,17 @@
+﻿@model string
+@{
+  string imgSize = "16px";
+  string srcUri = Url.Content("~/Images/16px/about.png");
+
+  if (this.ViewData["ImageSize"] != null && string.IsNullOrEmpty(this.ViewData["ImageSize"].ToString()) == false)
+  {
+    imgSize = this.ViewData["ImageSize"].ToString();
+    srcUri = Url.Content(string.Format("~/Images/{0}/about.png", imgSize));
+  }
+  
+}
+
+@if (!string.IsNullOrEmpty(Model))
+{
+  <img src="@srcUri" alt="Help" title="@Model" class="mouseChangeHelp" />
+}

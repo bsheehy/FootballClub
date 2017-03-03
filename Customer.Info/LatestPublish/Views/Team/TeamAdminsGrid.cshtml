@@ -1,0 +1,72 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model Mallon.Core.Web.Models.TypedModel<Team>
+@{
+  bool teamEdit = false;
+  if (ViewBag.EditTeam != null)
+  {
+    teamEdit = ViewBag.EditTeam;
+  }
+}
+
+<div id="dTeamMemberGrid">
+  @(Html.Kendo().Grid<ModelTeamAdmin>()
+  .Name("gridTeamAdminsGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (teamEdit)
+    { 
+      //toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" }).Text("Add");
+      toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+            .Name("btnAddNewTeamAdmin")
+            .Icon("plus")
+            .Content("Add")
+            .HtmlAttributes(new
+            {
+              type = "button",
+              id = "btnAddNewTeamAdmin",
+              data_dialogguid = Model.Entity.Oid,
+              data_dialogtitle = "Add New Team Member",
+              data_dialogtofit = "false",
+              data_closejscallback = "refreshTeamAdminsGrid",
+              data_actionurl = Url.Action("SelectTeamAdminUser", "User", new { teamOid = @Model.Entity.Oid, controlId = "btnAddNewTeamAdmin" })
+            })
+            .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+    }
+  })
+  .Editable(editable => editable.Mode(GridEditMode.InLine))
+  .Sortable()
+  .HtmlAttributes(new { style = "min-height: 100px;" })
+//.Scrollable(s => s.Height("500"))
+  .Columns(columns =>
+  {
+    //columns.ForeignKey(p => p.UserOid, (System.Collections.IEnumerable)ViewData["AdminUsers"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Users").Width(200);
+    columns.Bound(p => p.UserFullName).Title("Full Name").Width("150px");
+    columns.Bound(p => p.UserLogin).Title("Login").Width("150px");
+    columns.Bound(p => p.UserEmail).Title("Email").Width("150px");
+    columns.Command(command => { command.Destroy(); }).Title("Delete").Width(130);
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.Oid);
+      //model.Field(p => p.UserLogin).Editable(false);
+      //model.Field(p => p.UserEmail).Editable(false);
+    })
+    .Events(e =>
+    {
+      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+    })
+    //.Create(c => c.Action("TeamAdmin_Create", "Team", new { teamOid = Model.Entity.Oid }))
+    .Destroy(update => update.Action("TeamAdmin_Delete", "Team"))
+    .Read(read => read.Action("TeamAdmin_GridRead", "Team", new { teamOid = Model.Entity.Oid }))
+    )
+  )
+</div>

@@ -1,0 +1,5 @@
+Websites with low traffic need to keep refreshed to make them responsive. Otherwise the first request will always take a long time. I use UptimeRobot which is a free service to do this.
+
+https://uptimerobot.com
+bsheehy@hotmail.com
+01Sheehy4u

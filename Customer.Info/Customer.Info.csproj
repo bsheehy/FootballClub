@@ -49,6 +49,10 @@
     <Content Include="Customers\Cookstown_FrRocks\db\05_FrRocksU12s.sql" />
     <Content Include="Customers\Cookstown_FrRocks\db\99_StaticData_End.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="LatestPublish\" />
+    <Folder Include="Releases\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

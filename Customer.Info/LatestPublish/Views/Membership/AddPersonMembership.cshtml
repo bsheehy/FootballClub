@@ -1,0 +1,38 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model TypedModel<PersonMembershipQry>
+@{
+  ViewBag.Title = "Add Members";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+
+  bool addPersonMembership = false;
+  if (ViewBag.AddPersonMembership != null)
+  {
+    addPersonMembership = ViewBag.AddPersonMembership;
+  }
+}
+
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(false)
+  @*<div id="headerSubMenu">
+    @if (createCommitteeMinute )
+    {
+      @(Html.Kendo().Button()
+      .Name("frmSubmit")
+      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save")
+      .Events(x => x.Click("clickHiddenSubmit")))
+      <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+    }
+  </div>*@
+
+  @Html.Partial("AddPersonMembershipGrid", Model)
+  
+  <input id="hiddenSubmit" type="submit" value="Save" hidden="hidden" />
+}
+

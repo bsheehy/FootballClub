@@ -1,0 +1,70 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model LottoResult
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  bool editLottoWinner = false;
+  if (ViewBag.EditLotto != null)
+  {
+    editLottoWinner = ViewBag.EditLotto;
+  }
+  string msgTableHelp = "<p>You must be an <b>Administrator</b> to add or edit Lotto Winners.</p>";
+}
+
+<div id="dWinnersResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+  @(Html.Kendo().Grid<ModelLottoResultWinner>()
+  .Name("lottoResultWinners")
+  .AutoBind(true)
+  .ToolBar(tools =>
+  {
+    if (editLottoWinner)
+    {
+      tools.Template(@<text>
+        <a class="k-button k-button-icontext k-grid-excel" href="#"><span class="k-icon k-i-excel"></span>Export to Excel</a>
+        @(Html.Kendo().Button()
+          .Name("btnAddLottoWinner")
+          .Icon("plus")
+          .Content("Add")
+          .HtmlAttributes(new
+          {
+            type = "button",
+            id = "btnAddLottoWinner",
+            data_dialogguid = Model.Oid,
+            data_dialogtitle = "Add New Lotto Winner",
+            data_dialogtofit = "false",
+            data_closejscallback = "refreshLottoWinnersGrid",
+            data_actionurl = Url.Action("CreateLottoResultWinnerAjax", "Lotto", new { lottoResultOid = @Model.Oid, controlId = "btnAddLottoWinner" })
+          })
+          .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+    }
+    else
+    {
+      tools.Template(@Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } }).ToHtmlString());
+      tools.Excel();
+    }
+  })
+  .Columns(columns =>
+    {
+      columns.Bound(p => p.Matches).Title("Matches").Width("150px");
+      columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("200px");
+      columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width("200px");
+      columns.Bound(p => p.Message).Title("Message").Width("200px");
+    })
+  .Sortable()
+  .Filterable()
+  .Scrollable(s => s.Enabled(true).Height("auto"))
+  .DataSource(ds => ds
+  .Ajax()
+  .Events(e => e.Error("handleAjaxError").Change("searchOnChangeNoWarning"))
+  .Model(model => model.Id(p => p.Oid))
+  .Destroy(read => read.Action("LottoResultWinners_GridDelete", "Lotto"))
+  .Read(read => read.Action("LottoResultWinners_GridRead", "Lotto", new { lottoResultOid = Model.Oid }))
+  )
+  )
+</div>

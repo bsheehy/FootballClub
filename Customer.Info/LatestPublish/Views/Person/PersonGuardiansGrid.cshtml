@@ -1,0 +1,73 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+}
+
+<div id="dPersonGuardianGrid">
+  @(Html.Kendo().Grid<ModelPersonGuardian>()
+  .Name("gridPersonGuardian")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+            .Name("btnAddPersonGuardian")
+            .Icon("plus")
+            .Content("Add")
+            .HtmlAttributes(new
+            {
+              type = "button",
+              id = "btnAddPersonGuardian",
+              data_dialogguid = Model.Entity.Oid,
+              data_dialogtitle = "Add New Guardian",
+              data_dialogtofit = "false",
+              data_closejscallback = "refreshPersonGuardians",
+              data_actionurl = Url.Action("SelectGuardian", "Person", new { @personOid = @Model.Entity.Oid, @controlId = "btnAddPersonGuardian" })
+            })
+            .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+    }
+  })
+  .Sortable()
+  .HtmlAttributes(new { style = "height: 550px;" })
+  .Scrollable(s => s.Height("auto"))
+  .Columns(columns =>
+  {
+    columns.Bound(p => p.GuardianSingleLine).Title("Guardian Name").Width(150);
+    columns.Bound(p => p.GuardianPhone).Title("Guardian Phone").Width(150);
+    columns.Bound(p => p.GuardianMobileNo).Title("Guardian Mobile").Width(150);
+    columns.Bound(p => p.GuardianAddressSingleLine).Title("Guardian Address").Width(150);
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      columns.Command(command => { command.Destroy(); }).Width(172);
+    }
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.Oid);
+    })
+    .Events(e =>
+      {
+        e.Error("kendoGridErrorHandler('#gridPersonGuardian')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+      })
+    .Destroy(update => update.Action("PersonGuardian_GridDelete", "Person"))
+    .Read(read => read.Action("PersonGuardian_GridRead", "Person", new { personOid = Model.Entity.Oid }))
+    )
+  )
+</div>
+
+
+
+
+
+

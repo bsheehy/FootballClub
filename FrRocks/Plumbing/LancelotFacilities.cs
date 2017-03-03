@@ -64,8 +64,9 @@ namespace DiamondFireWeb.Gui.Plumbing
        .LifestylePerWebRequest()
        );
 
+      //string googleApiKey = ConfigurationManager.AppSettings["bs.GoogleAPIKey"];
       //Kernel.Register(
-      //  Component.For<IMapper>()
+      //  Component.For<IGeocoder>().ImplementedBy()
       //  .ImplementedBy<Mallon.Core.Web.Logic.MembershipPvd>()
       //  .LifestylePerWebRequest()
       //  );

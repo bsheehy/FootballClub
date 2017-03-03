@@ -35,12 +35,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "elmah", "elmah", "{30FC61E5-4461-40E0-AC6C-DF0087EAE7F8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "storedprocs", "storedprocs", "{147A9693-F8DA-4746-86C9-03028C3DC379}"
+	ProjectSection(SolutionItems) = preProject
+		db\elmah\storedprocs\elmah_sp.sql = db\elmah\storedprocs\elmah_sp.sql
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "staticdata", "staticdata", "{36164CB5-0E56-46B6-9DE5-1B36022AD151}"
 	ProjectSection(SolutionItems) = preProject
 		db\staticdata\00_StaticData_Start.sql = db\staticdata\00_StaticData_Start.sql
 		db\staticdata\01_StaticData.sql = db\staticdata\01_StaticData.sql
 		db\staticdata\02_StaticUsers.sql = db\staticdata\02_StaticUsers.sql
+		db\staticdata\90_ReleaseUpdate.sql = db\staticdata\90_ReleaseUpdate.sql
 		db\staticdata\99_StaticData_End.sql = db\staticdata\99_StaticData_End.sql
 	EndProjectSection
 EndProject
@@ -71,6 +75,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D633D6A8-74CD-430B-BDD4-775804E8483F}"
 	ProjectSection(SolutionItems) = preProject
 		build.version = build.version
+		KeepWebsiteWarm.txt = KeepWebsiteWarm.txt
 		ToDo.txt = ToDo.txt
 	EndProjectSection
 EndProject
@@ -95,8 +100,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "triggers", "triggers", "{79
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "functions", "functions", "{349EBF42-3CE1-4A9E-A2FA-6CA240E0D875}"
 	ProjectSection(SolutionItems) = preProject
-		db\functions\00_TablesUpdate.sql = db\functions\00_TablesUpdate.sql
 		db\functions\01_fnc_Audit_UserGetCurrent.sql = db\functions\01_fnc_Audit_UserGetCurrent.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "audit", "audit", "{DB438190-0038-482A-A47C-688B17F9AA7A}"
+	ProjectSection(SolutionItems) = preProject
+		db\audit\00_fnc_Audit_UserGetCurrent.sql = db\audit\00_fnc_Audit_UserGetCurrent.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tables", "tables", "{D6BC0304-B45D-4409-9F65-FA8D9BC14785}"
+	ProjectSection(SolutionItems) = preProject
+		db\elmah\tables\elmah_table.sql = db\elmah\tables\elmah_table.sql
 	EndProjectSection
 EndProject
 Global
@@ -174,5 +188,7 @@ Global
 		{1B237DC3-B16D-41DC-9F53-18A8D339D3BB} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
 		{79A62C24-D139-4D87-B11A-EA3E73C87710} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
 		{349EBF42-3CE1-4A9E-A2FA-6CA240E0D875} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
+		{DB438190-0038-482A-A47C-688B17F9AA7A} = {4D759B1B-86FD-47B1-9AA9-026FFB74EB88}
+		{D6BC0304-B45D-4409-9F65-FA8D9BC14785} = {30FC61E5-4461-40E0-AC6C-DF0087EAE7F8}
 	EndGlobalSection
 EndGlobal

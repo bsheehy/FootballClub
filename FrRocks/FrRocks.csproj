@@ -74,6 +74,10 @@
       <HintPath>..\..\NuGetPackages\GeoAPI.1.7.3.1\lib\net45\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Geocoding, Version=3.6.0.0, Culture=neutral, PublicKeyToken=7c714700b88674c7, processorArchitecture=MSIL">
+      <HintPath>..\..\NuGetPackages\Geocoding.net.3.6.0\lib\net40\Geocoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\NuGetPackages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
@@ -847,7 +851,9 @@
     <Content Include="Images\frRocks\SteelWeld.jpg" />
     <Content Include="Images\frRocks\tyrone_crest.jpg" />
     <Content Include="Installers\ReadMe-Installers.txt" />
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -954,6 +960,7 @@
     <Content Include="Scripts\club\UtilsDynamicValidation.js" />
     <Content Include="Scripts\club\UtilsErrHandler.js" />
     <Content Include="clubadmin.frrocksgfc.com.publishsettings" />
+    <None Include="Properties\PublishProfiles\ClubAdmin-PublishFiles.pubxml" />
     <None Include="Properties\PublishProfiles\frrocksgfc.com - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.2.4.intellisense.js" />
     <Content Include="Scripts\club\UtilsKendo.js" />
@@ -1956,6 +1963,7 @@
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\About.cshtml" />
@@ -2248,6 +2256,9 @@
     <Content Include="Views\Audit\StandardReport.cshtml" />
     <Content Include="Views\Audit\StandardReportResults.cshtml" />
     <Content Include="Views\Audit\StandardReportResultsJavascripExample.cshtml" />
+    <Content Include="Views\Person\SelectAddress.cshtml" />
+    <Content Include="Views\Person\SelectAddressCriteria.cshtml" />
+    <Content Include="Views\Person\SelectAddressResults.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />

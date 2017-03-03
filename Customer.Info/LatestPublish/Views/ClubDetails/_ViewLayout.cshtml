@@ -1,0 +1,32 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<ClubDetails>
+<div>
+
+  @(Html.Kendo().TabStrip()
+    .Name("tsPerson")
+    .Items(tabstrip =>
+    {
+      tabstrip.Add().Text("Club Details")
+      .ImageUrl(Url.Content("~/Images/24px/home.png"))
+      .Selected(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="d_pnlMandatory">
+        @Html.Partial("~/Views/ClubDetails/_EditPanel.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+      tabstrip.Add().Text("Attached Documents")
+        .ImageUrl(Url.Content("~/Images/24px/documents.png"))
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(
+      @<div id="dAttachedDocs">
+        @Html.Partial("~/Views/Shared/_AttachedDocuments.cshtml", null, Html.ViewData)
+      </div>
+        );
+    })
+)
+
+</div>

@@ -1,0 +1,81 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<ClubMinutes>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+}
+
+
+<div>
+
+  @(Html.Kendo().TabStrip()
+    .Name("tsClubMinutes")
+    .Items(tabstrip =>
+    {
+      tabstrip.Add().Text("Minutes Details")
+      .ImageUrl(Url.Content("~/Images/24px/users_family.png"))
+      .Selected(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="d_pnlMandatory">
+        @Html.Partial("~/Views/ClubMinutes/_EditPanel.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+      tabstrip.Add().Text("Minutes Attendees")
+      .ImageUrl(Url.Content("~/Images/24px/users_family.png"))
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="d_pnlClubMinutesMembers">
+        @Html.Partial("~/Views/ClubMinutes/ClubMinutesMembersGrid.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+      if (pnlViewUserAccess != PageViewType.Create)
+      {
+        tabstrip.Add().Text("Attached Documents")
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .ImageUrl(Url.Content("~/Images/24px/documents.png"))
+        .Content(
+        @<div id="dAttachedDocs">
+          @Html.Partial("~/Views/Shared/_AttachedDocuments.cshtml", null, Html.ViewData)
+        </div>
+          );
+      }
+    })
+)
+
+</div>
+
+
+
+@*<div>
+  @(Html.Kendo().PanelBar()
+  .Name("pnlClubMinutes")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("ClubMinutes Details")
+        //.ImageUrl("~/Images/16px/view.png")
+        .Expanded(true)
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .Content(@<div>
+          @Html.Partial("~/Views/ClubMinutes/_EditPanel.cshtml")
+        <br/></div>);
+
+    if (pnlViewUserAccess == PageViewType.Edit)
+    {
+      panelbar.Add().Text("Lotto Direct Debits")
+        //.ImageUrl("~/Images/16px/view.png")
+      .Expanded(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div>
+        @Html.Partial("~/Views/ClubMinutes/ClubMinutesDirectDebitsGrid.cshtml", Model)
+      </div>);
+    }
+  })
+)
+</div>*@

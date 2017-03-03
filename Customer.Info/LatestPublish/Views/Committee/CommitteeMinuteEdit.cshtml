@@ -1,0 +1,39 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model ModelCommitteeMinute
+@{
+  ViewBag.Title = "Edit Committee";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+
+  bool editCommitteeMinute = false;
+  if (ViewBag.EditCommitteeMinute != null)
+  {
+    editCommitteeMinute = ViewBag.EditCommitteeMinute;
+  }
+}
+
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(false)
+  <div id="headerSubMenu">
+    @if (editCommitteeMinute)
+    {
+      @(Html.Kendo().Button()
+      .Name("frmSubmit")
+      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save")
+      .Events(x => x.Click("clickHiddenSubmit")))
+      <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+    }
+  </div>
+
+  @Html.Partial("_CommitteeMinute", Model)
+
+  <input id="hiddenSubmit" type="submit" value="Save" hidden="hidden" />
+}
+

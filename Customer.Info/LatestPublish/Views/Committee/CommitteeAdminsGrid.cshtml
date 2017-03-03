@@ -1,0 +1,72 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model Mallon.Core.Web.Models.TypedModel<Committee>
+@{
+  bool teamEdit = false;
+  if (ViewBag.EditCommittee != null)
+  {
+    teamEdit = ViewBag.EditCommittee;
+  }
+}
+
+<div id="dCommitteeMemberGrid">
+  @(Html.Kendo().Grid<ModelCommitteeAdmin>()
+  .Name("gridCommitteeAdminsGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (teamEdit)
+    { 
+      //toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" }).Text("Add");
+      toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+            .Name("btnAddNewCommitteeAdmin")
+            .Icon("plus")
+            .Content("Add")
+            .HtmlAttributes(new
+            {
+              type = "button",
+              id = "btnAddNewCommitteeAdmin",
+              data_dialogguid = Model.Entity.Oid,
+              data_dialogtitle = "Add New Committee Admin",
+              data_dialogtofit = "false",
+              data_closejscallback = "refreshCommitteeAdminsGrid",
+              data_actionurl = Url.Action("SelectCommitteeAdminUser", "User", new { committeeOid = @Model.Entity.Oid, controlId = "btnAddNewCommitteeAdmin" })
+            })
+            .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+    }
+  })
+  .Editable(editable => editable.Mode(GridEditMode.InLine))
+  .Sortable()
+  .HtmlAttributes(new { style = "min-height: 100px;" })
+//.Scrollable(s => s.Height("500"))
+  .Columns(columns =>
+  {
+    //columns.ForeignKey(p => p.UserOid, (System.Collections.IEnumerable)ViewData["AdminUsers"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Users").Width(200);
+    columns.Bound(p => p.UserFullName).Title("Full Name").Width("150px");
+    columns.Bound(p => p.UserLogin).Title("Login").Width("150px");
+    columns.Bound(p => p.UserEmail).Title("Email").Width("150px");
+    columns.Command(command => { command.Destroy(); }).Title("Delete").Width(130);
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.Oid);
+      //model.Field(p => p.UserLogin).Editable(false);
+      //model.Field(p => p.UserEmail).Editable(false);
+    })
+    .Events(e =>
+    {
+      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+    })
+    //.Create(c => c.Action("CommitteeAdmin_Create", "Committee", new { committeeOid = Model.Entity.Oid }))
+    .Destroy(update => update.Action("CommitteeAdmin_Delete", "Committee"))
+    .Read(read => read.Action("CommitteeAdmin_GridRead", "Committee", new { committeeOid = Model.Entity.Oid }))
+    )
+  )
+</div>

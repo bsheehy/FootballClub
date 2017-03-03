@@ -1,0 +1,46 @@
+﻿@using Club.Domain.Models
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model ModelAddressSearch
+@functions{
+string ctrlId = System.Guid.NewGuid().ToString();
+//string msgTableHelp = "<p>All Address details can be searched here.</p><p>You should always search for a Address before creating a New Address to avoid creating duplicates.</p><p>You can add the following to a Address:</p><ul><li>Memberships</li><li>Qualifications</li><li>Lotto Direct Debits</li></ul>";
+}
+
+@*@{
+  string s = Model.Address;
+  string d = Model.Country;
+}*@
+<script type="text/javascript">
+  function getAddressSearchParams() {
+    return searchGetParams("searchCriteria@(ctrlId)");
+  }
+</script>
+
+<div class="table-responsive">
+  <table id="searchCriteria@(ctrlId)" style="width: 100%; margin-bottom: 5px;" class="tbl2Cols">
+    @*<tr>
+      <td>
+        @Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } })
+      </td>
+    </tr>*@
+    <tr>
+      <td>Address</td>
+      <td>@(Html.Kendo().TextBoxFor(x => x.qry_Address).HtmlAttributes(new { style = "width:90%" }))</td>
+    </tr>
+    <tr>
+      <td>Country</td>
+      <td>@(Html.Kendo().TextBoxFor(x => x.qry_Country).HtmlAttributes(new { style = "width:90%" }))</td>
+    </tr>
+  <tr>
+      <td></td>
+    <td colspan="3">
+      <div id="searchWrapper" class="float-right" style="display: inline-block">
+        <input type="submit" value="Go" class="k-button" id="btnSearchGo" style="width: auto; padding-top: 2px; padding-bottom: 2px;" onclick="searchBeginSearch()" />
+        <input type="button" value="Clear" class="k-button" id="btnSearchClear" onclick="searchClearSearch('searchCriteria@(ctrlId)')" style="width: auto; padding-top: 2px; padding-bottom: 2px;" />
+      </div>
+    </td>
+    </tr>
+  </table>
+  </div>

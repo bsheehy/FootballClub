@@ -1,0 +1,71 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+}
+
+
+<div>
+
+  @(Html.Kendo().TabStrip()
+    .Name("tsPerson")
+    .Items(tabstrip =>
+    {
+      tabstrip.Add().Text("Person Details")
+      .Selected(true)
+      .ImageUrl(Url.Content("~/Images/24px/user1.png"))
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="d_pnlMandatory">
+        @Html.Partial("~/Views/Person/_EditPanel.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+      @*tabstrip.Add().Text("Guardians")
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="d_pnlMandatory">
+        @Html.Partial("~/Views/Person/PersonGuardiansGrid.cshtml", Model, Html.ViewData)
+      </div>
+      );*@
+
+      tabstrip.Add().Text("Membership History")
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .ImageUrl(Url.Content("~/Images/24px/id_card_preferences.png"))
+      .Content(@<div id="d_pnlMembershipHistory">
+        @Html.Partial("~/Views/Person/PersonMembershipGrid.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+      tabstrip.Add().Text("Lotto Direct Debits")
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .ImageUrl(Url.Content("~/Images/24px/moneybag_euro.png"))
+      .Content(@<div id="d_pnlLottoDirectDebits">
+        @Html.Partial("~/Views/Person/PersonDirectDebitsGrid.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+
+      tabstrip.Add().Text("Qualifications")
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .ImageUrl(Url.Content("~/Images/24px/certificate.png"))
+      .Content(@<div id="d_pnlQualifications">
+        @Html.Partial("~/Views/Person/PersonQualificationsGrid.cshtml", Model, Html.ViewData)
+      </div>
+      );
+
+      tabstrip.Add().Text("Attached Documents")
+      .ImageUrl(Url.Content("~/Images/24px/documents.png"))
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(
+      @<div id="dAttachedDocs">
+        @Html.Partial("~/Views/Shared/_AttachedDocuments.cshtml", null, Html.ViewData)
+      </div>
+        );
+    })
+)
+
+</div>

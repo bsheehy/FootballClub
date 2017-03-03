@@ -1,0 +1,91 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model ModelCommitteeMinute
+@{
+  string personControlId = ViewBag.PersonControlId;
+  string committeeOid = ViewBag.CommitteeOid;
+  SelectList committees= null;
+  bool enabled = false;
+  bool editCommitteeMinute = false;
+  if (ViewBag.EditCommitteeMinute != null)
+  {
+    editCommitteeMinute = ViewBag.EditCommitteeMinute;
+  }
+  bool createCommitteeMinute = false;
+  if (ViewBag.CreateCommitteeMinute != null)
+  {
+    createCommitteeMinute = ViewBag.CreateCommitteeMinute;
+    committees = ViewBag.Committees as SelectList;
+  }
+
+  if (editCommitteeMinute || createCommitteeMinute)
+  {
+    enabled = true;
+  }
+}
+
+
+
+@if (createCommitteeMinute && committees.Count() == 0)
+{
+  <div>
+    <p>You must be an Admin on a Committee to create Minutes. Youre Administer can add you as an Admin to a Committee.</p>
+  </div>
+  return;
+}
+
+<div id="dCommitteeMinute" class="dfw-colorText">
+  <table class="tbl2Cols">
+    <tr>
+      <td colspan="2">
+        @Html.Hidden("Oid", Model.Oid)
+        @Html.Hidden("Orev", Model.Orev)
+      </td>
+    </tr>
+
+      <tr>
+        <td>
+          Committee
+        </td>
+        <td>
+          @if (createCommitteeMinute && Model.CommitteeOid == Guid.Empty)
+          {
+            @(Html.Kendo().DropDownList().Name("CommitteeOid").BindTo(committees).Value(Model.CommitteeOid.ToString()).OptionLabel(" ").HtmlAttributes(new { @style = "width:75%", @required = "required" }))
+          }
+          else
+          {
+            @Html.HiddenFor(x => x.CommitteeOid)
+            @Html.Kendo().TextBoxFor(x => x.CommitteeNameSingleLine).Enable(false).HtmlAttributes(new { @style = "width:75%" })
+          }
+        </td>
+      </tr>
+    
+    <tr>
+      <td>Date</td>
+      <td>
+        @Html.Kendo().DatePicker().Name("Date").Format("dd MMM yyyy").Enable(enabled).Value(Model.Date).HtmlAttributes(new { @style = "width:75%" })
+
+      </td>
+    </tr>
+  </table>
+
+  <br />
+  Add Minutes here:
+  @(Html.Kendo().EditorFor(x=>x.MinutesText)
+      .Name("MinutesText")
+      .Encode(false)
+      .HtmlAttributes(new { style = "height:440px" })
+      .Resizable(resizable => resizable.Content(true).Toolbar(true))
+      .Value(Model.MinutesText)
+      //.ImageBrowser(imageBrowser => imageBrowser
+      //    .Image("~/Content/UserFiles/Images/{0}")
+      //    .Read("Read", "ImageBrowser")
+      //    .Create("Create", "ImageBrowser")
+      //    .Destroy("Destroy", "ImageBrowser")
+      //    .Upload("Upload", "ImageBrowser")
+      //    .Thumbnail("Thumbnail", "ImageBrowser")
+  )
+</div>

@@ -1,0 +1,87 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<LottoTicketDirectDebit>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+}
+@Html.Hidden("dialogId")
+<script type="text/javascript">
+  var isDirty = false;
+  $(document).ready(function () {
+    $(".dfw-personBtn").on("click", function (e) {
+      openPersonDialog(this);
+    });
+
+    $(".dfw-clearContainerVals")
+      .bind("click", function () {
+        var container = $(this).data('containerdiv');
+        clearChildCtrls(container);
+
+        //This is needed if clearing Address's
+        $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
+      });
+
+    //function personSelected(dataItem) {
+    //  debugger;
+    //  clearAddressSingleLine('Licensee');
+    //  $('#Licensee').val(dataItem.Oid);
+    //  $('#Licensee_AllDetails').val(dataItem.AllDetails);
+
+    //  var oid = $('#Oid').val();
+    //}
+
+    $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
+      isDirty = true;
+      enableSaveBtn(isDirty);
+    });
+
+    // a with class "dfw-ignoreDirtyLink" is not checked
+    $("a").not(".dfw-ignoreDirtyLink").click(function (event) {
+      if (IsPageDirty() === false) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    });
+  });
+
+  function personContactTypeChange(e) {
+    var dataItem = this.dataItem(e.item);
+    if (dataItem.Value && dataItem.Value.toLowerCase() === "o") {
+      $('#personOrgName').show();
+    }
+    else {
+      $('#personOrgName').hide();
+    }
+  }
+</script>
+
+
+<div id="dLottoDirectDebit">
+  <div id="dComplainant_@Model.Entity.Oid" class="pbContent">
+    <table class="tbl2Cols">
+      <tr>
+        <td></td>
+        <td>
+          <input id="btnComplaintApplicantE_@Model.Entity.Oid" type="button" value="Edit" class="k-button dfw-personBtn dfw-k-button"
+                 data-containerdiv="dComplainant_@Model.Entity.Oid"
+                 data-dialogguid="@Model.Entity.Oid"
+                 data-dialogtitle="Edit Complainant"
+                 data-modelroutepath="Complainant"
+                 data-actionurl="@Url.Action("SelectPerson", "Person")" />
+
+          <input type="button" value="Clear" class="k-button dfw-k-button  dfw-clearContainerVals" data-containerdiv="dComplainant_@Model.Entity.Oid" />
+        </td>
+      </tr>
+      @Html.Partial("~/Views/Person/_ViewSingleLine.cshtml", Model.GetPropertyModel<Person>(x => x.Person, "Person"))
+    </table>
+
+
+
+  </div>
+</div>

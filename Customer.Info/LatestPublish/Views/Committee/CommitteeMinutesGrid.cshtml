@@ -1,0 +1,85 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@using System.Linq;
+@model Mallon.Core.Web.Models.TypedModel<Committee>
+@{
+  bool editCommittee = false;
+  if (ViewBag.EditCommittee != null)
+  {
+    editCommittee = ViewBag.EditCommittee;
+  }
+  string msgTableHelp = "<p>You must be an <b>Administrator</b> or have been added as a <b>Committee Admin</b> to add or edit Minutes for a Committee.</p>";
+}
+
+<div id="dCommitteeMinutesrGrid">
+  @(Html.Kendo().Grid<ModelCommitteeMinute>()
+  .Name("gridCommitteeMinutesGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (editCommittee)
+    {
+      toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+            .Name("btnAddNewCommitteeMinutes")
+            .Icon("plus")
+            .Content("Add")
+            .HtmlAttributes(new
+            {
+              type = "button",
+              id = "btnAddNewCommitteeMinutes",
+              data_dialogguid = Model.Entity.Oid,
+              data_dialogtitle = "Add New Committee Minutes",
+              data_dialogtofit = "false",
+              data_closejscallback = "refreshCommitteeMinutesGrid",
+              data_actionurl = Url.Action("CommitteeMinuteAjax", "Committee", new { committeeOid = @Model.Entity.Oid, controlId = "btnAddNewCommitteeMinutes" })
+            })
+            .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+    }
+    else
+    {
+      toolbar.Template(@Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } }).ToHtmlString());
+    }
+  })
+            .Sortable()
+            .HtmlAttributes(new { style = "min-height: 100px;" })
+      //.Scrollable(s => s.Height("500"))
+            .Columns(columns =>
+                      {
+                        if (editCommittee)
+                        {
+                          columns.Command(x => x.Custom("View").SendDataKeys(true).Click("editCommitteeMinutesViewDialog").HtmlAttributes(new
+                          {
+                            @class = "k-button",
+                            type = "button",
+                            id = "btnEditMinutes" + @Model.Entity.Oid.ToString(),
+                            data_dialogguid = Model.Entity.Oid.ToString(),
+                            data_dialogtitle = "Edit Committee Minutes",
+                            data_dialogtofit = "false",
+                            data_closejscallback = "refreshCommitteeMinutesGrid",
+                            data_actionurl = Url.Action("CommitteeMinuteAjax", "Committee")
+                          })).Width("100px");
+                        }
+                        //columns.Bound(p => p.Oid).Title("").ClientTemplate("<a href='" + Url.Action("Edit", "Address") + "?Oid=#= Oid #&pnlView=Edit' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new {style="min-width:100px;max-width:100px;" });
+                        columns.Bound(p => p.Date).Title("Minutes Date").Format("{0:dd/MMM/yyyy}").Width("150px");
+                        columns.Command(command => { command.Destroy(); }).Title("Delete").Width(130);
+                      })
+                .DataSource(dataSource => dataSource
+                  .Ajax()
+                  .Model(model =>
+                  {
+                    model.Id(p => p.Oid);
+                  })
+                  .Events(e =>
+                  {
+                    e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+                  })
+                  .Destroy(update => update.Action("CommitteeMinute_Delete", "Committee"))
+                  .Read(read => read.Action("CommitteeMinute_GridRead", "Committee", new { committeeOid = Model.Entity.Oid }))
+                  )
+  )
+</div>

@@ -1,0 +1,49 @@
+﻿@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model TypedModel<AuditApexSql.Artifacts.AuditQuery>
+@{
+  ViewBag.Title = "Standard Audit Report";
+  bool hideLayout = Convert.ToBoolean(ViewData["HideLayout"]);
+  if (hideLayout == null || hideLayout == false)
+  {
+    Layout = "~/Views/Shared/_Layout.cshtml";
+  }
+}
+
+<div>
+  @(Html.Kendo().PanelBar()
+  .Name("auditQueryCriteria")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("Audit Search Criteria")
+      .ImageUrl("~/Images/16px/view.png")
+        .Expanded(true)
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .Content(@<div>
+          @Html.Partial("~/Views/Audit/SearchCriteria.cshtml")
+        </div>);
+  })
+  )
+</div>
+<br />
+<div id="listContent">
+  @(Html.Kendo().PanelBar()
+  .Name("auditQueryResults")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("Audit Results")
+      .ImageUrl("~/Images/16px/houses.png")
+      .Expanded(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="dPremResults">
+        @Html.Partial("~/Views/Audit/StandardReportResults.cshtml")
+      </div>
+      );
+  })
+  )
+</div> 
+  

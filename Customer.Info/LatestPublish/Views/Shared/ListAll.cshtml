@@ -1,0 +1,44 @@
+﻿@model SelectList
+@{ViewBag.AdminTitle = @Mallon.Core.Resources.Strings.DescriptionForClass(this.ViewContext.Controller.GetType(), true);}
+<script type="text/javascript">
+  $(document).ready(function () {
+
+    $("#navLeft").show();;
+    $("#navRight").hide();
+
+    $("#navRight").click(function () {
+      $('#listAll').show();
+      $("#navLeft").show()
+      $("#navRight").hide();
+      $('#itemList').css('min-width', '300px');
+    });
+
+    $("#navLeft").click(function () {
+      $("#navRight").show();
+      $('#listAll').hide();
+      $('#itemList').css('min-width', '20px');
+      $("#navLeft").hide();
+    });
+    
+    $('#listAll').css('border', 'none');
+ 
+  });
+</script>
+<script type="text/x-kendo-tmpl" id="listAllTemplate">
+  <div id="${Value}" class="k-widget k-in mouseChangePointer" style="border:none;"> 
+      <h5 style="margin:4px; width:auto;">${Text}</h5>
+  </div>
+</script>
+
+<input id="title" type="hidden" value="@ViewBag.AdminTitle" />
+<div class="k-block">
+  <img hidden id="navLeft" src="~/Images/16px/navigate_left.png" class="mouseChangePointer" />
+  <img hidden id="navRight" src="~/Images/16px/navigate_right.png" class="mouseChangePointer" />
+
+  @(Html.Kendo().ListView(Model)
+  .Name("listAll")
+  .TagName("div")
+  .Selectable()
+  .ClientTemplateId("listAllTemplate")
+  )
+  </div>

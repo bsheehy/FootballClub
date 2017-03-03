@@ -56,7 +56,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 20;
+        request.PageSize = 100;
       }
 
       StandardApexReport report = new StandardApexReport();
@@ -99,7 +99,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 20;
+        request.PageSize = 100;
       }
 
       StandardApexReport report = new StandardApexReport();
@@ -123,7 +123,7 @@ namespace FrRocks.Controllers
     {
       if (request.PageSize == 0)
       {
-        request.PageSize = 20;
+        request.PageSize = 100;
       }
 
       StandardApexReport report = new StandardApexReport();
@@ -146,6 +146,12 @@ namespace FrRocks.Controllers
       return View(m);
     }
 
+    public JsonResult GetTableFieldNames(string tableName)
+    {
+      var results = new SelectList((IEnumerable)this.auditController.GetTableFieldNames(tableName), "Key", "Value");
+      return Json(results, JsonRequestBehavior.AllowGet);
+    }
+
     #region Private Methods
 
     private void SetViewBagSelectLists(AuditQuery m)
@@ -154,7 +160,7 @@ namespace FrRocks.Controllers
       ViewBag.AuditActions = UtilsSelectListEnum.SelectListFor<AuditAction>();
       ViewBag.AuditTableNames = new SelectList((IEnumerable)this.auditController.GetLookupData(LookupType.TableName), "Key", "Value", m.TableName);
       ViewBag.AuditModifiedBys = new SelectList((IEnumerable)this.auditController.GetLookupData(LookupType.ModifiedBy), "Key", "Value", m.ModifiedBy);
-      ViewBag.AuditColumnNames = new SelectList((IEnumerable)this.auditController.GetLookupData(LookupType.FieldName), "Key", "Value", m.FieldName);
+      //ViewBag.AuditColumnNames = new SelectList((IEnumerable)this.auditController.GetLookupData(LookupType.FieldName), "Key", "Value", m.FieldName);
       ViewBag.AuditComputers = new SelectList((IEnumerable)this.auditController.GetLookupData(LookupType.Host), "Key", "Value", m.Host);
       ViewBag.AuditApplications = new SelectList((IEnumerable)this.auditController.GetLookupData(LookupType.Application), "Key", "Value", m.Application);
     }

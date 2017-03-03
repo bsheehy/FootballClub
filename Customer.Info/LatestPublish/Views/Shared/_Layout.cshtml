@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>@ViewBag.Title</title>
+  <script id="confirmationTemplate" type="text/x-kendo-template">
+    <div class="popupMessage"></div>
+    <br />
+    <div class="dialog_buttons" style="float:right;">
+
+    </div>
+  </script>
+
+  @Styles.Render("~/Content/kendo/2016.3.914/kendocssbootstrap")
+
+  @Styles.Render("~/Content/css")
+
+  @Scripts.Render("~/bundles/jquery")
+
+  @Scripts.Render("~/bundles/kendo/2016.3.914/kendoscripts")
+
+  @Scripts.Render("~/bundles/club")
+
+  <script type="text/javascript">
+    //Global javascript variables here
+    var isDirty = false;
+    //set current to the "en-GB" culture script
+    //kendo.culture("en-GB");
+    window.logErrorUrl = '@Url.Action("LogJavaScriptError", "Error")';
+    window.logErrorAlertClient = false;
+    window.logErrorAfterAjaxHandled = false;
+
+    $(document).ready(function () {
+      generateTooltips();
+      setTitle();
+    });
+
+    function myAccountOpen() {
+      var Oid = $('#UserOid').val();
+      var guid = Oid;
+      var parentDialog = getDialogName(guid);
+      $('#dialogId').val(parentDialog);
+      kendoDialogCreate(guid, null, true);
+      kendoDialogOpen(guid, "My Account", '@Url.Action("CurrentUserView", "Util")', { Oid: Oid });
+    }
+
+    function showHidePassword(command) {
+      var tag = document.getElementById("myAccountPWord");
+      if (command == 'Show') {
+        tag.setAttribute('type', 'text');
+      } else {
+        tag.setAttribute('type', 'password');
+      }
+    }
+
+    function myAccountUpdated() {
+      var message = "Account Updated";
+      var buttons = ["OK"];
+      showModalAlert(message, "", "", buttons);
+    }
+  </script>
+  <meta name="description" content="Fr Rocks" />
+</head>
+<body>
+  <div id="progressDiv">
+    <div id="headerNav" class="navbar navbar-default navbar-static-top dfw-colorBase">
+      <div id="navContainer dfw-colorBase">
+
+        <div class="row dfw-colorText">
+          <div class="col-md-1 col-sm-1">
+            <div class="row">
+              <div class="col-md-12" style="padding-left:15px;padding-right:0px;">
+                <img src="~/Images/frRocks/FrRockCrest_TransOutline.png" class="img-responsive" style="max-height:80px" />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-2 hidden-xs hidden-sm text-center">
+            <div class="row">
+              <div class="col-md-12"><img src="~/Images/frRocks/SteelWeld.jpg" class="img-responsive" /></div>
+              <div id="titleTxt" class="col-md-12 dfw-title">@ViewBag.Title</div>
+            </div>
+          </div>
+          <div class="col-md-9 col-sm-11">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="short-div">
+                  @{Html.RenderAction("LogInStrip", "Account");}
+                </div>
+              </div>
+              <div class="col-md-12">
+                <div class="short-div">
+                  @(Html.Kendo().Menu()
+                  .Name("dbmenu")
+                  .Items(items =>
+                  { 
+                    items.Add().Text("Our Club").ImageUrl("~/Images/24px/home.png").Items(innerChildren =>
+                    {
+                      innerChildren.Add().Text("Club Details").Action("Edit", "ClubDetails");
+                      innerChildren.Add().Text("Search Membership").Action("Search", "Membership");
+                     
+                    });
+                    items.Add().Text("People").Action("Search", "Person").ImageUrl("~/Images/24px/user1.png");
+                    items.Add().Text("Teams").ImageUrl("~/Images/24px/users_family.png").Items(innerChildren =>
+                    {
+                      innerChildren.Add().Text("Search Teams").Action("Search", "Team");
+                      innerChildren.Add().Text("Search Members of Teams").Action("SearchTeamMembers", "Team");
+                    });
+
+                    items.Add().Text("Committees").ImageUrl("~/Images/24px/users1.png").Items(innerChildren =>
+                    {
+                      //innerChildren.Add().Text("Add Meeting Minutes").ImageUrl("~/Images/16px/add.png").Action("CommitteeMinuteCreate", "Committee");
+                      innerChildren.Add().Text("Search Committees").Action("Search", "Committee");
+                      innerChildren.Add().Text("Search Minutes").Action("Search", "CommitteeMinutes");
+                      innerChildren.Add().Text("Search Committee Members").Action("SearchCommitteeMembers", "Committee");
+                    });
+
+                    items.Add().Text("Lottery").ImageUrl("~/Images/24px/moneybag_euro.png").Items(innerChildren =>
+                    {
+                      innerChildren.Add().Text("Search Direct Debits").Action("SearchDirectDebits", "Lotto");
+                      innerChildren.Add().Text("Check Direct Debits Winners").Action("LottoTicketDirectDebitWinners", "Lotto");
+                    });
+
+                    items.Add().Text("Other").Items(innerChildren =>
+                    {
+                      innerChildren.Add().Text("Search Qualifications").Action("Search", "Qualification");
+                      innerChildren.Add().Text("Search People Qualifications").Action("SearchPersonQualification", "Qualification");
+                    });
+     
+                    items.Add().Text("About").Action("About", "Home");
+                  })
+                  .HtmlAttributes(new { @style = "border-radius: 5px;", @class = "dfw-menuSlim" })
+                  )
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dfw-main dfw-mainColor">
+      <div id="bodyContent" class="container-fluid class=" dfw-colortext"">
+        @(Html.Kendo().Window()
+              .HtmlAttributes(new { @style = "background-color:#2b2b2b" })
+              .Name("errorWindow")
+              .Title("")
+              .Content(@<text>
+                <div id="errorMsg" style="width: 100%; text-align: center; display: none; font-weight: bold">
+                </div>
+              </text>)
+              .Width(1000)
+              .Draggable(true)
+              .Actions(actions => actions.Close())
+              .Visible(false)
+              .Events(e => e.Open("onErrorOpen"))
+        )
+        @RenderBody()
+      </div>
+    </div>
+
+    @Html.Hidden("dialogId")
+  </div>
+</body>
+</html>

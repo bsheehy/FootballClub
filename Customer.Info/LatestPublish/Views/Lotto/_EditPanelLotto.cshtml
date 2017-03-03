@@ -1,0 +1,183 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Lotto>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.Entity.Oid.ToString();
+}
+@Html.Hidden("dialogId")
+<script type="text/javascript">
+  var isDirty = false;
+  $(document).ready(function () {
+    $(".dfw-clearContainerVals")
+      .bind("click", function () {
+      var container = $(this).data('containerdiv');
+      clearChildCtrls(container);
+
+      //This is needed if clearing Address's
+      $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
+      });
+
+    $(".dfw-personBtn").on("click", function (e) {
+      openPersonDialog(this);
+    });
+
+    $(".dfw-clearContainerVals")
+    .bind("click", function () {
+    var container = $(this).data('containerdiv');
+    clearChildCtrls(container);
+    });
+
+
+    $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
+      isDirty = true;
+      enableSaveBtn(isDirty);
+    });
+
+    $(".bs-AddLottoResult").on("click", function (e) {
+      openEntityDialog(this);
+    });
+
+    // a with class "dfw-ignoreDirtyLink" is not checked
+    $("a").not(".dfw-ignoreDirtyLink").click(function (event) {
+      if (IsPageDirty() === false) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    });
+  });
+
+
+
+  function OnSuccess(data) {
+    alert(data);
+  }
+
+  function OnFailure(xhr, status) {
+    alert('Error: ' + xhr.statusText);
+  }
+
+  function addLottoResult(e)
+  {
+    var lottoDrawOid = $("#Oid").val();
+
+  }
+
+  function refreshLottoDrawPage(e) {
+    history.go(0);
+  }
+
+</script>
+
+
+@(Html.Kendo().PanelBar()
+.Name("pnlbLottoResultDetails")
+.ExpandMode(PanelBarExpandMode.Multiple)
+.HtmlAttributes(new { style = "width:100%" })
+.Items(panelbar =>
+{
+  panelbar.Add().Text("Lotto Draw:")
+  .ImageUrl("~/Images/24px/moneybag_euro.png")
+  .Expanded(true)
+  .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+  .Content(@<div id="dLottoDraw" class="dfw-colorText">
+              <div id="headerSubMenu">
+                @(Html.Kendo().Button()
+      .Name("frmSubmit")
+      .Enable(false)
+      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save")
+      .Events(x => x.Click("clickHiddenSubmit")))
+
+                <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+              </div>
+
+    @Html.Partial("_Lotto",Model)  
+
+    <br />
+  </div>);
+
+  if (pnlViewUserAccess != PageViewType.Create)
+  {
+    panelbar.Add().Text("Lotto Result:")
+    .ImageUrl("~/Images/24px/record.png")
+    .Expanded(true)
+    .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+    .Content(@<div id="dLottoResult" class="dfw-colorText">
+      @if (Model.Entity.LottoResult == null || Model.Entity.LottoResult.Oid == Guid.Empty)
+      {
+        <br />
+        @*@(Html.Kendo().Button()
+          .Name("btnAddLottoResult")
+          .HtmlAttributes(new {@data_dialogguid="@ctrlId",data_dialogtitle="Add Lotto Result", data_modelroutepath="LottoResult", data_jscallback="refreshLottoDrawPage", @data_actionurl=Url.Action("CreateLottoResultAjax", "Lotto", new {lottoOid = Model.Entity.Oid })  })
+          .ImageUrl(Url.Content("~/Images/24px/add.png"))
+          .Content("Add Lotto Result")
+          .Events(x => x.Click("addLottoResult")))*@
+
+
+  <input id="btnAddLottoResult" type="button" value="Add Lotto Result" class="k-button bs-AddLottoResult"
+         data-dialogguid="@ctrlId"
+         data-dialogtofit="true"
+         data-dialogtitle="Add Lotto Result"
+         data-modelroutepath="LottoResult"
+         data-jscallback="refreshLottoDrawPage"
+         data-actionurl="@Url.Action("CreateLottoResultAjax", "Lotto", new {lottoOid = Model.Entity.Oid })" />
+
+  <br />
+      }
+      else
+      {
+      <table class="tbl2Cols">
+        <tr>
+          <td colspan="2">
+            @if(Model.Entity.LottoResult != null)
+            {
+              @Html.HiddenFor(Model.GetProperty(m => m.LottoResult.Oid))
+              @Html.HiddenFor(Model.GetProperty(m => m.LottoResult.Orev))
+            }
+          </td>
+        </tr>
+
+        <tr>
+          @Html.TextBoxFor(Model.GetProperty(m => m.LottoResult.No1), new { @style = "width:75%", @disabled="disabled" })
+        </tr>
+
+        <tr>
+          @Html.TextBoxFor(Model.GetProperty(m => m.LottoResult.No2), new { @style = "width:75%", @disabled = "disabled" })
+        </tr>
+
+        <tr>
+          @Html.TextBoxFor(Model.GetProperty(m => m.LottoResult.No3), new { @style = "width:75%", @disabled = "disabled" })
+        </tr>
+
+        <tr>
+          @Html.TextBoxFor(Model.GetProperty(m => m.LottoResult.No4), new { @style = "width:75%", @disabled = "disabled" })
+        </tr>
+      </table>
+      }
+      <br />
+    </div>);
+
+      @*if (Model.Entity.LottoResult != null && Model.Entity.LottoResult.Oid != Guid.Empty)
+      {
+        panelbar.Add().Text("Lotto Winners Result:")
+        .ImageUrl("~/Images/24px/record.png")
+        .Expanded(true)
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .Content(@<div id="dLottoResultWinners" class="dfw-colorText">
+
+          @Html.Partial("_ViewLottoResultWinnersGrid", Model.Entity.LottoResult)
+        <br />
+      </div>);
+    }*@
+  }
+})
+
+)

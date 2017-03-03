@@ -1,0 +1,116 @@
+﻿@using AuditApexSql.Artifacts
+<div id="dAuditSearchResults">
+  <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
+  <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
+
+  <div id="searchGridResults"></div>
+  <script>
+  $(document).ready(function () {
+    $("#searchGridResults").kendoGrid({
+      dataSource: {
+        //error: 'handleAjaxError',
+        error: function (e) {
+          handleAjaxError(e);
+          alert('HELLO');
+        },
+        type: "json",
+        transport: {
+          read: {
+            url: '@Url.Action("StandardReportResultsJavascripExample_ReadData", "Audit")',
+            contentType: "application/json",
+            type: "POST" 
+            }
+        },
+        schema: {
+          data: "Data",
+              model: {
+                fields: {
+                  DatabaseName: { type: "string" },
+                  TableSchema: { type: "string" },
+                  Key1: { type: "string" },
+                  Key2: { type: "string" },
+                  Key3: { type: "string" },
+                  Key4: { type: "string" },
+                  Computer: { type: "string" },
+                  Action: { type: "string" },
+                  TableName: { type: "string" },
+                  ColumnName: { type: "string" },
+                  OldValue: { type: "string" },
+                  NewValue: { type: "string" },
+                  ModifiedBy: { type: "string" },
+                  ModifiedDate: { type: "date" }
+                  }
+              }
+          },
+          pageSize: 20,
+          serverPaging: true,
+          serverFiltering: true,
+          serverSorting: true
+        },
+        height: 550,
+        filterable: true,
+        sortable: true,
+        pageable: true,
+        columns: [
+          //{
+          //  field:"Action",
+          //  filterable: false
+          //},
+          {
+            field:"TableName",
+            title: "Table Name",
+          },
+          {
+            field:"ColumnName",
+            title: "Column Name",
+          }
+          //,
+          //{
+          //  field:"OldValue",
+          //  title: "Old Value",
+          //},
+          //{
+          //  field:"NewValue",
+          //  title: "New Value",
+          //},
+          //{
+          //  field:"ModifiedBy",
+          //  title: "Modified By",
+          //},
+          //{
+          //  field: "ModifiedDate",
+          //  title: "Modified Date",
+          //  format: "{0:dd/MMM/yyyy HH:mm}"
+          //}
+        ]
+    });
+  });
+  </script>
+
+
+
+  @*@(Html.Kendo().Grid<AuditData>()
+  .Name("searchGridResults")
+  .AutoBind(false) //if false - on Search carried out until criteria search added.
+  .Scrollable(s => s.Enabled(true).Height("auto"))
+  .Columns(columns =>
+  {
+    columns.Bound(p => p.Action).Title("Action").Width(100).HtmlAttributes(new { style = "min-width:100px;" });
+    columns.Bound(p => p.TableName).Title("Table Name").Width(200).HtmlAttributes(new { style = "min-width:150px;" });
+    columns.Bound(p => p.ColumnName).Title("Column Name").Width(250).HtmlAttributes(new { style = "min-width:250;" });
+    columns.Bound(p => p.OldValue).Title("Old Value").Width(200).HtmlAttributes(new { style = "min-width:200px;" });
+    columns.Bound(p => p.NewValue).Title("New Value").Width(200).HtmlAttributes(new { style = "min-width:200px;" });
+    columns.Bound(p => p.ModifiedBy).Title("Modified By").Width(300).HtmlAttributes(new { style = "min-width:300px;" });
+    columns.Bound(p => p.ModifiedDate).Title("Modified Date").Width(150).HtmlAttributes(new { style = "min-width:150px;" }).Format("{0:dd/MMM/yyyy HH:mm}"); ;
+    //columns.Bound(p => p.Key1).Title("Key1").Width(100).HtmlAttributes(new { style = "min-width:100px;" });
+  })
+  .Pageable(x => { x.PageSizes(new int[] { 20, 50}); })
+  .Sortable()
+  .Selectable(x => x.Type(GridSelectionType.Cell))
+  .Scrollable()
+  .DataSource(ds => ds
+    .Ajax()
+    .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))
+    .Read(read => read.Action("StandardReport_ReadData", "Audit").Data("getAuditSearchParams"))
+  ))
+</div>*@

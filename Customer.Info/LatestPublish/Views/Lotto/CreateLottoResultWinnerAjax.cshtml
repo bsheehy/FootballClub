@@ -1,0 +1,176 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model Mallon.Core.Web.Models.TypedModel<LottoResultWinner>
+
+@{
+  ViewBag.Title = "Create Lotto Winner ";
+}
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $(".dfw-personBtn").on("click", function (e) {
+      openPersonDialog(this);
+    });
+
+    $(".dfw-clearContainerVals")
+    .bind("click", function () {
+      var container = $(this).data('containerdiv');
+      clearChildCtrls(container);
+    });
+  });
+
+  function validateLottoResultWinnerAjax(e) {
+    var valid = true;
+    var errorMsg = "";
+    var frmAjax = $("#frmCreateLottoResultAjax");
+    valid = frmAjax.validate().form();
+
+    if (valid == false)
+    {
+      return false;
+    }
+
+    var vald = $('#frmCreateLottoResultAjax')
+          .updateValidation()
+          .validate();
+    valid = vald.form();
+
+    var matches = Number($("#Matches").val());
+    if (no1 < 1 || no1 > 4) {
+      valid = false;
+      errorMsg += "Matches must be between 1 and 4 <br/>";
+    }
+
+    //var no1 = Number($("#No1").val());
+    //var no2 = Number($("#No2").val());
+    //var no3 = Number($("#No3").val());
+    //var no4 = Number($("#No4").val());
+    //var maxNum = Number($("#MaxLottoNumber").val());
+  
+    //if (no1 < 1 || no1 > maxNum) {
+    //  valid = false;
+    //  errorMsg += "'No 1' must be between 1 and " + maxNum + "<br/>";
+    //}
+    //if (no2 < 1 || no2 > maxNum) {
+    //  valid = false;
+    //  errorMsg += "'No 2' must be between 1 and " + maxNum + "<br/>";
+    //}
+    //if (no3 < 1 || no3 > maxNum) {
+    //  valid = false;
+    //  errorMsg += "'No 3' must be between 1 and " + maxNum + "<br/>";
+    //}
+    //if (no4 < 1 || no4 > maxNum) {
+    //  valid = false;
+    //  errorMsg += "'No 4' must be between 1 and " + maxNum + "<br/>";
+    //}
+
+    //if (no1 == no2 || no1 == no3 || no1 == no4 || no2 == no3 || no2 == no4 || no3 == no4) {
+    //  valid = false;
+    //  errorMsg += "The numbers must all be unique.";
+    //}
+
+    if (valid == false && errorMsg.length > 0) {
+      showError(errorMsg);
+    }
+
+    return valid;
+  }
+
+  function OnSuccessCreateLottoResultAjax(e) {
+    if (e.success && e.success === true) {
+      refreshLottoDrawPage();
+    }
+    else {
+      handleAjaxError(e);
+    }
+  }
+
+</script>
+
+
+
+@using (Ajax.BeginForm("CreateLottoResultWinnerAjax", "Lotto", new AjaxOptions { OnFailure = "handleAjaxError", OnBegin = "return validateLottoResultWinnerAjax()", OnComplete = "hideProgress", OnSuccess = "OnSuccessCreateLottoResultAjax" }, new { @id = "frmCreateLottoResultAjax" }))
+{
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(false)
+
+@Html.HiddenFor(m => m.Entity.Oid)
+@Html.HiddenFor(m => m.Entity.Orev)
+@Html.HiddenFor(m => m.Entity.LottoResult.Oid)
+@Html.Hidden("MaxLottoNumber", "34")
+  
+  <table class="tbl2Cols" id="lottoResultWinnerPerson">
+    <tr>
+      <td></td>
+      <td>
+        <input id="btnLottoWinnerPerson_@Model.Entity.Oid" type="button" value="Edit" class="k-button dfw-personBtn dfw-k-button"
+               data-containerdiv="lottoResultWinnerPerson"
+               data-dialogguid="@Model.Entity.Oid"
+               data-dialogtitle="Add Person"
+               data-modelroutepath="Person"
+               data-actionurl="@Url.Action("SelectPerson", "Person")" />
+
+        <input type="button" value="Clear" class="k-button dfw-k-button  dfw-clearContainerVals" data-containerdiv="lottoResultWinnerPerson" />
+      </td>
+    </tr>
+    @Html.Partial("~/Views/Person/_ViewSingleLine.cshtml", Model.GetPropertyModel<Person>(x => x.Person, "Person"))
+  </table>
+  
+  <table class="tbl2Cols">
+    <tr>
+      @Html.NumericFor(Model.GetProperty(m => m.Matches), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      @Html.TextBoxFor(Model.GetProperty(m => m.Message), new { @class = "k-textbox", @style = "width:75%" })
+    </tr>
+
+    <tr>
+      <td></td>
+      <td>
+        <input id="btnSubmitCreateLottoResultAjax" type="submit" class="k-button" value="Save" />
+      </td>
+    </tr>
+  </table>
+
+
+    @*<div class="form-group">
+      @Html.LabelFor(m => m.Entity.No1)
+      @(Html.Kendo().NumericTextBoxFor(x => x.Entity.No1).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.Entity.No1)
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(m => m.Entity.No2)
+      @(Html.Kendo().NumericTextBoxFor(x => x.Entity.No2).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.Entity.No2)
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(m => m.Entity.No3)
+      @(Html.Kendo().NumericTextBoxFor(x => x.Entity.No3).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.Entity.No3)
+    </div>
+
+    <div class="form-group">
+      @Html.LabelFor(m => m.Entity.No4)
+      @(Html.Kendo().NumericTextBoxFor(x => x.Entity.No4).Decimals(0).Format("0"))
+      @Html.ValidationMessageFor(m => m.Entity.No4)
+    </div>*@
+
+    @*<div class="form-group">
+      @Html.LabelFor(m => m.Entity.Matches)
+      @(Html.Kendo().NumericTextBoxFor(x => x.Entity.Matches).Decimals(0).Format("0").Min(1).Max(4))
+      @Html.ValidationMessageFor(m => m.Entity.Matches)
+    </div>*@
+
+      @*@(Html.Kendo().Button()
+      .Name("btnAddLottoResult")
+      .HtmlAttributes(new { @class = "saveButtonRight", @id = "btnAddLottoResult" })
+      .ImageUrl(Url.Content("~/Images/16px/check.png"))
+      .Content("Save XX")
+      .Events(x => x.Click("saveLottoResultAjax")))*@
+}
+

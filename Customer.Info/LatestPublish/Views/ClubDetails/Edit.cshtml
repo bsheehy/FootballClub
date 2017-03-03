@@ -1,0 +1,17 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model Mallon.Core.Web.Models.TypedModel<ClubDetails>
+@{
+  ViewBag.Title = "Club Details";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(false)
+
+  @Html.Partial("_ViewLayout", Model)
+  <input id="hiddenSubmit" type="submit" value="Save" hidden="hidden" />
+}

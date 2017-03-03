@@ -1,0 +1,93 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Committee>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  bool personEdit = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  bool committeeEdit = false;
+  if (ViewBag.EditCommittee != null)
+  {
+    committeeEdit = ViewBag.EditCommittee;
+  }
+  string msgTableHelp = "<p>You must be an <b>Administrator</b> or have been added as a <b>Committee Admin</b> to add or edit Members of a Committee.</p>";
+}
+
+<div id="dCommitteeMemberGrid">
+  @(Html.Kendo().Grid<ModelCommitteeMember>()
+  .Name("gridCommitteeMemberGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (committeeEdit && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
+    {
+      toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+          .Name("btnAddNewCommitteeMember")
+          .Icon("plus")
+          .Content("Add")
+          .HtmlAttributes(new
+          {
+            type = "button",
+            id = "btnAddNewCommitteeMember",
+            data_dialogguid = Model.Entity.Oid,
+            data_dialogtitle = "Add New Committee Member",
+            data_dialogtofit = "false",
+            data_closejscallback = "refreshCommitteeMemberGrid",
+            data_actionurl = Url.Action("SelectCommitteeMember", "Person", new { committeeOid = @Model.Entity.Oid, controlId = "btnAddNewCommitteeMember" })
+          })
+          .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+      //toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
+    }
+    else
+    {
+      toolbar.Template(@Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } }).ToHtmlString());
+    }
+  })
+  .Editable(editable => editable.Mode(GridEditMode.InLine))
+  .Sortable()
+  .HtmlAttributes(new { style = "height: 550px;" })
+//.Scrollable(s => s.Height("500"))
+  .Columns(columns =>
+  {
+    if (committeeEdit)
+    {
+      columns.Bound(p => p.PersonOid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+    }
+    columns.Bound(p => p.PersonNameSingleLine).Title("Person").Width(200);
+    columns.ForeignKey(p => p.CommitteeMemberTypeOid, (System.Collections.IEnumerable)ViewData["CommitteeMemberTypes"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Committee Role").Width(120);
+    //columns.Bound(p => p.CommitteeMemberTypeName).Title("Member Type").Width(200);
+    columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width(200);
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      columns.Command(command => { command.Edit(); command.Destroy(); }).Title("Edit Committee Member").Width(130);
+    }
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.Oid);
+      model.Field(p => p.PersonOid).Editable(false);
+      model.Field(p => p.PersonNameSingleLine).Editable(false);
+      model.Field(p => p.PersonAddressSingleLine).Editable(false);
+    })
+    .Events(e =>
+    {
+      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+    })
+    //.Create(update => update.Action("PersonMembership_Create", "Membership", new { personOid = Model.Entity.Oid }))
+    .Update(update => update.Action("CommitteeMember_Update", "Committee"))
+    .Destroy(update => update.Action("CommitteeMember_Delete", "Committee"))
+    .Read(read => read.Action("CommitteeMember_GridRead", "Committee", new { committeeOid = Model.Entity.Oid }))
+    )
+  )
+</div>

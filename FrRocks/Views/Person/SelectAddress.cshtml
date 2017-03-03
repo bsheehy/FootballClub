@@ -1,0 +1,50 @@
+﻿@using Club.Domain.Models
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@model ModelAddressSearch
+@{
+  string addressControlId = ViewBag.AddressControlId;
+
+  //string s = Model.Address;
+  //string d = Model.Country;
+}
+@Html.Hidden("AddressControlId", addressControlId)
+@Html.Hidden("SaveGuardianUrl", Url.Action("SelectAddress", "Person"))
+
+<div>
+  @(Html.Kendo().PanelBar()
+  .Name("pnlbAddressS")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("Address Search Criteria")
+        .ImageUrl(Url.Content("~/Images/24px/view.png"))
+        .Expanded(true)
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .Content(@<div>
+          @Html.Partial("~/Views/Person/SelectAddressCriteria.cshtml")
+        </div>);
+  })
+  )
+</div>
+<div id="listContent">
+  @(Html.Kendo().PanelBar()
+  .Name("pnlbAddressL")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("Address Results")
+      .ImageUrl(Url.Content("~/Images/24px/scroll_view.png"))
+      .Expanded(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div id="dPersonResults">
+        @Html.Partial("~/Views/Person/SelectAddressResults.cshtml")
+      </div>
+      );
+  })
+  )
+</div>
+

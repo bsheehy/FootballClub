@@ -2,50 +2,28 @@
 <!--
    ======================================================================================================
   RELEASE PROCESS EXPLAINED
-  CommandLine= NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -logfile:BuildOutput.txt
+  CommandLine= NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -logfile:BuildOutput.txt
   Does the following:
       
   checkLiveArguments: validate passed arguments
   clean: cleans source code folders
-  sourceControlCheckForUncommittedChanges: if there are any uncommitted changes in the repos then the build fails.
-  incrementVersion: increments version number in Build.number fle e.g. C:\development\DiamondFireWeb\Build\Build.number
   assemblyInfoUpdate: iterates through all assemblies in 'solution.Projects' array and updates assembly info with version number and other properties.
-  sqlCreateScripts: updates the 'C:\development\DiamondFireWeb\db\staticdata\99_ReleaseUpdate.sql' script.
+  sqlCreateScripts: updates the 'C:\development\FootballClub\db\staticdata\99_ReleaseUpdate.sql' script.
   buildCode: builds all code in solution.
   publishWebsite: publishes the website using the specified Publish profile i.e. 'build.publishProfile'=Publish_Live_Release
-  copyToReleaseFolder: copy the published Web Deploy solution to the Releases folder
-  copyReleaseFolderToProject: Copies the entire release folder to the DiamondFire.CustomerData project.
-  assemblyRevertSourceControl: revert code changes to all AssemblyInfo.cs done in the assemblyInfoUpdate task.
-  sourceControlTagAdd: Add a Tag to source control for this release
-	sourceControlPushChanges: Push changes to SourceControl
 
-  Initial Relase:
-	NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -D:customerName=Demo -D:sourcecontrol.Tag=true -D:setupVer.default=1.7.0.0 -logfile:BuildOutput.txt
-  
-  Updates:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -D:customerName=Demo -D:sourcecontrol.Tag=true -D:version.DoIncrement=true -logfile:BuildOutput.txt
-	
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -D:customerName=Demo -D:sourcecontrol.Tag=false -D:setupVer.default=1.8.0.0 -D:version.DoIncrement=false -logfile:BuildOutput.txt
-	
-  
-  Test Release: - WONT INCREMENT VERION OR TAG SOURCE CONTROL
-	NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -D:customerName=Demo -D:sourcecontrol.Tag=false -D:version.DoIncrement=false -D:setupVer.default=0.0.0.0 -logfile:BuildOutput.txt
-	
-	
-	NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" publishWebsite -D:build.type=Release -D:org.default=trunk -D:customerName=Demo -D:sourcecontrol.Tag=false -D:version.DoIncrement=false -D:setupVer.default=0.0.0.0 -logfile:BuildOutput.txt
-	
-	Other Stuff:
-	NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -D:customerName=Meath -D:setupVer.default=1.0.0.0 -D:sourcecontrol.Tag=true -logger:NAnt.Core.DefaultLogger
 
-	NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -D:customerName=Meath -D:sourcecontrol.Tag=true -D:version.DoIncrement=true -logfile:BuildOutput.txt
-		
+  NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" createLiveRelease -D:setupVer.default=0.0.0.0 -D:build.type=Release -D:org.default=trunk -logfile:BuildOutput.txt
+
+
+  NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" sqlCreateScripts -D:setupVer.default=0.0.0.0 -D:build.type=Release -D:org.default=trunk -logfile:BuildOutput.txt
+
+
   UPDATING PROPERTIES IN SCRIPT - CHECK LINK BELOW: Basically if property is set from command line using -D switch you cant update it in the script.
-  To get around this we create 2 properties for any property we want to be able to set from the command line and update in the script.
-  e.g. sourcecontrol.labelname.default (command line property) sourcecontrol.labelname (property updateable from within script)
-  http://stackoverflow.com/questions/36620111/nant-update-property-in-a-script
+  To get around this we create 2 properties for any property we want to be able to set from the command line and update in the scr  http://stackoverflow.com/questions/36620111/nant-update-property-in-a-script
    ======================================================================================================
    -->
-<project name="DiamondFireWeb" default="help" xmlns="http://nant.sf.net/release/0.92/nant.xsd" >
+<project name="FootballClub" default="help" xmlns="http://nant.sf.net/release/0.92/nant.xsd" >
   <echo message="Loading tasks: 'NAnt.Contrib.Tasks.dll'..."/>
   <loadtasks assembly="..\..\BuildTools\NAnt-0.92\bin\tasks\net\NAntContrib\NAnt.Contrib.Tasks.dll" failonerror="true" />
 
@@ -56,20 +34,20 @@
    Argument: 'project.name'
    The name of the project
    -->
-  <property name="project.name" value="DiamondFireWeb" unless="${property::exists('project.name')}" />
+  <property name="project.name" value="Club Admin" unless="${property::exists('project.name')}" />
 
   <!--
    Argument: 'customerName'
-   The name of the customer deafult is Meath
+   The name of the customer deafult is Cookstown
    -->
-  <property name="customerName" value="Meath" unless="${property::exists('customerName')}" />
+  <property name="customerName" value="Cookstown" unless="${property::exists('customerName')}" />
 	
   <!--
    Argument: 'build.type'
    This file should be run with a value of 'Debug' or 'Release' for property 'build.type'.
       1. Debug results in no versioning set (0.0.0.0)."/>
       2. Release increments the version in the Build.number file (1.0.x.0)."/>
-      Example: NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" go -D:build.type=Release
+      Example: NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" go -D:build.type=Release
    -->
   <property name="build.type" value="Debug" unless="${property::exists('build.type')}" />
 
@@ -83,32 +61,9 @@
    Argument: 'build.publishProfile'
    If creating a Live release then this should be set to the web site Publish profile e.g. Publish_Live_Release.
    -->
-  <property name="build.publishProfile" value="Publish_Live_Release" unless="${property::exists('build.publishProfile')}" />
+  <property name="build.publishProfile" value="ClubAdmin-PublishFiles" unless="${property::exists('build.publishProfile')}" />
 
 	
-	<property name="sourcecontrol.Tag" value="false" unless="${property::exists('sourcecontrol.Tag')}" />
-
-  <!--
-   Argument: 'sourcecontrol.labelname'
-   When creating a Release build a new version number is generated. The source code for the release should be 
-   automatically labeled in the following format:
-      [sourcecontrol.labelname]-Release-[setupVer]
-      Example: DiamondFireWeb-Release-1.0.5.0
-   -->
-  <property name="sourcecontrol.labelname.default" value="${project.name + '-Release-0.0.0.0'}" unless="${property::exists('sourcecontrol.labelname.default')}" />
-
-  <property name="sourcecontrol.RemoteRepos" value="\\mt-repo1\Mercurial\Repos\mallons\" unless="${property::exists('sourcecontrol.RemoteRepos')}" />
-  
-  <!--
-  Argument: 'sourcecontrol.tagRemove'
-  Used to remove a Source Control Tag. You must set the 'changed.sourcecontrol.tagged.default' argument to true for ths to work.
-    Example: NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" sourceControlTagRemove -D:changed.sourcecontrol.tagged.default=true -D:sourcecontrol.tagRemove=DiamondFireWeb-Release-1.0.2.0
-  -->
-  <property name="sourcecontrol.tagRemove" value="${sourcecontrol.labelname.default}" unless="${property::exists('sourcecontrol.tagRemove')}"/>
-
-  <!--If you want to remove a source cobtrol tag - set this to true-->
-  <property name="changed.sourcecontrol.tagged.default" value="false" unless="${property::exists('changed.sourcecontrol.tagged.default')}" />
-
   <!--
    Argument: 'setupVer.default'
    This is the current version of the software - this version number is used to Version the Assemblys and label the SourceCode.
@@ -123,17 +78,6 @@
    -->
   <property name="setupVer.default" value="0.0.0.0" unless="${property::exists('setupVer.default')}" />
 	
-	 <!-- If this is True then AutoIncrement the release version for this build   -->
-	<property name="version.DoIncrement" value="false" unless="${property::exists('version.DoIncrement')}" />
-
-  <!--
-   Argument: 'release.root.folder.default'
-      This is the root folder used in 'publish' target to push releases too. The final release folder will have the following format:
-      \[release.root.folder.default]\[org]\[project.name]\[setupVer]
-      Example: \\mt-repo1\Mercurial\releases\mallons\DiamondFireWeb\1.3.2.0
-   -->
-  <property name="release.root.folder.default" value="\\mt-repo1\Mercurial\releases" unless="${property::exists('release.root.folder.default')}" />
-
   <!--
    Argument: 'org.default'
    This is the source code to build valid values are:
@@ -143,7 +87,7 @@
          This option tag\label the source code with the version number.
       3. mallons: source code comes from the the mallons repos. i.e. \\mt-repo1\Mercurial\Repos\mallons
    -->
-  <property name="org.default" value="mallons" unless="${property::exists('org.default')}"/>
+  <property name="org.default" value="Brendan Sheehy" unless="${property::exists('org.default')}"/>
   <property name="changed.assemblyinfo.default" value="false" unless="${property::exists('changed.assemblyinfo.default')}" />
 
 
@@ -154,27 +98,29 @@
   <property name="solution.root.folder" value ="${directory::get-parent-directory(build.file.directory)}"/>
   <property name="nant.onfailure" value="fail"/>
   <property name="publishDir" value="dist" unless="${property::exists('publishDir')}" />
-  <property name="sourcecontrol.getOldVersion" value="false"  unless="${property::exists('sourcecontrol.getOldVersion')}" />
   <property name="changed.versionnumber" value="false" unless="${property::exists('changed.versionnumber')}" />
-  <property name="changed.sourcecontrol.tagged" value="${changed.sourcecontrol.tagged.default}" />
-  <property name="sourcecontrol.labelname" value="${sourcecontrol.labelname.default}" />
   <property name="org" value="${org.default}"/>
   <property name="changed.assemblyinfo" value="${changed.assemblyinfo.default}" />
-  <property name="release.root.folder" value="${release.root.folder.default}" />
   <property name="setupVer" value="${setupVer.default}" />
-  <property name="release.Folder" value="${release.root.folder + '\' + org + '\' + project.name + '\' + build.type + '\' + setupVer}" />
-	<property name="sourceControl.uncommittedChangesExist" value="false" />
-	<property name="sourceControl.errorMessage" value="" />
 
-  <!--This is a list of all project Repos in source control-->
-  <property name="solution.HgRepos" value="${solution.root.folder},${solution.root.folder}\..\Lancelot\,${solution.root.folder}\..\WordReporting\,${solution.root.folder}\..\AuditApexSql\,${solution.root.folder}\..\Export\,${solution.root.folder}\..\MallonAgent\,${solution.root.folder}\..\MallonLib\,${solution.root.folder}\..\DotNetLib\,${solution.root.folder}\..\DiamondFireEncryption\" />
+  <!--
+   Argument: 'release.root.folder.default'
+      This is the root folder used in 'publish' target to push releases too. The final release folder will have the following format:
+      \[release.root.folder.default]\[org]\[project.name]\[setupVer]
+      Example: \\mt-repo1\Mercurial\releases\mallons\DiamondFireWeb\1.3.2.0
+   -->
+  <property name="release.root.folder.default" value="${solution.root.folder + '\Customer.Info\Releases\' + setupVer}" unless="${property::exists('release.root.folder.default')}" />
 
+  <!--Location where the publishProfile puts website files-->
+  <property name="publishedFiles.folder" value="${solution.root.folder + '\Customer.Info\LatestPublish'}" />
+  
   <!--This is a list of all comma delimited projects in the solution-->
-  <property name="solution.Projects" value="..\DiamondFireEncryption\,..\Lancelot\AssignedTo\,..\AuditApexSql\,..\Lancelot\Common\,..\Lancelot\Core\Core\,..\Lancelot\Core\CoreSpatial\,..\Lancelot\Core\CoreWeb\,..\Export\CustomProperties\CustomProperties\,DiamondFireWeb.Gui\,DiamondFireWeb.UnitTests\,..\Lancelot\Documents\Documents\,..\Export\Export\,Fire.BusinessLogic\,Fire.Common\,FireDomain\,Fire.Letters\,Fire.QuartzJobs\,Fire.Reports\,..\Lancelot\Forms\,GeoDirectory.Domain\,..\Lancelot\Lancelot.Draw2D\,..\Lancelot\Lancelot.Draw2D.Test\,..\MallonAgent\MallonAgentDefs\,..\MallonFileDownload\,..\MallonQuartz\MallonQuartzBaseJob\,..\MallonQuartz\MallonQuartzServer\,..\Lancelot\Messaging\,..\Lancelot\NHibernateSupport\,..\MallonLib\Permission\,..\Lancelot\Reporting\Reporting\,..\Lancelot\Reporting\ReportingWF\,..\DotNetLib\Resources\DotNet4.0\,..\Lancelot\TemplateEditorHelper\,..\WordReporting\WordReporting\,..\Lancelot\Workflow\Workflow\,..\Lancelot\WorkflowCommandLine\,..\Lancelot\WorkflowEvents\,..\Lancelot\Workflow\WorkflowWeb\" />
-
-  <if test="${property::get-value('setupVer') !='0.0.0.0' and property::get-value('org') =='trunk'}">
-    <property name="sourcecontrol.getOldVersion" value="true" />
-  </if>
+  <property name="solution.Projects" value="Club.Domain\,Club.Services\" />
+  <property name="release.root.folder" value="${release.root.folder.default}" />
+  <property name="release.root.folder.Website" value="${release.root.folder  + '\Website\'}" />
+  <property name="release.root.folder.DatabaseCreateDatabase" value="${release.root.folder + '\Database\00_CreateDatabase\'}" />
+  <property name="release.root.folder.DatabaseUpdateDatabase" value="${release.root.folder + '\Database\00_UpdateDatabase\'}" />
+  <property name="release.root.folder.DatabaseUpdateScripts" value="${release.root.folder + '\Database\01_StaticScripts\'}" />
 
   <!-- TARGETS -->
   
@@ -191,16 +137,9 @@
         <call target="clean" />
         <echo level="Debug" message="PASSED EXECUTION OF: clean"/>
         
-				  <!-- <call target="sourceControlCheckForUncommittedChanges" />
-        <echo level="Debug" message="PASSED EXECUTION OF: sourceControlCheckForUncommittedChanges"/> -->
-					
-				<if test="${property::get-value('sourceControl.uncommittedChangesExist') == 'true'}">
-					<fail message="${sourceControl.errorMessage}" />
-				</if>
+        <call target="createReleaseFolders" />
+        <echo level="Debug" message="PASSED EXECUTION OF: createReleaseFolders"/>
 
-        <call target="incrementVersion" />
-        <echo level="Debug" message="PASSED EXECUTION OF: incrementVersion"/>
-        
         <call target="assemblyInfoUpdate" />
         <echo level="Debug" message="PASSED EXECUTION OF: assemblyInfoUpdate"/>
 
@@ -213,21 +152,6 @@
         <call target="publishWebsite" />
         <echo level="Debug" message="PASSED EXECUTION OF: publishWebsite"/>
         
-        <call target="copyToReleaseFolder" />
-        <echo level="Debug" message="PASSED EXECUTION OF: copyToReleaseFolder"/>
-
-        <call target="copyReleaseFolderToProject" />
-        <echo level="Debug" message="PASSED EXECUTION OF: copyReleaseFolderToProject"/>
-        
-        <call target="assemblyRevertSourceControl" />
-        <echo level="Debug" message="PASSED EXECUTION OF: assemblyRevertSourceControl"/>
-        
-        <call target="sourceControlTagAdd" />
-        <echo level="Debug" message="PASSED EXECUTION OF: sourceControlTagAdd"/>
-        
-        <call target="sourceControlPushChanges" />
-        <echo level="Debug" message="PASSED EXECUTION OF: sourceControlPushChanges"/>
-				
 				<echo message="createLiveRelease:Success" />
 				<echo message="++++++++++++++++++++++++++++++++++++++++++++++++++++" />
 				<echo message="Target End: createLiveRelease" />
@@ -303,161 +227,10 @@
     <echo message="Target End: clean" />
   </target>
 
-  <target name="incrementVersion" description="Increment the version number in the Build.number file." depends="checkLiveArguments">
-    <!-- 
-      VERSIONING: Only increment the version number if: 
-         build.type == 'Release'
-      -->
-    <if test="${property::get-value('build.type') =='Release' and property::get-value('version.DoIncrement') !='false' and property::get-value('setupVer') !='1.0.0.0'}">
-		<echo message="Target Start: incrementVersion" />
-      <echo message="version: Attempting to increment version number in Build.number file."/>
-      <version
-         buildtype="Increment"
-         revisiontype="Increment"
-         path="Build.number"
-         />
-      <property name="setupVer" value="${buildnumber.version}" />
-      <property name="changed.versionnumber" value="true"/>
-			<echo message="Target End: incrementVersion" />
-    </if>
-  </target>
-
-	<!--
-	To test:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" sourceControlTagAdd -D:build.type=Release -D:sourcecontrol.Tag=true -D:org.default=trunk -D:customerName=Meath -D:setupVer.default=0.0.0.0 -logger:NAnt.Core.DefaultLogger
-  -->
-  <target name="sourceControlTagAdd" description="Tag the source control for all projects\repos with the relevant release tag.">
-    <property name="sourcecontrol.labelname" value="${project.name + '-Release-' + setupVer}" />
-    <if test="${property::get-value('build.type') == 'Release' and property::get-value('org') == 'trunk' and property::get-value('sourcecontrol.Tag') =='true'}">
-			<echo message="Target Start: sourceControlTagAdd" />
-      <echo message="sourceControlTagAdd: Attempting to set Mercurial release tag for all repos relevant to this project to: ${sourcecontrol.labelname}"/>
-      <foreach item="String" in="${solution.HgRepos}" delim=" ," property="projectRepos">
-        <echo message="${projectRepos}" />
-        <exec program = "hg.exe" workingdir="${projectRepos}" failonerror="true">
-          <arg value="tag" />
-          <arg value="-f"/>
-          <arg value="${sourcecontrol.labelname}"/>
-        </exec>
-        <property name="changed.sourcecontrol.tagged" value="true"/>
-      </foreach>
-      <property name="changed.sourcecontrol.tagged" value="true"/>
-			<echo message="Target End: sourceControlTagAdd" />
-    </if>
-  </target>
-	
-	
-	<!--
-  To remove a Source Control Tag call the following:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" -D:changed.sourcecontrol.tagged.default=true sourceControlTagRemove -D:sourcecontrol.tagRemove=DiamondFireWeb-Release-1.0.0.0
-  -->
-  <target name="sourceControlTagRemove" description="Remove the specified Tag from source control for all projects\repos.">
-    <if test="${property::get-value('changed.sourcecontrol.tagged') == 'true'}">
-			<echo message="Target Start: sourceControlTagRemove" />
-      <echo message="sourceControlTagRemove: Attempting to remove Mercurial tag: ${sourcecontrol.tagRemove}"/>
-      <foreach item="String" in="${solution.HgRepos}" delim=" ," property="projectRepos">
-        <echo message="${projectRepos}" />
-        <exec program = "hg.exe" workingdir="${projectRepos}" failonerror="true">
-          <arg value="tag" />
-          <arg value="--remove"/>
-          <arg value="${sourcecontrol.tagRemove}"/>
-        </exec>
-      </foreach>
-			<echo message="Target End: sourceControlTagRemove" />
-    </if>
-  </target>
-  
-  
-  <!--
-  This should be the last thing done in the createLiveRelease:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" sourceControlPushChanges -D:build.type=Release -D:org.default=trunk -D:customerName=Meath -D:setupVer.default=1.0.0.0 -logger:NAnt.Core.DefaultLogger
-	Source Control should only be pushed here if sourceControlTagAdd was called. i.e. "changed.sourcecontrol.tagged"="true"
-  -->
-  <target name="sourceControlPushChanges" description="Pushes all changes for all projects\repos to source control.">
-    <if test="${property::get-value('build.type') == 'Release' and property::get-value('org') == 'trunk' and property::get-value('setupVer') !='0.0.0.0' and property::get-value('changed.sourcecontrol.tagged') == 'true'}">
-      <echo message="Target Start: sourceControlPushChanges" />
-			<!--Check if there are any changes in Repos-->
-      <foreach item="String" in="${solution.HgRepos}" delim=" ," property="projectRepos">
-        <echo message="${projectRepos}" />
-        <exec program = "hg.exe" workingdir="${projectRepos}" failonerror="true">
-          <arg value="push" />
-          <arg value="-f"/>
-          <arg value="-f"/>
-        </exec>
-      </foreach>
-			<echo message="Target End: sourceControlPushChanges" />
-    </if>
-  </target>
-
-
-
-  <!--
-  Use to attempt to Update remote Repos after pushing changes
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" sourceControlUpdateRemoteRepos -D:build.type=Release -D:org.default=trunk -D:customerName=Meath -D:setupVer.default=1.0.0.0 -logger:NAnt.Core.DefaultLogger
-  
-  -->
-  <!--<target name="sourceControlUpdateRemoteRepos" description="Attempts to update all remote repos.">
-    <property name="solution.HgReposRemote" value="DiamondFireWeb,Lancelot,WordReporting,Export,MallonAgent,MallonLib,DotNetLib" />
-    <echo message="Target Start: sourceControlUpdateRemoteRepos" />
-    <if test="${property::get-value('build.type') == 'Release' and property::get-value('org') == 'trunk' and property::get-value('setupVer') !='0.0.0.0'}">
-      --><!--Check if there are any changes in Repos--><!--
-      --><!--<foreach item="String" in="${solution.HgReposRemote}" delim=" ," property="projectRemoteRepos">--><!--
-        --><!--<echo message="${projectRemoteRepos}" />--><!--
-        <exec program = "hg.exe" workingdir="C:\development\Export" failonerror="true">
-          <arg value="update" />
-          <arg value="-R \\orion\Mercurial\Repos\mallons\Export" />
-        </exec>
-      --><!--</foreach>--><!--
-    </if>
-    <echo message="Target End: sourceControlUpdateRemoteRepos" />
-  </target>-->
-  
-    <!--
-  sourceControlCheckForUncommittedChanges: 
-  This target checks whether any changes exist within a repo in following way: 
-    1. Use the 'identity' command to check in each repos. Output result to a file.
-    2. Read file txt into a property 'sourceControl.output'
-    3. If 'sourceControl.output' contains '+'  then changes exist (see last post in http://stackoverflow.com/questions/2210403/testing-for-uncommitted-changes-in-mercurial)
-		NOTE: DO NOT ADD VERSION NUMBER HERE - AS IT WILL REMOVE THE RELEASE TAGS FOR THAT RELEASE
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" sourceControlCheckForUncommittedChanges -D:org.default=trunk -D:customerName=Meath -logger:NAnt.Core.DefaultLogger
-  -->
-  <target name="sourceControlCheckForUncommittedChanges" description="Pushes all changes for all projects\repos to source control.">
-    <property name="sourceControl.outputFile" value="sourceControl_CheckChanges.txt"/>
-    <property name="sourceControl.result" value=""/>
-    <property name="sourceControl.output" value=""/>
-    <property name="sourceControl.outputConcatFile" value=""/>
-
-    <echo message="Target Start: sourceControlCheckForUncommittedChanges" />
-    <!--
-    Check if there are any changes in Repos using 'identity'
-    If the hash ends with\contains a + it indicates the working copy has changes. 
-      -->
-      <foreach item="String" in="${solution.HgRepos}" delim=" ," property="projectRepos">
-      <echo message="${projectRepos}" />
-      <exec program = "hg.exe" workingdir="${projectRepos}" failonerror="true" resultproperty="sourceControl.result" output="${sourceControl.outputFile}">
-        <arg value="identify" />
-      </exec>
-          
-      <!--if 'sourceControl.output' contains + this means that there are uncommitted changes - append to error message.-->
-      <loadfile file="${sourceControl.outputFile}" property="sourceControl.output" />
-      <property name="sourceControl.outputConcatFile" value="${sourceControl.outputConcatFile + environment::newline() + sourceControl.output}"/>
-      <if test="${string::contains(sourceControl.output, '+')}">
-        <!--<echo message="sourceControlCheckForUncommittedChanges: ERROR UNCOMITTED CHANGES EXIST IN THE FOLLOWING PROJECT: ${projectRepos}" />-->
-        <property name="sourceControl.errorMessage" value="${sourceControl.errorMessage + environment::newline() + '   ' + projectRepos}"/>
-        <property name="sourceControl.uncommittedChangesExist" value="true" />
-      </if>
-    </foreach>
-      
-    <if test="${property::get-value('sourceControl.uncommittedChangesExist') == 'true'}">
-      <property name="sourceControl.errorMessage" value="${'ERROR sourceControlCheckForUncommittedChanges: ERROR Uncommitted changes exist in the following projects:' + sourceControl.errorMessage}"/>
-      <echo message="${sourceControl.errorMessage}" />
-    </if>
-	
-    <echo message="Target End: sourceControlCheckForUncommittedChanges" />
-  </target>
 
   <!--
   To test this target run:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" assemblyInfoUpdate -D:build.type=Release -D:org.default=trunk
+  NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" assemblyInfoUpdate -D:build.type=Release -D:org.default=trunk
   -->
   <target name="assemblyInfoUpdate" description="Set the AssemblyInfo details for the source code.">
     <property name="thisYear" value="${datetime::get-year(datetime::now())}" />
@@ -500,72 +273,15 @@
   </target>
 
   <!--
+  This target builds the code in theClub Admin web solution using the buildconfiguration specified in the 'build.type' argument.
   To test this target run:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" assemblyRevertSourceControl -D:build.type=Release -D:org.default=trunk -D:changed.assemblyinfo.default=true
-  -->
-  <target name="assemblyRevertSourceControl" description="Set the AssemblyInfo details for the source code.">
-    <property name="thisYear" value="${datetime::get-year(datetime::now())}" />
-
-    <!--Get the Absolute path from the relaive path-->
-    <if test="${property::get-value('build.type') == 'Release'}">
-      <if test="${changed.assemblyinfo}">
-				<echo message="Target Start: assemblyRevertSourceControl" />
-        <echo message="assemblyRevertSourceControl: Reverting assemblyinfo changes in source control..."/>
-
-        <attrib file="C:\development\Lancelot\AssignedTo\Properties\AssemblyInfo.cs" readonly="false" />
-        <exec program = "hg.exe" workingdir="C:\development\Lancelot\AssignedTo" failonerror="false">
-          <arg value="revert" />
-          <arg value="C:\development\Lancelot\AssignedTo\Properties\AssemblyInfo.cs" />
-        </exec>
-
-        <foreach item="String" in="${solution.Projects}" delim="," property="projectDir">
-
-          <property name="asminfo.file" value="${path::get-full-path(solution.root.folder + '\' + projectDir + 'Properties\AssemblyInfo.cs')}" />
-
-          <!--Need to use 'asminfo.revertFilePath' when running hg.exe as 'workingdir' is set for this exe.-->
-          <property name="asminfo.revertFilePath" value="${projectDir + 'Properties\AssemblyInfo.cs'}" />
-          <property name="asminfo.workingDir" value="${path::get-full-path(solution.root.folder + '\' + projectDir)}" />
-
-          <!--Check if AssemblyInfo.cs exists - some assemblies have this file in their root directory rather than ...Properties\AssemblyInfo.cs-->
-          <if test="${not file::exists(asminfo.file)}">
-            <property name="asminfo.file" value="${path::get-full-path(solution.root.folder + '\' + projectDir + 'AssemblyInfo.cs')}" />
-            <property name="asminfo.revertFilePath" value="${projectDir + 'AssemblyInfo.cs'}" />
-          </if>
-
-          <choose>
-            <when test="${not file::exists(asminfo.file)}">
-              <echo message="XXX WARNING XXX assemblyRevertSourceControl: WARNING File does not exist: ${asminfo.file}" />
-            </when>
-            <otherwise>
-              <echo message="*******************************************************************************"/>
-              <echo message="assemblyRevertSourceControl: Attempting to revert assemblyinfo's for: ${asminfo.file}"/>
-              <attrib file="${asminfo.file}" readonly="false" />
-              <exec program = "hg.exe" workingdir="${asminfo.workingDir}" failonerror="false" verbose="true">
-                <arg value="revert" />
-                <arg value="${asminfo.file}"/>
-              </exec>
-              <!--<attrib file="${asminfo.file}" readonly="true" />-->
-              <echo message="*******************************************************************************"/>
-              <echo message=""/>
-            </otherwise>
-          </choose>
-        </foreach>
-        <property name="changed.assemblyinfo" value="false"/>
-				<echo message="Target End: assemblyRevertSourceControl" />
-      </if>
-    </if>
-  </target>
-
-  <!--
-  This target builds the code in the Diamond Fire web solution using the buildconfiguration specified in the 'build.type' argument.
-  To test this target run:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" buildCode -D:build.type=Release -D:org.default=trunk
+  NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" buildCode -D:build.type=Release -D:org.default=trunk
   -->
   <target name="buildCode" description="Compile the solution code.">
     <echo message="Target Start: buildCode" />
     <echo message="buildCode: Attempting to build the '${build.type}' solution code..."/>
     <exec program="${makeMSBuild}" failonerror="true">
-      <arg value="${solution.root.folder}\DiamondFireWeb.sln"/>
+      <arg value="${solution.root.folder}\FootballClub.sln"/>
       <arg value="/target:Rebuild" />
       <arg value="/nologo" />
       <arg value="/property:Configuration=${build.type}"/>
@@ -587,16 +303,15 @@
   </target>
 
   <!--
-  This target Publishes the Diamond Fire website - first it builds the project code then publishes it using the 'build.publishProfile' argument.
+  This target Publishes theClub Admin website - first it builds the project code then publishes it using the 'build.publishProfile' argument then the Published Files are moved to the Customer.Info project.
   To test this target run:
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" publishWebsite -D:build.type=Release -D:org.default=trunk
+  NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" publishWebsite -D:build.type=Release -D:org.default=trunk
   -->
-  <target name="publishWebsite" description="Publish the Diamond Fire website using the 'build.publishProfile' argument: $(build.publishProfile).">
+  <target name="publishWebsite" depends="createReleaseFolders" description="Publish theClub Admin website using the 'build.publishProfile' argument: $(build.publishProfile).">
     <echo message="Target Start: publishWebsite" />
 
-    <property name="release.Folder" value="${release.root.folder + '\' + org + '\' + project.name + '\' + build.type + '\' + setupVer}" />
     <exec program="${makeMSBuild}" failonerror="true">
-      <arg value="${solution.root.folder}\DiamondFireWeb.Gui\DiamondFireWeb.Gui.csproj"/>
+      <arg value="${solution.root.folder}\FrRocks\FrRocks.csproj"/>
       <arg value="/nologo" />
 
       <!-- When building the project dont do any post build events because they result in errors - next 2 lines do this.-->
@@ -613,9 +328,9 @@
       <arg value="/property:Platform=AnyCPU"/>
 
       <!--Publish the website to specific directory-->
-      <!--<arg value="/property:OutDir=${release.Folder}" />-->
-      <!--<arg value="/property:WebProjectOutputDir=${release.Folder}" />-->
-      <!--<arg value="/property:OutDir=${release.Folder}" />-->
+      <!--<arg value="/property:OutDir=${release.root.folder}" />-->
+      <!--<arg value="/property:WebProjectOutputDir=${release.root.folder}" />-->
+      <!--<arg value="/property:OutDir=${release.root.folder}" />-->
 
       <!--<arg value="/t:ResolveReferences;_WPPCopyWebApplication" />
       <arg value="/t:TransformWebConfig" />-->
@@ -633,49 +348,33 @@
 
       <!--<arg value="/property:DefineSolutionProperties=false"/>-->
     </exec>
+
+    <!--Copy the Published Web Deploy folder to ..\Web Deploy-->
+    <copy todir="${release.root.folder.Website}">
+      <fileset basedir="${publishedFiles.folder}">
+        <include name="**/*" />
+      </fileset>
+    </copy>
+    
     <echo message="Target End: publishWebsite" />
   </target>
 
 
-  <!--
-  Copies the following files to the Release folder:
-  1. Published Web Deploy solution 
-  2. Letter and Report templates from C:\development\DiamondFireWeb\DiamondFire.CustomerData\TEMPLATES\
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" copyToReleaseFolder -D:build.type=Release -D:org.default=trunk -D:setupVer.default=1.0.0.0
-  -->
-  <target name="copyToReleaseFolder" description="Copies website bin folder and the published solution to Release folder.">
-    <echo message="Target Start: copyToReleaseFolder" />
-
-    <property name="release.Folder" value="${release.root.folder + '\' + org + '\' + project.name + '\' + build.type + '\' + setupVer}" />
-    <echo message="publishWebsite: Creating the release directory: ${release.Folder} ...." />
-    <mkdir dir="${release.Folder}"/>
-
-    <echo message="publishWebsite: Trying to copy published Web site and code to release folder: '${release.Folder}'"/>
-
-    <!--Copy the Published Web Deploy folder to ..\Web Deploy-->
-    <mkdir dir="${release.Folder}\WebDeploy"/>
-    <copy todir="${release.Folder}\WebDeploy">
-      <fileset basedir="${solution.root.folder}\Solution Items\DeploymentPackage\Live_Release">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-
-    <copy todir="${release.Folder}\Templates">
-      <fileset basedir="${solution.root.folder}\DiamondFire.CustomerData\TEMPLATES\">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-
-    <echo message="Target End: copyToReleaseFolder" />
+  <target name="createReleaseFolders" description="Creates the release folder structure.">
+    <mkdir dir="${release.root.folder}"/>
+    <mkdir dir="${release.root.folder.Website}"/>
+    <mkdir dir="${release.root.folder.DatabaseUpdateScripts}"/>
+    <mkdir dir="${release.root.folder.DatabaseCreateDatabase}"/>
+    <mkdir dir="${release.root.folder.DatabaseUpdateDatabase}"/>
   </target>
-
+  
   <!--
   This target does the following:
     1. Updates the '90_ReleaseUpdate.sql' script with the relevant properties.
     2. Concatones sql scripts are creates 01_sqlStoredProcedures.sql, 02_sqlTriggers.sql and 03_sqlStaticData.sql and sends to release folder.
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" sqlCreateScripts -D:setupVer.default=1.0.0.0 -D:build.type=Release -D:org.default=trunk
+  NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" sqlCreateScripts -D:setupVer.default=1.0.0.0 -D:build.type=Release -D:org.default=trunk
   -->
-  <target name="sqlCreateScripts" description="Update sql scripts for this release.">
+  <target name="sqlCreateScripts" depends="createReleaseFolders" description="Update sql scripts for this release.">
     <echo message="Target Start: sqlCreateScripts" />
     <echo message="sqlCreateScripts: Version is ${setupVer}" />
     <property name="version.Major" value="${version::get-major(version::parse(setupVer))}" />
@@ -686,7 +385,7 @@
     <echo file="${solution.root.folder}\db\staticdata\90_ReleaseUpdate.sql">
       /*
       ===============================================================================================================
-      This file was auto generated by the Diamond Fire Nant build file target: 'sqlCreateScripts' for version: ${setupVer}
+      This file was auto generated by theClub Admin Nant build file target: 'sqlCreateScripts' for version: ${setupVer}
       ===============================================================================================================
       */
       IF NOT EXISTS(SELECT * FROM [core_system_info] WHERE [Oid] = N'48c42625-eace-4728-aa6f-2ab11b6712ec')
@@ -697,16 +396,6 @@
       BEGIN
       UPDATE [dbo].[core_system_info]
       SET [ver_major] = ${version.Major}, [ver_minor] = ${version.Minor}, [ver_schema] = ${version.Revision}, [ver_build] = ${version.Build}
-      END
-
-      IF NOT EXISTS(SELECT * FROM [domainfire_site_settings] WHERE [Oid] = N'2bb9ae26-c61e-4fb9-8f91-1c6e26553075')
-      BEGIN
-      INSERT [dbo].[domainfire_site_settings] ([oid], [orev], [templates_path], [templates_url], [download_controller_url], [iplan_updated], [iplan_file], [database_version], [code_version], [imported], [updated_date], [installed_date]) VALUES (N'2bb9ae26-c61e-4fb9-8f91-1c6e26553075', 1, N'\\149.202.74.135\Meath\', NULL, N'https://downloads.diamondfire.ie/download/downloadfile', NULL, NULL, N'${setupVer}', N'${setupVer}', NULL, GETDATE(), GETDATE())
-      END
-      ELSE
-      BEGIN
-      UPDATE [dbo].[domainfire_site_settings]
-      SET [database_version] = N'${setupVer}', [code_version] = N'${setupVer}', [updated_date] = GETDATE()
       END
 
       IF NOT EXISTS(SELECT * FROM [core_version_info] WHERE [Oid] = N'c19df5be-79c7-4ffc-8699-c2cfac4be2bd')
@@ -729,88 +418,74 @@
     
     This creates the following scripts by concatonating various files:
     1. 01_sqlStoredProcedures.sql: = Concatonate following scripts:
-          a. C:\development\DiamondFireWeb\db\audit\tables\00_fnc_Audit_UserGetCurrent.sql
-          b. All sql files from C:\development\DiamondFireWeb\db\storedprocs\
+          a. C:\development\FootballClub\db\audit\tables\00_fnc_Audit_UserGetCurrent.sql
+          b. All sql files from C:\development\FootballClub\db\storedprocs\
     2. 02_sqlTriggers.sql = Concatonate following scripts:
-          a. C:\development\DiamondFireWeb\db\triggers\
-          b. C:\development\DiamondFireWeb\db\audit\triggers\00_ApexSQLAuditTriggers.sql          
+          a. C:\development\FootballClub\db\triggers\
+          b. C:\development\FootballClub\db\audit\triggers\00_ApexSQLAuditTriggers.sql          
     3. 03_sqlStaticData.sql:
-          a. All sql files from C:\development\DiamondFireWeb\db\staticdata\
-          b. C:\development\DiamondFireWeb\db\staticdata\90_ReleaseUpdate.sql"
+          a. All sql files from C:\development\FootballClub\db\staticdata\
+          b. C:\development\FootballClub\db\staticdata\90_ReleaseUpdate.sql"
     3. 04_sqlIndexes.sql:
-          a. All sql files from C:\development\DiamondFireWeb\db\indexes\
+          a. All sql files from C:\development\FootballClub\db\indexes\
     -->
-    <property name="release.Folder" value="${release.root.folder + '\' + org + '\' + project.name + '\' + build.type + '\' + setupVer}" />
-    <property name="release.Folder.DatabaseUpdateScripts" value="${release.Folder + '\Database\01_StaticScripts\'}" />
-    <property name="release.Folder.DatabaseCreateDatabase" value="${release.Folder + '\Database\00_CreateDatabase\'}" />
-    <property name="release.Folder.DatabaseUpdateDatabase" value="${release.Folder + '\Database\00_UpdateDatabase\'}" />
-    <echo message="sqlCreateScripts: Creating the release directory: ${release.Folder.DatabaseUpdateScripts} ...." />
-    <mkdir dir="${release.Folder.DatabaseUpdateScripts}"/>
-    <mkdir dir="${release.Folder.DatabaseCreateDatabase}"/>
-    <mkdir dir="${release.Folder.DatabaseUpdateDatabase}"/>
 
     <echo message="sqlCreateDatabaseScripts: Creating '00_DatabaseCreate.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseCreateDatabase}\00_DatabaseCreate.sql">
+    <concat destfile="${release.root.folder.DatabaseCreateDatabase}\00_DatabaseCreate.sql">
       <fileset>
         <include name="${solution.root.folder}\db\schema.sql" />
-        <include name="${solution.root.folder}\db\audit\tables\00_fnc_Audit_UserGetCurrent.sql" />
-        <include name="${solution.root.folder}\db\audit\tables\01_TablesUpdate.sql" />
-        <include name="${solution.root.folder}\db\audit\tables\01_TablesUpdate.sql" />
+        <!--Need this fuction here-->
+        <include name="${solution.root.folder}\db\audit\00_fnc_Audit_UserGetCurrent.sql" />
         <include name="${solution.root.folder}\db\elmah\tables\elmah_table.sql" />
       </fileset>
     </concat>
 
     <echo message="sqlCreateDatabaseScripts: Creating '01_ApexAuditLogCreate.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseCreateDatabase}\01_ApexAuditLogCreate.sql">
+    <concat destfile="${release.root.folder.DatabaseCreateDatabase}\01_ApexAuditLogCreate.sql">
       <fileset>
         <include name="${solution.root.folder}..\..\AuditApexSql\db\ApexSchema\*.sql" />
       </fileset>
     </concat>
 
     <echo message="sqlCreateScripts: Creating '01_sqlStoredProcedures.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseUpdateScripts}\01_sqlStoredProcedures.sql">
+    <concat destfile="${release.root.folder.DatabaseUpdateScripts}\01_sqlStoredProcedures.sql">
       <fileset>
-        <!--Cant include 00_fnc_Audit_UserGetCurrent.sql because the function is used as a Default for various columns in the database.-->
-        <!--<include name="${solution.root.folder}\db\audit\tables\00_fnc_Audit_UserGetCurrent.sql" />-->
-        <include name="${solution.root.folder}..\..\DynamicApps\DynamicApps.Schema\db\storedprocs\*.sql" />
+        <!--<include name="${solution.root.folder}..\..\DynamicApps\DynamicApps.Schema\db\storedprocs\*.sql" />-->
         <include name="${solution.root.folder}\db\storedprocs\*.sql" />
         <include name="${solution.root.folder}\db\elmah\storedprocs\*.sql" />
       </fileset>
     </concat>
 
     <echo message="sqlCreateScripts: Creating '02_sqlTriggers.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseUpdateScripts}\02_sqlTriggers.sql">
+    <concat destfile="${release.root.folder.DatabaseUpdateScripts}\02_sqlTriggers.sql">
       <fileset>
         <include name="${solution.root.folder}\db\triggers\*.sql" />
-        <include name="${solution.root.folder}\db\audit\triggers\00_ApexSQLAuditTriggers.sql" />
       </fileset>
     </concat>
 
     <echo message="sqlCreateScripts: Creating '03_sqlStaticData.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseUpdateScripts}\03_sqlStaticData.sql">
+    <concat destfile="${release.root.folder.DatabaseUpdateScripts}\03_sqlStaticData.sql">
       <fileset>
-        <include name="${solution.root.folder}..\..\DynamicApps\DynamicApps.Schema\db\staticdata\*.sql" />
         <include name="${solution.root.folder}\db\staticdata\*.sql" />
-<!--         <include name="${solution.root.folder}\db\staticdata\99_ReleaseUpdate.sql" /> -->
       </fileset>
     </concat>
 
-    <echo message="sqlCreateScripts: Creating '04_sqlIndexes.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseUpdateScripts}\04_sqlIndexes.sql">
+    <!--<echo message="sqlCreateScripts: Creating '04_sqlIndexes.sql' file..." />
+    <concat destfile="${release.root.folder.DatabaseUpdateScripts}\04_sqlIndexes.sql">
       <fileset>
         <include name="${solution.root.folder}\db\indexes\*.sql" />
       </fileset>
-    </concat>
+    </concat>-->
 
-    <echo message="sqlCreateScripts: Creating '05_sqlViews.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseUpdateScripts}\05_sqlViews.sql">
+    <!--<echo message="sqlCreateScripts: Creating '05_sqlViews.sql' file..." />
+    <concat destfile="${release.root.folder.DatabaseUpdateScripts}\05_sqlViews.sql">
       <fileset>
         <include name="${solution.root.folder}\db\views\*.sql" />
       </fileset>
-    </concat>
+    </concat>-->
 
     <echo message="sqlCreateScripts: Creating '06_sqlFunctions.sql' file..." />
-    <concat destfile="${release.Folder.DatabaseUpdateScripts}\06_sqlFunctions.sql">
+    <concat destfile="${release.root.folder.DatabaseUpdateScripts}\06_sqlFunctions.sql">
       <fileset>
         <include name="${solution.root.folder}\db\functions\*.sql" />
       </fileset>
@@ -818,30 +493,11 @@
     <echo message="Target End: sqlCreateScripts" />
   </target>
 
-  <!--
-  Copies the entire release folder to the DiamondFire.CustomerData project.
-  NAnt -buildfile:"C:\development\DiamondFireWeb\Build\Build.build" copyReleaseFolderToProject -D:setupVer.default=1.0.0.0 -D:build.type=Release -D:org.default=trunk
-  -->
-  <target name="copyReleaseFolderToProject" description="Copies the entire release folder to the DiamondFire.CustomerData project.">
-    <echo message="Target Start: copyReleaseFolderToProject" />
-
-    <property name="release.Folder" value="${release.root.folder + '\' + org + '\' + project.name + '\' + build.type + '\' + setupVer}" />
-
-    <!--Copy the Published Web Deploy folder to ..\Web Deploy-->
-    <copy todir="${solution.root.folder + '\DiamondFire.CustomerData\RELEASES\' + setupVer}">
-      <fileset basedir="${release.Folder}">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-
-    <echo message="Target End: copyReleaseFolderToProject" />
-  </target>
-
   <target name="notify" description="Tell everyone of the success or failure.">
     <!--Enter tasks for notify target-->
   </target>
 
-  <target name="fail" depends="assemblyRevertSourceControl">
+  <target name="fail">
     <!--Enter tasks for fail target-->
   </target>
 
@@ -851,7 +507,6 @@
     <echo message="-- clean"/>
     <echo message="-- assemblyInfoUpdate"/>
     <echo message="-- version"/>
-    <echo message="-- sourceControlTagAdd"/>
     <echo message="-- buildCode"/>
     <echo message="-- buildInstallers"/>
     <echo message="-- publish"/>

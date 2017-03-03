@@ -1,0 +1,142 @@
+﻿@using Mallon.Core.Web.Models
+@using System.Collections.Generic
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Kendo.Mvc.UI.Fluent 
+@using Club.Domain.Artifacts
+@using Club.Services.Models
+@using Club.Services.Utils
+@using Club.Services.Utils
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+}
+
+<script type="text/javascript">
+function uplAttachFiles_onSuccess(e) {
+  $('#gridAttachedDocs').data('kendoGrid').dataSource.read();
+}
+
+function uplAttachFiles_onUpload(e) {
+  var _appliesTo = $('#AttachedDocsAppliesTo').val();
+  var _appliesToOid = $('#AttachedDocsAppliesToOid').val();
+  var _recordTypeOid = $('#AttachedRecordTypeOid').val();
+  e.data = { appliesTo: _appliesTo, appliesToOid: _appliesToOid, recordTypeOid: _recordTypeOid };
+}
+
+function gridAttachedDocs_ViewDocument(e) {
+  e.preventDefault();
+  var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+  if (dataItem.Oid) {
+    var url = $('#AttachedDocSaveUrl').val() + "?attachedDocOid=" + dataItem.Oid;
+    window.location = url;
+  }
+}
+</script>
+
+@{
+	bool upload = true;
+	bool isAttachedDocuments = false;
+  bool isCustomData = false;
+	Guid appliesToOid = Guid.Empty;
+  Guid recordTypeOid = Guid.Empty;
+	string appliesTo = "";
+
+	if(ViewData.ContainsKey("IsAttachedDocs")){
+		isAttachedDocuments = Convert.ToBoolean(ViewData["IsAttachedDocs"]);
+	}
+  if (ViewData.ContainsKey("IsCustomData"))
+  {
+    isCustomData = Convert.ToBoolean(ViewData["IsCustomData"]);
+	}
+
+  if (isCustomData)
+  {
+    string s = Convert.ToString(ViewData["AttachedRecordTypeOid"]);
+    Guid.TryParse(s, out recordTypeOid);
+  }
+  else
+  {
+    if (ViewData.ContainsKey("AttachedDocsAppliesTo"))
+    {
+      appliesTo = Convert.ToString(ViewData["AttachedDocsAppliesTo"]);
+    }
+  }
+
+	if(ViewData.ContainsKey("AttachedDocsAppliesToOid")){
+		string s = Convert.ToString(ViewData["AttachedDocsAppliesToOid"]);
+		Guid.TryParse(s, out appliesToOid);
+	}
+
+	if(appliesToOid == Guid.Empty)
+	{
+		isAttachedDocuments = false;
+		upload = false;
+	}
+
+  bool attachedDocsEdit = false;
+  if (ViewBag.EditAttachedDocs != null)
+  {
+    attachedDocsEdit = ViewBag.EditAttachedDocs;
+  }
+  
+}
+
+@*All Required*@
+@Html.Hidden("isCustomData", isCustomData)
+@Html.Hidden("AttachedDocsAppliesTo",appliesTo)
+@Html.Hidden("AttachedDocsAppliesToOid",appliesToOid)
+@Html.Hidden("AttachedRecordTypeOid", recordTypeOid)
+@Html.Hidden("AttachedDocSaveUrl", Url.Action("AttachDocumentView", "AttachedDocs"))
+
+<div style="width: 100%">
+  @if (attachedDocsEdit == true)
+  {
+    if (upload)
+    {
+	    <div style="background-color: #e2e2e2; color: #e2e2e2;" >
+      @(Html.Kendo().Upload()
+		    .Name("uplAttachFiles")
+		    .ShowFileList(false)
+		    .Events(e =>e
+			    .Error("handleAjaxError")
+			    .Upload("uplAttachFiles_onUpload")
+			    .Success("uplAttachFiles_onSuccess")
+		    )
+		    .Async(a => a
+            .Save("AttachDocuments", "AttachedDocs")
+				    .AutoUpload(true)
+          ).HtmlAttributes(new { @class = "dfw-ignoreChange" })
+      )
+	    </div>
+    }else{
+	    <h3>Attached Documents not enabled - there was an error. Contact system Administrator</h3>
+    }
+  }
+<br />
+@(Html.Kendo().Grid<ModelAttachedDocument>()
+	.Name("gridAttachedDocs")
+	.AutoBind(isAttachedDocuments) //if false - Report not loaded on page initialise
+  .HtmlAttributes(new { @class = "ignore dfw-ignoreChange" })
+	.Scrollable(s => s.Height("auto"))
+	.Columns(columns =>
+	{
+		columns.Bound(p => p.Oid).Visible(false);
+		columns.Bound(p => p.FileName).Title("Name");
+		columns.Bound(p => p.DateAdded).Format("{0:dd/MMM/yyyy}").EditorTemplateName("Date").Title("Date Added");
+		columns.Command(command => command.Custom("View").Click("gridAttachedDocs_ViewDocument")).Width(85);
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      columns.Command(command => { command.Destroy(); }).Width(172);
+    }
+	})
+	.DataSource(dataSource => dataSource
+		.Ajax()
+		.Model(model => model.Id(p => p.Oid))
+		.Events(e => e.Error("handleAjaxError"))
+      .Destroy(update => update.Action("AttachDocuments_GridDelete", "AttachedDocs"))
+      .Read(read => read.Action("AttachDocuments_GridRead", "AttachedDocs", new { entityOid = appliesToOid }))
+	)
+)
+
+</div>
+

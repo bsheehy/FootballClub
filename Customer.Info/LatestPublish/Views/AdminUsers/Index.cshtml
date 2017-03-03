@@ -1,0 +1,98 @@
+﻿@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Mallon.Core.Artifacts
+@using Club.Domain.Models
+@model ModelUser
+
+<p><i>Your subscription includes @ViewBag.ActiveUsersAllowed users. Current number of Active Users: <b>@ViewBag.CurrentActiveUsers</b></i></p>
+@Html.HiddenFor(x => x.Oid)
+@Html.Hidden("controller", "AdminUsers")
+
+<table class="tbl2Cols">
+  <tr>
+    <h4>User Details</h4>
+  </tr>
+  @if(ViewBag.CurrentUser != true)
+  { 
+    <tr>
+      <td>
+        @Html.Label("Active")
+      </td>
+      <td>
+        @Html.Kendo().CheckBoxFor(x => x.IsActive)   
+       </td>
+    </tr>
+  }
+  <tr>
+    <td>
+      @Html.Label("Login Email")
+    </td>
+    <td>
+      @Html.TextBoxFor(x => x.Login, new { type = "email", placeholder = "example@mail.com", @style = "width:80%;", @class = "k-textbox", autocomplete = "off"})
+    </td>
+  </tr>
+  @{
+    <tr>
+      <td>
+        @Html.Label("Password")
+      </td>
+      <td>
+        @Html.TextBoxFor(x => x.Password, new { autocomplete = "off", type = "password", @style = "width:80%", @class = "k-textbox" })
+      </td>
+    </tr>
+    <tr>
+      <td>
+        @Html.Label("Confirm Password")
+      </td>
+      <td>
+        @Html.TextBoxFor(x => x.ConfirmPassword, new { autocomplete = "off", type = "password", @style = "width:80%", @class = "k-textbox" })
+      </td>
+    </tr>
+  }
+  <tr>
+    <td>
+      @Html.Label("Full Name")
+    </td>
+    <td>
+      @Html.TextBoxFor(x => x.FullName, new { @style = "width:80%", @class = "k-textbox" })
+    </td>
+  </tr>
+  @{
+    if (Model.HostedInCloud)
+    {
+      <tr>
+        <td>
+          @Html.Label("Account Locked")
+        </td>
+        <td>
+          @Html.Kendo().CheckBoxFor(x => x.AccountLocked)          
+          @Html.Label(String.Format("Number of Failed Logins: {0}", Model.NoOfFailedLogins), new { @style = "color:#888;" })
+      </td>
+      </tr>
+    }
+  }
+  <tr>
+    <td>
+      @Html.Label("Group")
+    </td>
+    <td>
+      @(Html.Kendo().MultiSelect()
+              .HtmlAttributes(new { style = "width:80%" })
+              .Name("Roles")
+              .Value(Model.Roles)
+              .DataTextField("Name")
+              .DataValueField("Oid")
+              .Filter(FilterType.Contains)
+              .DataSource(source =>
+              {
+                source.Read(read =>
+              {
+                read.Action("GetRoles", "AdminUsers");
+              })
+            .ServerFiltering(true); //If true the DataSource will not filter the data on the client.
+          })
+      )
+      @*@Html.ValidationMessage("Roles")*@
+    </td>
+  </tr>
+</table>

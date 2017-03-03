@@ -1,0 +1,5 @@
+﻿@model Mallon.Core.Web.Models.ModelProperty
+@if (!string.IsNullOrEmpty(Model.Hint))
+{
+  <img src="~/Images/16px/about.png" alt="Help" title="@Model.Hint" class="mouseChangeHelp" />
+}

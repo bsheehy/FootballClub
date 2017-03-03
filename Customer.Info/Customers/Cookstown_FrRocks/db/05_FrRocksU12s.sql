@@ -431,174 +431,177 @@ BEGIN
 END
 
 
+
+
 -- ==============================================================================================
 --					 [club_team_member] Static Data 
 -- ==============================================================================================
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'ed3d2f5c-041c-4942-a220-015eca5c8e4c')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'ed3d2f5c-041c-4942-a220-015eca5c8e4c', 0, N'17b74593-5b56-4233-a0c2-49a80bf081be', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'ed3d2f5c-041c-4942-a220-015eca5c8e4c', 0, N'17b74593-5b56-4233-a0c2-49a80bf081be', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'804671d0-119e-47cd-bedb-01ea2ddf4354')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'804671d0-119e-47cd-bedb-01ea2ddf4354', 0, N'0d73b794-2faa-437b-a7a1-b2a0fbfe50a3', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'804671d0-119e-47cd-bedb-01ea2ddf4354', 0, N'0d73b794-2faa-437b-a7a1-b2a0fbfe50a3', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'182d6314-c509-4c18-84b5-082539678758')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'182d6314-c509-4c18-84b5-082539678758', 0, N'1c6d64b9-42de-48cd-aaeb-3c60a463ff42', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'182d6314-c509-4c18-84b5-082539678758', 0, N'1c6d64b9-42de-48cd-aaeb-3c60a463ff42', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'fd9622f3-5890-4388-8273-089564a4375e')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'fd9622f3-5890-4388-8273-089564a4375e', 0, N'4820bf21-29d4-4784-a34b-cbc223a752c9', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'fd9622f3-5890-4388-8273-089564a4375e', 0, N'4820bf21-29d4-4784-a34b-cbc223a752c9', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'33b84b28-5d5b-4829-ba94-09ef867de602')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'33b84b28-5d5b-4829-ba94-09ef867de602', 0, N'b427dacd-04c0-4776-bf36-b8e6d8888888', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'33b84b28-5d5b-4829-ba94-09ef867de602', 0, N'b427dacd-04c0-4776-bf36-b8e6d8888888', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'5d58a0b1-ce48-4bac-8389-125c1fa4b7c9')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'5d58a0b1-ce48-4bac-8389-125c1fa4b7c9', 0, N'14dd7a24-9f41-409f-bb25-d1bfc01f4e63', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'5d58a0b1-ce48-4bac-8389-125c1fa4b7c9', 0, N'14dd7a24-9f41-409f-bb25-d1bfc01f4e63', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'36b0e356-9719-459d-b97b-2455a525f560')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'36b0e356-9719-459d-b97b-2455a525f560', 0, N'1f59e5ce-0956-4225-9de3-e5aace531e81', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'36b0e356-9719-459d-b97b-2455a525f560', 0, N'1f59e5ce-0956-4225-9de3-e5aace531e81', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'97972fc0-9ee8-49fb-8dbe-3de370da8730')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'97972fc0-9ee8-49fb-8dbe-3de370da8730', 0, N'd67694f5-b56e-482a-9c4d-883132c0369f', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'97972fc0-9ee8-49fb-8dbe-3de370da8730', 0, N'd67694f5-b56e-482a-9c4d-883132c0369f', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'e547bb66-cb2a-427c-8852-3eab7181a8b8')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'e547bb66-cb2a-427c-8852-3eab7181a8b8', 0, N'47ddc8eb-3150-4ebf-8485-90a24a299b5c', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'e547bb66-cb2a-427c-8852-3eab7181a8b8', 0, N'47ddc8eb-3150-4ebf-8485-90a24a299b5c', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'b474ddec-3def-437a-bb68-40948dc222c6')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'b474ddec-3def-437a-bb68-40948dc222c6', 0, N'f928ba09-8a12-49af-87cd-a272b10b7e58', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'b474ddec-3def-437a-bb68-40948dc222c6', 0, N'f928ba09-8a12-49af-87cd-a272b10b7e58', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'93ef24e7-3349-454c-884d-4d53d8ca9306')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'93ef24e7-3349-454c-884d-4d53d8ca9306', 0, N'78edd860-6cea-4281-afbd-0e9cd914dd3a', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'93ef24e7-3349-454c-884d-4d53d8ca9306', 0, N'78edd860-6cea-4281-afbd-0e9cd914dd3a', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'47edb3ae-a469-457e-8965-604a9e4133e2')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'47edb3ae-a469-457e-8965-604a9e4133e2', 0, N'fdeb2653-3bc2-44a2-b00b-9665025b5db6', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'47edb3ae-a469-457e-8965-604a9e4133e2', 0, N'fdeb2653-3bc2-44a2-b00b-9665025b5db6', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'd5731dfb-be5f-48d5-82d2-6492eb4a539f')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'd5731dfb-be5f-48d5-82d2-6492eb4a539f', 0, N'3d5516f3-e0fe-450f-a667-a9eb35ff9304', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'd5731dfb-be5f-48d5-82d2-6492eb4a539f', 0, N'3d5516f3-e0fe-450f-a667-a9eb35ff9304', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'e7aa7cb8-8452-4e77-b2ae-6bef975b2f78')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'e7aa7cb8-8452-4e77-b2ae-6bef975b2f78', 0, N'512385d4-8239-4b97-8a13-863bacfaec71', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'e7aa7cb8-8452-4e77-b2ae-6bef975b2f78', 0, N'512385d4-8239-4b97-8a13-863bacfaec71', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'6f5e61f1-0288-4fe2-ab45-7179e19dcac2')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'6f5e61f1-0288-4fe2-ab45-7179e19dcac2', 0, N'e15948bd-0e0e-405e-a3c5-b4085fd06344', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'6f5e61f1-0288-4fe2-ab45-7179e19dcac2', 0, N'e15948bd-0e0e-405e-a3c5-b4085fd06344', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'a38d38ea-fe5f-4296-abec-719d5aa7dc0d')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'a38d38ea-fe5f-4296-abec-719d5aa7dc0d', 0, N'f7addaa5-a536-4c58-81da-dfb73e6e201b', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'a38d38ea-fe5f-4296-abec-719d5aa7dc0d', 0, N'f7addaa5-a536-4c58-81da-dfb73e6e201b', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'44e3f748-a9e9-46fe-87f9-72c2da3d6f38')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'44e3f748-a9e9-46fe-87f9-72c2da3d6f38', 0, N'e448e999-3c6b-4e5f-b5b0-581b1f69dd60', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'44e3f748-a9e9-46fe-87f9-72c2da3d6f38', 0, N'e448e999-3c6b-4e5f-b5b0-581b1f69dd60', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'2e7ab36a-6135-4935-a90a-79c82baca7f1')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'2e7ab36a-6135-4935-a90a-79c82baca7f1', 0, N'69fcd808-2e2f-491d-973c-e20ea3ab536f', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'2e7ab36a-6135-4935-a90a-79c82baca7f1', 0, N'69fcd808-2e2f-491d-973c-e20ea3ab536f', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'89003b20-4cb9-44ad-9068-82b80a247e0f')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'89003b20-4cb9-44ad-9068-82b80a247e0f', 0, N'286bcb93-12ca-4316-82cf-6e547deb8bf1', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'89003b20-4cb9-44ad-9068-82b80a247e0f', 0, N'286bcb93-12ca-4316-82cf-6e547deb8bf1', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'666b6610-c09d-4202-a50c-855a77f28a62')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'666b6610-c09d-4202-a50c-855a77f28a62', 0, N'7f65f53a-07b9-463c-8e59-962ea1626ad0', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'666b6610-c09d-4202-a50c-855a77f28a62', 0, N'7f65f53a-07b9-463c-8e59-962ea1626ad0', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'f746ad28-f421-411d-82e6-8b50a82e423b')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'f746ad28-f421-411d-82e6-8b50a82e423b', 0, N'c1ebdecc-88da-42ac-ad0d-46302c13fca3', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'f746ad28-f421-411d-82e6-8b50a82e423b', 0, N'c1ebdecc-88da-42ac-ad0d-46302c13fca3', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'3e350302-951b-4b79-b7e3-99c137fe640f')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'3e350302-951b-4b79-b7e3-99c137fe640f', 0, N'3a541a4c-8c37-41d6-b4f9-de692ce6a2bc', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'3e350302-951b-4b79-b7e3-99c137fe640f', 0, N'3a541a4c-8c37-41d6-b4f9-de692ce6a2bc', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'667cb555-cfc1-4c39-8490-9e6209b52690')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'667cb555-cfc1-4c39-8490-9e6209b52690', 0, N'a27745cb-97a5-4f3d-87ad-e3924c17394b', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'667cb555-cfc1-4c39-8490-9e6209b52690', 0, N'a27745cb-97a5-4f3d-87ad-e3924c17394b', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'ae8faeae-6a20-4575-b924-a120ba8db135')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'ae8faeae-6a20-4575-b924-a120ba8db135', 0, N'259918e1-5b7f-4a5e-b064-fddbd2879074', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'ae8faeae-6a20-4575-b924-a120ba8db135', 0, N'259918e1-5b7f-4a5e-b064-fddbd2879074', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'2e7a962c-4f9c-41e3-8406-a47a7a470055')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'2e7a962c-4f9c-41e3-8406-a47a7a470055', 0, N'0092e3d9-0dbb-4393-a286-2786c895b5cc', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'2e7a962c-4f9c-41e3-8406-a47a7a470055', 0, N'0092e3d9-0dbb-4393-a286-2786c895b5cc', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'd7fda021-07e9-4db0-8f56-bd708f8e5846')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'd7fda021-07e9-4db0-8f56-bd708f8e5846', 0, N'd4777c5f-3a69-499b-a5f2-555249e53df0', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'd7fda021-07e9-4db0-8f56-bd708f8e5846', 0, N'd4777c5f-3a69-499b-a5f2-555249e53df0', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'60a8e963-95b8-41dc-8a25-c0fd9a0d9bd9')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'60a8e963-95b8-41dc-8a25-c0fd9a0d9bd9', 0, N'b816ef7c-90fd-48ca-8c6b-8e4b3dad5188', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'60a8e963-95b8-41dc-8a25-c0fd9a0d9bd9', 0, N'b816ef7c-90fd-48ca-8c6b-8e4b3dad5188', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'65330a7f-ed15-43e4-9459-d055ae4bffab')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'65330a7f-ed15-43e4-9459-d055ae4bffab', 0, N'e46fc863-8b97-460d-99c5-b7787d5645ab', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'65330a7f-ed15-43e4-9459-d055ae4bffab', 0, N'e46fc863-8b97-460d-99c5-b7787d5645ab', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'8b60a3cc-ba3e-4d59-9700-d279277de207')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'8b60a3cc-ba3e-4d59-9700-d279277de207', 0, N'7e5174b6-9c67-45f9-9790-c1735311218a', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'8b60a3cc-ba3e-4d59-9700-d279277de207', 0, N'7e5174b6-9c67-45f9-9790-c1735311218a', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'6012d03b-c219-4169-9bc1-dd0da3949f2c')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'6012d03b-c219-4169-9bc1-dd0da3949f2c', 0, N'63c3b555-fae3-414f-b0e5-0c4b56e61108', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'6012d03b-c219-4169-9bc1-dd0da3949f2c', 0, N'63c3b555-fae3-414f-b0e5-0c4b56e61108', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'a7cbd672-f424-4eb1-ac87-df18d8571ba4')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'a7cbd672-f424-4eb1-ac87-df18d8571ba4', 0, N'd596d4ea-d6b0-4ae9-92b5-0808e800960f', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'a7cbd672-f424-4eb1-ac87-df18d8571ba4', 0, N'd596d4ea-d6b0-4ae9-92b5-0808e800960f', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'4ff43daf-2b12-4a7c-ad98-e0661e3b52ce')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'4ff43daf-2b12-4a7c-ad98-e0661e3b52ce', 0, N'039eb138-bad8-41fe-bf77-fc90b4baca82', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'4ff43daf-2b12-4a7c-ad98-e0661e3b52ce', 0, N'039eb138-bad8-41fe-bf77-fc90b4baca82', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
 
 IF NOT EXISTS(SELECT * FROM [club_team_member] WHERE [Oid] = N'955a9d4e-0551-4c47-89b5-feafba24aca7')
 BEGIN
-	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'955a9d4e-0551-4c47-89b5-feafba24aca7', 0, N'f0599bf3-2ac2-450a-9678-e7d0c25506b7', N'27caf1f2-1b51-4192-8440-0b0fd8dddbe2', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
+	INSERT [dbo].[club_team_member] ([oid], [orev], [person], [team], [team_member_type]) VALUES (N'955a9d4e-0551-4c47-89b5-feafba24aca7', 0, N'f0599bf3-2ac2-450a-9678-e7d0c25506b7', N'0846ad69-8e95-442d-ad4e-687909366a7f', N'2151c74b-be85-4152-9b43-c31fc7ae8730')
 END
+
 
 SET IDENTITY_INSERT [dbo].[club_person] OFF 
 

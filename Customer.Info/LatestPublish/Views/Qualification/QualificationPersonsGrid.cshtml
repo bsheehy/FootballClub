@@ -1,0 +1,85 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Qualification>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  bool personEdit = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  bool qualificationEdit = false;
+  if (ViewBag.EditQualification != null)
+  {
+    qualificationEdit = ViewBag.EditQualification;
+  }
+}
+
+<div id="dQualificationMemberGrid">
+  @(Html.Kendo().Grid<ModelPersonQualification>()
+  .Name("gridQualificationMemberGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (qualificationEdit && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
+    {
+      toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+          .Name("btnAddNewQualificationMember")
+          .Icon("plus")
+          .Content("Add")
+          .HtmlAttributes(new
+          {
+            type = "button",
+            id = "btnAddNewQualificationMember",
+            data_dialogguid = Model.Entity.Oid,
+            data_dialogtitle = "Add Person with Qualification",
+            data_dialogtofit = "false",
+            data_closejscallback = "refreshQualificationMemberGrid",
+            data_actionurl = Url.Action("SelectQualificationMember", "Person", new { qualificationOid = @Model.Entity.Oid, controlId = "btnAddNewQualificationMember" })
+          })
+          .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+      //toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
+    }
+  })
+  .Editable(editable => editable.Mode(GridEditMode.InLine))
+  .Sortable()
+  .HtmlAttributes(new { style = "height: 550px;" })
+    //.Scrollable(s => s.Height("500"))
+  .Columns(columns =>
+  {
+    if (personEdit)
+    {
+      columns.Bound(p => p.Person.Oid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+    }
+    columns.Bound(p => p.Person.NameSingleLine).Title("Person").Width(200);
+    columns.Bound(p => p.Person.AddressSingleLine).Title("Address").Width(200);
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      columns.Command(command => { command.Destroy(); }).Title("Edit Qualification Member").Width(130);
+    }
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.Oid);
+      model.Field(p => p.QualificationOid).DefaultValue(Model.Entity.Oid);
+    })
+    .Events(e =>
+    {
+      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+    })
+    .Destroy(update => update.Action("QualificationMember_Delete", "Qualification"))
+    .Read(read => read.Action("QualificationMember_GridRead", "Qualification", new { qualificationOid = Model.Entity.Oid }))
+    )
+  )
+</div>
+
+
+

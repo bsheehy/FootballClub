@@ -1,0 +1,91 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<ClubMinutes>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  bool personEdit = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  bool teamEdit = false;
+  if (ViewBag.EditClubMinutes != null)
+  {
+    teamEdit = ViewBag.EditClubMinutes;
+  }
+}
+
+@*<div id="dClubMinutesMemberGrid">
+  @(Html.Kendo().Grid<ModelClubMinutesMember>()
+  .Name("gridClubMinutesMemberGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (teamEdit && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
+    {
+      toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+          .Name("btnAddNewClubMinutesMember")
+          .Icon("plus")
+          .Content("Add")
+          .HtmlAttributes(new
+          {
+            type = "button",
+            id = "btnAddNewClubMinutesMember",
+            data_dialogguid = Model.Entity.Oid,
+            data_dialogtitle = "Add New ClubMinutes Member",
+            data_dialogtofit = "false",
+            data_closejscallback = "refreshClubMinutesMemberGrid",
+            data_actionurl = Url.Action("SelectClubMinutesMember", "Person", new { teamOid = @Model.Entity.Oid, controlId = "btnAddNewClubMinutesMember" })
+          })
+          .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+      //toolbar.Create().HtmlAttributes(new { @class = "dfw-ignoreDirtyLink" });
+    }
+  })
+  .Editable(editable => editable.Mode(GridEditMode.InLine))
+  .Sortable()
+  .HtmlAttributes(new { style = "height: 550px;" })
+    //.Scrollable(s => s.Height("500"))
+  .Columns(columns =>
+  {
+    if (personEdit)
+    {
+      columns.Bound(p => p.PersonOid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+    }
+    columns.Bound(p => p.PersonNameSingleLine).Title("Person").Width(200);
+    columns.ForeignKey(p => p.ClubMinutesMemberTypeOid, (System.Collections.IEnumerable)ViewData["ClubMinutesMemberTypes"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("ClubMinutes Role").Width(120);
+    //columns.Bound(p => p.ClubMinutesMemberTypeName).Title("Member Type").Width(200);
+    columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width(200);
+    if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+    {
+      columns.Command(command => { command.Edit(); command.Destroy(); }).Title("Edit ClubMinutes Member").Width(130);
+    }
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.Oid);
+      model.Field(p => p.PersonOid).Editable(false);
+      model.Field(p => p.PersonNameSingleLine).Editable(false);
+      model.Field(p => p.PersonAddressSingleLine).Editable(false);
+    })
+    .Events(e =>
+    {
+      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+    })
+    //.Create(update => update.Action("PersonMembership_Create", "Membership", new { personOid = Model.Entity.Oid }))
+    .Update(update => update.Action("ClubMinutesMember_Update", "ClubMinutes"))
+    .Destroy(update => update.Action("ClubMinutesMember_Delete", "ClubMinutes"))
+    .Read(read => read.Action("ClubMinutesMember_GridRead", "ClubMinutes", new { teamOid = Model.Entity.Oid }))
+    )
+  )
+</div>*@
+
+
+

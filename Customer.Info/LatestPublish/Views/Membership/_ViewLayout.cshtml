@@ -1,0 +1,38 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Club.Domain.Artifacts.MembershipType>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+}
+<div>
+  @(Html.Kendo().PanelBar()
+  .Name("pnlPerson")
+  .ExpandMode(PanelBarExpandMode.Multiple)
+  .HtmlAttributes(new { style = "width:100%" })
+  .Items(panelbar =>
+  {
+    panelbar.Add().Text("Membership Details")
+        //.ImageUrl("~/Images/16px/view.png")
+        .Expanded(true)
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .Content(@<div>
+          @Html.Partial("~/Views/Membership/_EditPanel.cshtml")
+        <br/></div>);
+
+    @*if (pnlViewUserAccess == PageViewType.Edit)
+    {
+      panelbar.Add().Text("Lotto Direct Debits")
+        //.ImageUrl("~/Images/16px/view.png")
+      .Expanded(true)
+      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+      .Content(@<div>
+        @Html.Partial("~/Views/Lotto/DirectDebitsPersonGrid.cshtml",Model)
+      </div>);
+    }*@
+  })
+)
+</div>

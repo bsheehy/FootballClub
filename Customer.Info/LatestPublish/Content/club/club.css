@@ -1,0 +1,1077 @@
+﻿/* Use for Kendo DropDownLists and validation. Hidden fields are not validated using jquery validation (unobtrusive)
+  This basically unhides the input and moves it up behind the dropdownlist. 
+  */
+.k-dropdown-clientValidation input[type='text'] {
+    height: 0;
+    width: inherit;
+    z-index: -99;
+    padding: 0;
+    position: relative;
+    top: -26px !important;
+    display:block !important;
+    border-style: none !important;
+}
+
+/*make navBar fixed to top of screen on smaller screens i.e. dosnt scroll with page*/
+@media (max-width: 767px) /* @grid-float-breakpoint -1 */
+{
+    .navbar-fixed-top
+    {
+    position: relative;
+    top: auto;
+    }
+}
+
+.ctrlMinWidth{
+  min-width:200px;
+}
+
+.dfw-main {
+  margin:10px;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+  border-radius: 15px;
+}
+
+.rounded {
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+label{
+  font-weight:normal !important;
+}
+
+.dfw-dashBoardMsg{
+  margin-top:0;
+  margin-bottom:0;
+}
+
+.dfw-custformsTable {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.5em;
+  border: 0 none;
+}
+
+  .dfw-custformsTable tr {
+    border: none;
+    border-width: 1px;
+    /*padding-bottom: 2px;
+    padding-top: 2px;*/
+  }
+
+  .dfw-custformsTable td {
+    border: none;
+    padding: 0.5em 0.5em 0.5em 0.5em;
+  }
+
+  /*lable column*/
+  .dfw-custformsTable td:first-child {
+    text-align: right;
+    width: 30%;
+    max-width: 30%;
+    min-width: 30%;
+  }
+
+  /*control column*/
+  .dfw-custformsTable td:first-child + td {
+    width: 70%;
+    max-width: 70%;
+    min-width: 70%;
+  }
+
+  .dfw-custformsTableTight{
+    padding: 0.2em 0.5em 0.2em 0.5em !important;
+  }
+
+  .dfw-custformsTableTightTop{
+    padding: 0.5em 0.5em 0.2em 0.5em !important;
+  }
+
+  .dfw-custformsTableTightBottom{
+    padding: 0.2em 0.5em 0.5em 0.5em !important;
+  }
+
+  .dfw-menuSlim {
+    margin-top:0;
+    margin-bottom:0;
+  }
+
+  .dfw-menuSlim .k-link{
+    padding: 5px 8px 5px 8px !important;
+  }
+
+  .dfw-menuSlim .k-button{
+    padding: 5px 8px 5px 8px !important;
+  }
+
+  .dfw-headerShowImg {
+    max-width: 40px;
+    max-height: 40px;
+    z-index:99999 !important;
+    position: relative !important;
+  }
+
+  .dfw-headerShow {
+    display: none;
+    max-width: 40px;
+    max-height: 40px;
+    top: 0;
+    right: 1px;
+    position: fixed;
+    /*position: relative;*/
+    cursor: pointer;
+  }
+
+.dfw-custformsFormatHeader
+{
+  width: 90%;
+  text-align:center;
+  margin-top: 6px;
+  margin-bottom: 5px;
+}
+
+.dfw-custformsFormatPageBreak
+{
+  text-align: center;
+  width: 90%;
+  border-bottom:dashed;
+  border-bottom-width:thick;
+}
+
+
+#premisesDetailsInsp {
+        background: url('../../Images/16px/home.png') left no-repeat;
+}
+
+.dfw-HelpButton {
+  background: url('../../Images/16px/question_and_answer.png') left no-repeat;
+}
+
+@keyframes mapHandle {
+    from {background-color: green;}
+    to {background-color: greenyellow;}
+}
+
+#slide-in-handle {
+    -moz-animation: mapHandle 1s infinite;
+    -webkit-animation: mapHandle 1s infinite;
+    -ms-animation: mapHandle 1s infinite;
+    animation: mapHandle 1s infinite;
+  }
+  
+#slide-in-handle.off {
+    -moz-animation-name: none;
+    -webkit-animation-name: none;
+    -ms-animation-name: none;
+    animation-name: none;	
+  }
+
+
+.dfw-dragField {
+  width: 200px;
+  text-align:left;
+}
+
+.dfw-dropDownLookupBtn {
+  width: 200px;
+}
+
+
+.dfw-CustomFrmControlList {
+    list-style: none;
+    padding-left: 0;
+    /*list-style-position:inside;*/
+  }
+
+
+li.dfw-CustomFrmDragHint {
+    display: block;
+    width: 200px;
+    background-color: #52aef7;
+    color: #fff;
+}
+
+  .hint {
+    border: 2px solid #2db245;
+    border-radius: 6px;
+  }
+
+  /*  Wraps a dropped control on the form  */
+  .dfw-CustomFrmControl {
+    margin: 0 0 1px 0;
+    padding: 6px 1% 9px 1%;
+    text-align: left;
+  }
+
+  .dfw-CustomFrmControl:hover {
+    border: 2px dotted #ccc;
+    cursor: pointer;
+  }
+
+  #fieldSettings{
+    overflow-y: auto; 
+    height:400px;
+    border-width:4px;
+    border-color:aqua;
+  }
+
+  .dfw-CustomFrmControl:active {
+    background-color: aqua;
+  }
+
+  .dfw-CustomFrmControl_Active{
+    border: 2px dotted #ccc;
+    cursor: pointer;
+    background-color: aqua;
+  }
+
+  /*  Wraps a dropped controls LABEL on the form  */
+  .dfw-CustomFrmControlLabel {
+    font-weight: bold;
+    display: block; 
+    width:100%;
+    min-width:100%;
+  }
+
+  .dfw-CustomFrmControlLabel:hover {
+    cursor: pointer;
+  }
+  .dfw-CustomFrmControlLabelChild{
+    display: block; 
+    width:100%;
+    min-width:100%;
+  }
+
+    .dfw-CustomFrmControlLabelChild:hover {
+    cursor: pointer;
+  }
+
+  /*  Wraps the sepcific control type dropped on the form  */
+  .dfw-CustomFrmControlHandle {
+    position: relative;
+  }
+
+
+  .dfw-FieldSettingDiv{
+    margin-bottom:1em;
+  }
+
+  .dfw-FieldSettingDiv p{
+    margin:2px;
+    padding:1px;
+    font-weight:bold;
+  }
+
+.dfw-ImgDelete {
+  border-radius: 50%;
+  opacity: 0.2;
+  -webkit-transition: opacity 0.3s ease-out;
+     -moz-transition: opacity 0.3s ease-out;
+       -o-transition: opacity 0.3s ease-out;
+          transition: opacity 0.3s ease-out;
+  -webkit-transform: translateZ(0);
+     -moz-transform: translateZ(0);
+       -o-transform: translateZ(0);
+          transform: translateZ(0);
+}
+
+.dfw-ImgDelete:hover {
+  opacity: 1;
+}
+
+
+  .dfw-CustomFrmControlContainer {
+    position: relative;
+  }
+
+  .dfw-CustomFrmControlDelete {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  /*  Wraps a dropped controls INPUT control on the form  */
+  .dfw-CustomFrmControlInput {
+  }
+
+
+  .dfw-SplitPageSidebar {
+    width: 45%;
+    /*height: 100%;*/
+    height:400px; 
+    float: left;
+    overflow-y: auto;
+    padding-right:2em;
+  }
+
+  .dfw-SplitPageContent {
+    /*width: 70%;
+    height: 100%;
+    float: left;*/
+    overflow-y: auto; 
+    height:400px;
+  }
+
+
+
+  .dfw-mergeFieldSidebar {
+    width: 45%;
+    height: 100%;
+    float: left;
+  }
+
+  .dfw-mergeFieldContent {
+    width: 55%;
+    height: 100%;
+    float: left;
+  }
+
+  .dfw-mergeFieldContentField {
+    width: inherit;
+    position: fixed;
+    top: 50px;
+  }
+
+  .dfw-MergeTable {
+    display: table;
+    width: 100%;
+  }
+
+  .dfw-MergeTableRow {
+    display: table-row;
+  }
+
+  .dfw-MergeTableCell {
+    border: 2px dotted #ccc;
+    display: table-cell;
+    padding: 10px 10px;
+    overflow: auto;
+    overflow-y: hidden;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    /*background-color: #007794;*/
+  }
+
+  .dfw-MergeTableBody {
+    display: table-row-group;
+  }
+
+
+/*Allows the row menu containing Add FireCert, Inspections, DAC etc..  to disaply over the Grid*/ 
+#searchGridResults .k-grid-content, #grid tr td {
+    overflow:visible;
+}
+
+ /*IMPORTANT - This is required to make the Grid scroll Vertically and Horizontally within the page otherwise page is a mess*/
+#searchGridResults .k-grid-content {
+  overflow-y: auto;
+}
+
+#searchGridResults .k-grid-header {
+  padding: 0 !important;
+}
+
+#searchGridAddressResults .k-grid-content {
+  overflow-y: auto;
+}
+
+.dfw-k-button{
+  padding: 2px 7px !important;
+  /*padding-bottom:0 !important;
+  padding-top:0 !important;*/
+}
+
+
+#searchGridResults .k-loading-image {
+    background-image: none;
+}
+
+#searchGridAddressResults .k-loading-image {
+    background-image: none;
+}
+
+.workflowMenu {
+  width: auto;
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  z-index: 10000;
+  padding: 2px 0 2px 0;
+  margin: 2px 0 2px 0;
+}
+
+.workflowMenuBtnRight {
+  margin: 2px;
+  text-align: left;
+  vertical-align: central;
+  float: right;
+}
+
+
+
+/*Style to add red * for required controls*/
+.requiredAfter:after {
+  content: "*";
+  font-weight: bold;
+  /*font-size: 20px;*/
+  color: red;
+  vertical-align: middle;
+}
+
+/*Save button align right*/
+.saveButtonRight {
+  float: right;
+  margin: 2px;
+  text-align: right;
+  vertical-align: central;
+}
+
+
+/*Styles for Tables*/
+.tbl2ColsNormal {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
+}
+
+  .tbl2ColsNormal tr {
+    border: none;
+    border-width: 1px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+  }
+
+  .tbl2ColsNormal td {
+    border: none;
+    border-width: 0px;
+    padding: 2px 1em 2px 1em;
+  }
+
+    /*lable column*/
+    .tbl2ColsNormal td:first-child {
+      text-align: right;
+      width: 20%;
+      max-width: 20%;
+      min-width: 20%;
+    }
+
+      /*control column*/
+      .tbl2ColsNormal td:first-child + td {
+        width: 80%;
+        max-width: 80%;
+        min-width: 80%;
+      }
+
+
+
+.tbl2Cols {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
+}
+
+  .tbl2Cols tr {
+    border: none;
+    border-width: 1px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+  }
+
+  .tbl2Cols td {
+    border: none;
+    border-width: 0px;
+    padding: 2px 1em 2px 1em;
+  }
+
+    /*lable column*/
+    .tbl2Cols td:first-child {
+      text-align: right;
+      width: 30%;
+      max-width: 30%;
+      min-width: 30%;
+    }
+
+      /*control column*/
+      .tbl2Cols td:first-child + td {
+        width: 70%;
+        max-width: 70%;
+        min-width: 70%;
+      }
+
+
+
+.tbl2ColsHalf {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
+}
+
+  .tbl2ColsHalf tr {
+    border: none;
+    border-width: 1px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+  }
+
+  .tbl2ColsHalf td {
+    border: none;
+    border-width: 0px;
+    padding: 2px 1em 2px 1em;
+    vertical-align: top;
+  }
+
+    .tbl2ColsHalf td:first-child {
+      width: 50%;
+      max-width: 50%;
+      min-width: 50%;
+      border-width: 0 medium 0 0;
+    }
+
+      .tbl2ColsHalf td:first-child + td {
+        width: 50%;
+        max-width: 50%;
+        min-width: 50%;
+        border-width: 0;
+      }
+
+
+/* tbl2ColsLngLbls: Used to display entities in 2 columns which have Long Label Names:
+  Label1: | Control1 | Label2 | Control2
+*/
+.tbl2ColsLngLbls {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
+}
+
+  /*lable column*/
+  .tbl2ColsLngLbls td:first-child {
+    text-align: right;
+    width: 50%;
+    max-width: 50%;
+    min-width: 50%;
+  }
+
+    /*control column*/
+    .tbl2ColsLngLbls td:first-child + td {
+      width: 50%;
+      max-width: 50%;
+      min-width: 50%;
+    }
+
+/* tbl2Cols4ColStyle: Used to display entities in 2 columns which match with tbl4Cols:
+  Label1: | Control1 
+*/
+.tbl2Cols4ColStyle {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
+}
+
+  .tbl2Cols4ColStyle tr {
+    border: none;
+    border-width: 1px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+  }
+
+  .tbl2Cols4ColStyle td {
+    border: none;
+    border-width: 0px;
+    padding: 2px 1em 2px 1em;
+  }
+
+    /*lable1 column*/
+  .tbl2Cols4ColStyle td:first-child {
+    text-align: right;
+    width: 20%;
+    max-width: 20%;
+    min-width: 20%;
+  }
+
+  /*control1 column*/
+  .tbl2Cols4ColStyle td:first-child + td {
+    width: 80%;
+    max-width: 80%;
+    min-width: 80%;
+  }
+
+
+
+/* tbl4Cols: Used to display entities in 4 columns:
+  Label1: | Control1 | Label2 | Control2
+*/
+.tbl4Cols {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
+}
+
+  .tbl4Cols tr {
+    border: none;
+    border-width: 1px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+  }
+
+  .tbl4Cols td {
+    border: none;
+    border-width: 0px;
+    padding: 2px 1em 2px 1em;
+  }
+
+    /*lable1 column*/
+    .tbl4Cols td:first-child {
+      text-align: right;
+      width: 20%;
+      max-width: 20%;
+      min-width: 20%;
+    }
+
+      /*control1 column*/
+      .tbl4Cols td:first-child + td {
+        width: 30%;
+        max-width: 30%;
+        min-width: 30%;
+      }
+
+        /*lable2 column*/
+        .tbl4Cols td:first-child + td + td {
+          text-align: right;
+          width: 20%;
+          max-width: 20%;
+          min-width: 20%;
+        }
+
+          /*control2 column*/
+          .tbl4Cols td:first-child + td + td + td {
+            width: 30%;
+            max-width: 30%;
+            min-width: 30%;
+          }
+
+
+/* tbl4ColsLngLbls: Used to display entities in 4 columns which have Long Label Names:
+  Label1: | Control1 | Label2 | Control2
+*/
+.tbl4ColsLngLbls {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 0.75em;
+  border: 0 none;
+}
+
+  /*lable1 column*/
+  .tbl4ColsLngLbls td:first-child {
+    text-align: right;
+    width: 30%;
+    max-width: 30%;
+    min-width: 30%;
+  }
+
+    /*control1 column*/
+    .tbl4ColsLngLbls td:first-child + td {
+      width: 20%;
+      max-width: 20%;
+      min-width: 20%;
+    }
+
+      /*lable2 column*/
+      .tbl4ColsLngLbls td:first-child + td + td {
+        text-align: right;
+        width: 30%;
+        max-width: 30%;
+        min-width: 30%;
+      }
+
+        /*control2 column*/
+        .tbl4ColsLngLbls td:first-child + td + td + td {
+          width: 20%;
+          max-width: 20%;
+          min-width: 20%;
+        }
+
+
+/* styles for validation helpers */
+.field-validation-error {
+  color: #e80c4d;
+  font-weight: bold;
+}
+
+.field-validation-valid {
+  display: none;
+}
+
+input.input-validation-error {
+  border: 1px solid #e80c4d;
+}
+
+input[type="checkbox"].input-validation-error {
+  border: 0 none;
+}
+
+.validation-summary-errors {
+  color: #e80c4d;
+  font-weight: bold;
+}
+
+.validation-summary-valid {
+  display: none;
+}
+
+
+/*style required button address Kendo Menu controls into Grid*/
+.k-widget .gridTemplateCellMenu {
+  overflow: visible;
+  display: flex;
+  vertical-align: middle;
+}
+
+
+.dlgContainer {
+  position: absolute;
+  background-color: red;
+}
+
+.k-window .dlgDialog {
+  /*position:absolute;*/
+  /*background-color: blue;*/
+}
+
+
+/** Images **/
+img.disabled {
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+  zoom: 1;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+/*DF Admin page*/
+#toolbar {
+  padding-left: 50%;
+  padding-top:10px;
+}
+
+#tree {
+  float: left;
+  margin-top: 40px;
+}
+
+#adminTable {
+  height: 100%;
+  width: 100%;
+}
+
+#adminTable td {
+  vertical-align: top;
+  text-align: left;
+}
+
+
+.mouseChangeHelp:hover {
+  /*cursor: help;*/
+}
+
+.hidden > div {
+  display: none;
+}
+
+.visible > div {
+  display: block;
+}
+
+
+.dfw-HideTr{
+  display:none; 
+}
+
+.dfw-ShowTr{
+  display:table-row;
+}
+
+#workflowPropBox {
+  float: right;
+  position: fixed;
+  overflow: auto;
+  font-size: small;
+  top: 150px;
+  right: 60px;
+  border-radius: 15px;
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 5px;
+}
+
+#elementPropBox {
+  float: right;
+  position: fixed;
+  overflow: auto;
+  font-size: small;
+  top: 320px;
+  right: 60px;
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 5px;
+}
+
+#gridAcceptor .k-grid-content
+{
+    min-height: 100px;
+    max-height: 100px;
+}
+
+#gridGuard .k-grid-content
+{
+    min-height: 100px;
+    max-height: 100px;
+}
+
+#gridEnterEvent .k-grid-content
+{
+    min-height: 100px;
+    max-height: 100px;
+}
+
+#gridExitEvent .k-grid-content
+{
+    min-height: 100px;
+    max-height: 100px;
+}
+
+#accessGrid .k-grid-content
+{
+    min-height: 100px;
+    max-height: 100px;
+}
+#adminWorkflowPropBox {
+  overflow:auto;
+
+}
+
+#tabStripDiv {
+  font-size: small;
+  float: right;
+  position: fixed;
+  width:310px;
+  height: auto;
+  overflow: auto;
+  top: 430px;
+  right: 60px;
+  background-color:rgba(255, 255, 255, 0.9);
+}
+
+.addAction {
+  font-size: small;
+  float: left;
+  color: blue;
+  position: fixed;
+  top: 488px;
+  right: 335px;
+  max-height: 30px;
+}
+
+.tabResults {
+  font-size: small;
+  float: right;
+  position: fixed;
+  top: 505px;
+  right: 60px;
+  max-height: 120px;
+}
+
+.wfScriptFont {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-style: normal;
+  font-size: small;
+  color: black;
+  width: 700px;
+  tab-size: 2;
+}
+
+#toolbar_nav {
+  float: right;
+  position: fixed;
+  overflow: auto;
+  top: 300px;
+  right: 60px;
+  height: auto;
+}
+
+.workflow_palette_node_element {
+	border: 1px solid gray;
+	background-color: #A0A0A0;
+	cursor: move;
+	width: 30px;
+  max-width:40px;
+	text-align: center;
+	border-radius: 5px;
+}
+
+#navigate {
+  float: right;
+  position: fixed;
+  top: 130px;
+  right: 60px;
+
+}
+#navigateR{
+  float: left;
+  position:absolute;
+  top: 110px;
+  /*right: 1250px;*/
+
+}
+ #vertical {
+    height: 800px;
+    margin: 0 auto;
+}
+.pane-content {
+    padding: 0 10px;
+}
+
+.mouseChangePointer {
+  cursor: pointer;
+}
+
+
+/*****************Maps***********************/
+
+#slide-in-share {
+  position: absolute;
+  top: 400px;
+  /*left: 1200px;*/
+  right:50px;
+  width: 445px;
+  margin-right: -200px;
+  background-color: #4d4d4d;
+}
+
+#slide-in-handle {
+  position: absolute;
+  right: 210px;
+  width: 40px;
+  height: 50px;
+  background: #454343 url('../../Images/24px/home.png') no-repeat 50% 50%;
+  color: #fff;
+  text-indent: -999em;
+  border-radius: 2px;
+}
+
+.unchecked
+{
+  text-decoration: line-through;
+}
+
+.delete-link {
+  width: 12px;
+  height: 12px;
+  background: transparent url('../../Images/16px/delete.png') no-repeat 50% 50%;
+  overflow: hidden;
+  display: inline-block;
+  font-size: 0;
+  line-height: 0;
+  vertical-align: top;
+  margin: 2px 0 0 3px;
+  -webkit-border-radius: 5px;
+  -mox-border-radius: 5px;
+  border-radius: 5px;
+}
+
+
+/*****************MedusaScreenWarning***********************/
+.overlay{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,0.8);
+
+	visibility: hidden;
+	-webkit-transition: opacity 0.5s, visibility 0s 0.5s;
+	transition: opacity 0.5s, visibility 0s 0.5s;  
+
+  z-index:10000;
+}
+
+.overlay nav {
+	text-align: center;
+	position: relative;
+	top: 50%;
+	height: 60%;
+	font-size: 54px;
+	/*-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);*/
+}
+
+.overlay ul {
+	list-style: none;
+	padding: 30px;
+	margin: 0 auto;
+	display: inline-block;
+	position: relative;
+  background-color:#eee;
+}
+
+.overlay ul li {
+	display: block;
+	min-height: 54px;
+	-webkit-transition: color 0.2s;
+	transition: color 0.2s;  
+}
+
+.MedusaWarningSmall {
+  font-size:medium;
+}
+
+.lower~.overlay-hugeinc{
+	visibility: hidden;
+	-webkit-transition: opacity 0.5s, visibility 0s 0.5s;
+	transition: opacity 0.5s, visibility 0s 0.5s;
+}
+
+.overlay-hugeinc nav ul {
+	-webkit-transform: translateY(-25%) rotateX(35deg);
+	transform: translateY(-25%) rotateX(35deg);
+	-webkit-transition: -webkit-transform 0.5s, opacity 0.5s;
+	transition: transform 0.5s, opacity 0.5s;
+}
+
+.ShowOverlay.overlay-hugeinc{
+	visibility: visible;
+	-webkit-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+}
+
+/*Test theme*/
+
+span.themeChooser {
+    float: right;
+}
+
+#tree {
+    height: 9em;
+}
+
+

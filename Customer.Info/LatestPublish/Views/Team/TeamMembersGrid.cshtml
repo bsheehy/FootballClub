@@ -1,0 +1,123 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Team>
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  bool personEdit = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  bool teamEdit = false;
+  if (ViewBag.EditTeam != null)
+  {
+    teamEdit = ViewBag.EditTeam;
+  }
+}
+
+@if (teamEdit)
+{
+  <div class="row">
+    <div class="col-md-4 text-right">
+      @Html.Label("Copy Members From:")
+    </div>
+    <div class="col-md-7">
+      @(Html.Kendo().DropDownList()
+          .Name("CopyTeamMembers")
+          .BindTo(ViewBag.Teams as SelectList)
+    //.Events(e => e.Change("onChangeTimeType"))
+          .OptionLabel(" ")
+          .HtmlAttributes(new { @style = "width:75%" }))
+
+      <button class="k-button" value="Go" onclick="copyTeamMembers()">Go</button>
+    </div>
+  </div>
+  <br />
+}
+
+
+<div id="dTeamMemberGrid">
+  @(Html.Kendo().Grid<ModelTeamMember>()
+  .Name("gridTeamMemberGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (teamEdit && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
+    {
+      toolbar.Template(@<text>
+        <a class="k-button k-button-icontext k-grid-excel" href="#"><span class="k-icon k-i-excel"></span>Export to Excel</a>
+        @(Html.Kendo().Button()
+          .Name("btnAddNewTeamMember")
+          .Icon("plus")
+          .Content("Add")
+          .HtmlAttributes(new
+          {
+            type = "button",
+            id = "btnAddNewTeamMember",
+            data_dialogguid = Model.Entity.Oid,
+            data_dialogtitle = "Add New Team Member",
+            data_dialogtofit = "false",
+            data_closejscallback = "refreshTeamMemberGrid",
+            data_actionurl = Url.Action("SelectTeamMember", "Person", new { teamOid = @Model.Entity.Oid, controlId = "btnAddNewTeamMember" })
+          })
+          .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+    }
+    else
+    {
+      toolbar.Excel();
+    }
+  })
+            .Editable(editable => editable.Mode(GridEditMode.InLine))
+            .Sortable()
+            .HtmlAttributes(new { style = "height: 550px;" })
+            .Scrollable()
+      //.Scrollable(s => s.Height("500"))
+            .Columns(columns =>
+            {
+              if (teamEdit)
+              {
+                columns.Bound(p => p.PersonOid).Title("Edit").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Person</a>").Width(100).HtmlAttributes(new { style = "min-width:120px;max-width:120px;" });
+              }
+              if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
+              {
+                columns.Command(command => { command.Edit(); command.Destroy(); }).Title("Edit Team Member").Width(150);
+              }
+              columns.Bound(p => p.PersonNameSingleLine).Title("Person").Width(200);
+              columns.ForeignKey(p => p.TeamMemberTypeOid, (System.Collections.IEnumerable)ViewData["TeamMemberTypes"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Team Role").Width(120);
+              columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width(200);
+              columns.Bound(p => p.PersonDob).Title("DOB").Format("{0:dd/MMM/yyyy}").Width(100);
+              columns.Bound(p => p.PersonPhone).Title("Phone").Width(100);
+              columns.Bound(p => p.PersonEmail).Title("Email").Width(100);
+              columns.Bound(p => p.PersonAlergies).Title("Alergies").Width(100);
+              columns.Bound(p => p.PersonAlergiesDetails).Title("Alergies Details").Width(200);
+            })
+            .DataSource(dataSource => dataSource
+              .Ajax()
+              .Model(model =>
+              {
+                model.Id(p => p.Oid);
+                model.Field(p => p.PersonOid).Editable(false);
+                model.Field(p => p.PersonNameSingleLine).Editable(false);
+                model.Field(p => p.PersonAddressSingleLine).Editable(false);
+                model.Field(p => p.PersonDob).Editable(false);
+                model.Field(p => p.PersonPhone).Editable(false);
+                model.Field(p => p.PersonEmail).Editable(false);
+                model.Field(p => p.PersonAlergies).Editable(false);
+                model.Field(p => p.PersonAlergiesDetails).Editable(false);
+              })
+              .Events(e =>
+              {
+                e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+              })
+              //.Create(update => update.Action("PersonMembership_Create", "Membership", new { personOid = Model.Entity.Oid }))
+              .Update(update => update.Action("TeamMember_Update", "Team"))
+              .Destroy(update => update.Action("TeamMember_Delete", "Team"))
+              .Read(read => read.Action("TeamMember_GridRead", "Team", new { teamOid = Model.Entity.Oid }))
+              )
+  )
+</div>

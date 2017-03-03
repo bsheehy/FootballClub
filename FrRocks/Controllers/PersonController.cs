@@ -7,6 +7,7 @@ using Club.Services.Controllers;
 using Club.Services.Utils;
 using FrRocks.Models;
 using FrRocks.Utils;
+using Geocoding.Google;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Mallon.Core.Artifacts;
@@ -14,6 +15,7 @@ using Mallon.Core.Web.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -154,6 +156,91 @@ namespace FrRocks.Controllers
       IEnumerable<ModelPerson> result = Mapper.Map<IEnumerable<ModelPerson>>(people);
       return Json(result.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
     }
+
+    #region Address Search
+
+    public PartialViewResult SelectAddress(string address, string country, string controlId = null)
+    {
+      if (string.IsNullOrEmpty(country))
+      {
+        country = ConfigurationManager.AppSettings["bs.GeoCoding.Region"];
+      }
+      ModelAddressSearch m = new ModelAddressSearch() { qry_Address = address, qry_Country = country };
+      ViewBag.AddressControlId = controlId;
+      return PartialView(m);
+    }
+
+    //public JsonResult SelectAddress_GridRead([DataSourceRequest]DataSourceRequest request, ModelAddressSearch filter)
+    //{
+    //  if (request.PageSize == 0)
+    //  {
+    //    request.PageSize = 30;
+    //  }
+
+    //  if (filter == null || string.IsNullOrEmpty(filter.qry_Address))
+    //  {
+    //    return null;
+    //  }
+    //  if (string.IsNullOrEmpty(filter.qry_Country))
+    //  {
+    //    filter.qry_Country = ConfigurationManager.AppSettings["bs.GeoCoding.Region"];
+    //  }
+
+    //  string googleApiKey = ConfigurationManager.AppSettings["bs.GeoCoding.GoogleAPIKey"];
+    //  GoogleGeocoder geoCoder = new GoogleGeocoder(googleApiKey);
+    //  geoCoder.RegionBias = filter.qry_Country;
+    //  geoCoder.ComponentFilters = new List<GoogleComponentFilter>();
+    //  geoCoder.ComponentFilters.Add(new GoogleComponentFilter(GoogleComponentFilterType.Country, filter.qry_Country));
+
+    //  IEnumerable<GoogleAddress> addresses = geoCoder.Geocode(filter.qry_Address).ToArray();
+    //  IList<ModelAddressGeocode> results = new List<ModelAddressGeocode>();
+    //  foreach (GoogleAddress a in addresses)
+    //  {
+    //    ModelAddressGeocode modelAddressGeocode = new Club.Domain.Models.ModelAddressGeocode();
+    //    modelAddressGeocode.Address = a.FormattedAddress;
+    //    modelAddressGeocode.Country = filter.qry_Country;
+    //    results.Add(modelAddressGeocode);
+    //  }
+
+    //  //PersonServiceController service = (PersonServiceController)this.Injector.Activate(typeof(PersonServiceController));
+    //  //IEnumerable<PersonQualification> m = service.GetQualifications(new ModelStateWrapper(this.ModelState), personOid, true);
+    //  //IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
+    //  //IEnumerable<ModelPersonQualification> result = Mapper.Map<IEnumerable<ModelPersonQualification>>(m);
+    //  return Json(results.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+    //}
+
+    public JsonResult SelectAddress_GridRead([DataSourceRequest]DataSourceRequest request, string qry_Address, string qry_Country)
+    {
+      if (request.PageSize == 0)
+      {
+        request.PageSize = 30;
+      }
+
+      string googleApiKey = ConfigurationManager.AppSettings["bs.GeoCoding.GoogleAPIKey"];
+      if (string.IsNullOrEmpty(qry_Address))
+      {
+        return null;
+      }
+      if (string.IsNullOrEmpty(qry_Country))
+      {
+        qry_Country = ConfigurationManager.AppSettings["bs.GeoCoding.Region"];
+      }
+      GoogleGeocoder geoCoder = new GoogleGeocoder(googleApiKey);
+      geoCoder.RegionBias = qry_Country;
+      geoCoder.ComponentFilters = new List<GoogleComponentFilter>();
+      geoCoder.ComponentFilters.Add(new GoogleComponentFilter(GoogleComponentFilterType.Country, qry_Country));
+
+      IEnumerable<GoogleAddress> addresses = geoCoder.Geocode(qry_Address).ToArray();
+      IList<ModelAddressGeocode> results = new List<ModelAddressGeocode>();
+      foreach (GoogleAddress a in addresses)
+      {
+        ModelAddressGeocode modelAddressGeocode = new Club.Domain.Models.ModelAddressGeocode(a);
+        results.Add(modelAddressGeocode);
+      }
+      return Json(results.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+    }
+
+    #endregion
 
     #region Person Guardians
 
