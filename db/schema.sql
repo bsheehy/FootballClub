@@ -493,6 +493,54 @@ go
 
 
 
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK6BE3E3628C0C498]') AND parent_object_id = OBJECT_ID('[club_team_sheet]'))
+
+alter table [club_team_sheet]  drop constraint FK6BE3E3628C0C498
+
+
+
+go
+
+
+
+
+
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK29C9BD82B6D6ABC1]') AND parent_object_id = OBJECT_ID('[club_team_sheet_person]'))
+
+alter table [club_team_sheet_person]  drop constraint FK29C9BD82B6D6ABC1
+
+
+
+go
+
+
+
+
+
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK29C9BD826A96A258]') AND parent_object_id = OBJECT_ID('[club_team_sheet_person]'))
+
+alter table [club_team_sheet_person]  drop constraint FK29C9BD826A96A258
+
+
+
+go
+
+
+
+
+
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK29C9BD829CB697D]') AND parent_object_id = OBJECT_ID('[club_team_sheet_person]'))
+
+alter table [club_team_sheet_person]  drop constraint FK29C9BD829CB697D
+
+
+
+go
+
+
+
+
+
     if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK96C055CFE8E90626]') AND parent_object_id = OBJECT_ID('[core_incrementing_property_id]'))
 
 alter table [core_incrementing_property_id]  drop constraint FK96C055CFE8E90626
@@ -910,6 +958,30 @@ go
 
 
     if exists (select * from dbo.sysobjects where id = object_id(N'[club_team_member_type]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_team_member_type]
+
+go
+
+
+
+
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[club_team_position]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_team_position]
+
+go
+
+
+
+
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[club_team_sheet]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_team_sheet]
+
+go
+
+
+
+
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[club_team_sheet_person]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_team_sheet_person]
 
 go
 
@@ -2005,6 +2077,8 @@ go
 
        [surname] NVARCHAR(255) not null,
 
+       [irish_name] NVARCHAR(255) null,
+
        [dob] DATETIME null,
 
        [phone] NVARCHAR(255) null,
@@ -2252,6 +2326,78 @@ go
        [name] NVARCHAR(255) not null,
 
        [description] NVARCHAR(255) null,
+
+       primary key ([oid])
+
+    )
+
+go
+
+
+
+
+
+    create table [club_team_position] (
+
+        [oid] UNIQUEIDENTIFIER not null,
+
+       [orev] INT not null,
+
+       [name] NVARCHAR(255) not null,
+
+       [number] INT null,
+
+       [active] BIT default 1  not null,
+
+       primary key ([oid])
+
+    )
+
+go
+
+
+
+
+
+    create table [club_team_sheet] (
+
+        [oid] UNIQUEIDENTIFIER not null,
+
+       [orev] INT not null,
+
+       [match_date] DATETIME null,
+
+       [notes] NVARCHAR(255) null,
+
+       [opponent] NVARCHAR(255) null,
+
+       [result] NVARCHAR(255) null,
+
+       [team] UNIQUEIDENTIFIER not null,
+
+       primary key ([oid])
+
+    )
+
+go
+
+
+
+
+
+    create table [club_team_sheet_person] (
+
+        [oid] UNIQUEIDENTIFIER not null,
+
+       [orev] INT not null,
+
+       [notes] NVARCHAR(255) null,
+
+       [team_sheet] UNIQUEIDENTIFIER not null,
+
+       [person] UNIQUEIDENTIFIER not null,
+
+       [team_position] UNIQUEIDENTIFIER null,
 
        primary key ([oid])
 
@@ -2922,6 +3068,62 @@ go
         foreign key ([team_member_type]) 
 
         references [club_team_member_type]
+
+go
+
+
+
+
+
+    alter table [club_team_sheet] 
+
+        add constraint FK6BE3E3628C0C498 
+
+        foreign key ([team]) 
+
+        references [club_team]
+
+go
+
+
+
+
+
+    alter table [club_team_sheet_person] 
+
+        add constraint FK29C9BD82B6D6ABC1 
+
+        foreign key ([team_sheet]) 
+
+        references [club_team_sheet]
+
+go
+
+
+
+
+
+    alter table [club_team_sheet_person] 
+
+        add constraint FK29C9BD826A96A258 
+
+        foreign key ([person]) 
+
+        references [club_person]
+
+go
+
+
+
+
+
+    alter table [club_team_sheet_person] 
+
+        add constraint FK29C9BD829CB697D 
+
+        foreign key ([team_position]) 
+
+        references [club_team_position]
 
 go
 

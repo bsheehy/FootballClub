@@ -76,7 +76,7 @@
                   })
                   .Events(e =>
                   {
-                    e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+                    e.Error("kendoGridErrorHandler('#gridCommitteeMinutesGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
                   })
                   .Destroy(update => update.Action("CommitteeMinute_Delete", "Committee"))
                   .Read(read => read.Action("CommitteeMinute_GridRead", "Committee", new { committeeOid = Model.Entity.Oid }))

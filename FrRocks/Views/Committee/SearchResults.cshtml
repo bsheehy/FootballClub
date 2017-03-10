@@ -32,6 +32,7 @@
     })
   .Pageable(x => { x.PageSizes(new int[] { 30, 60 }); })
   .Sortable()
+      .Resizable(resize => resize.Columns(true))
   .Filterable()
   .Groupable()
   .Scrollable(s => s.Enabled(true).Height("auto"))

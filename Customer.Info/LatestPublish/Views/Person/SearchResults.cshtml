@@ -7,6 +7,7 @@
   bool personEdit = false;
   bool selectGuardian = false;
   bool selectTeamMember = false;
+  bool selectTeamSheetPerson = false;
   bool selectCommitteeMember = false;
   bool selectPersonMembership = false;
   bool selectQualificationMember = false;
@@ -18,6 +19,10 @@
   {
     selectGuardian = ViewBag.SelectGuardian;
   }
+  if (ViewBag.SelectTeamSheetPerson != null)
+  {
+    selectTeamSheetPerson = ViewBag.SelectTeamSheetPerson;
+  }  
   if (ViewBag.SelectTeamMember != null)
   {
     selectTeamMember = ViewBag.SelectTeamMember;
@@ -60,6 +65,12 @@
       {
         columns.Command(command => command.Custom("Select").Click("selectTeamMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
+      
+       if (selectTeamSheetPerson)
+      {
+        columns.Command(command => command.Custom("Select").Click("selectTeamSheetPerson")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      }
+
       if (selectCommitteeMember)
       {
         columns.Command(command => command.Custom("Select").Click("selectCommitteeMember")).Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
@@ -80,6 +91,7 @@
       columns.Bound(p => p.Phone).Title("Phone").Width("100px");
       columns.Bound(p => p.Email).Title("Email").Width("100px");
     })
+        .Resizable(resize => resize.Columns(true))
   
   .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()

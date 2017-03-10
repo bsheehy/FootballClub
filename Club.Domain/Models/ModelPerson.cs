@@ -14,7 +14,6 @@ namespace Club.Domain.Models
 
     public virtual string TitleDescription { get; set; }
 
-
     [Required]
     public virtual string Forename { get; set; }
 
@@ -36,6 +35,9 @@ namespace Club.Domain.Models
 
     [DisplayName("Name")]
     public virtual string NameSingleLine { get; set; }
+
+    [DisplayName("Irish Name")]
+    public virtual string IrishName { get; set; }
 
     /// <remarks>
     /// Returns a single line representaion of Person.

@@ -76,7 +76,6 @@
             .Sortable()
             .HtmlAttributes(new { style = "height: 550px;" })
             .Scrollable()
-      //.Scrollable(s => s.Height("500"))
             .Columns(columns =>
             {
               if (teamEdit)
@@ -91,13 +90,14 @@
               columns.ForeignKey(p => p.TeamMemberTypeOid, (System.Collections.IEnumerable)ViewData["TeamMemberTypes"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Team Role").Width(120);
               columns.Bound(p => p.PersonAddressSingleLine).Title("Address").Width(200);
               columns.Bound(p => p.PersonDob).Title("DOB").Format("{0:dd/MMM/yyyy}").Width(100);
-              columns.Bound(p => p.PersonPhone).Title("Phone").Width(100);
+              columns.Bound(p => p.PersonPhone).Title("Phone").Width(150);
               columns.Bound(p => p.PersonEmail).Title("Email").Width(100);
               columns.Bound(p => p.PersonAlergies).Title("Alergies").Width(100);
               columns.Bound(p => p.PersonAlergiesDetails).Title("Alergies Details").Width(200);
             })
+            .Resizable(resize => resize.Columns(true))
             .DataSource(dataSource => dataSource
-              .Ajax()
+              .Ajax()              
               .Model(model =>
               {
                 model.Id(p => p.Oid);
@@ -112,7 +112,7 @@
               })
               .Events(e =>
               {
-                e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+                e.Error("kendoGridErrorHandler('#gridTeamMemberGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
               })
               //.Create(update => update.Action("PersonMembership_Create", "Membership", new { personOid = Model.Entity.Oid }))
               .Update(update => update.Action("TeamMember_Update", "Team"))

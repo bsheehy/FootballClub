@@ -1,0 +1,3 @@
+C:\development\FootballClub\FrRocks\Web.Release.config(10,6): warning : No element in the source document matches '/configuration/system.web/httpCookies' [C:\development\FootballClub\FrRocks\FrRocks.csproj]
+C:\development\FootballClub\FrRocks\Web.Release.config(32,6): warning : No element in the source document matches '/configuration/appSettings/add[@key='mallon.dfw.Https']' [C:\development\FootballClub\FrRocks\FrRocks.csproj]
+C:\development\FootballClub\FrRocks\Web.Release.config(33,6): warning : No element in the source document matches '/configuration/appSettings/add[@key='mallon.dfw.CustomErrors']' [C:\development\FootballClub\FrRocks\FrRocks.csproj]

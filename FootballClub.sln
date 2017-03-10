@@ -44,6 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "staticdata", "staticdata", 
 		db\staticdata\00_StaticData_Start.sql = db\staticdata\00_StaticData_Start.sql
 		db\staticdata\01_StaticData.sql = db\staticdata\01_StaticData.sql
 		db\staticdata\02_StaticUsers.sql = db\staticdata\02_StaticUsers.sql
+		db\staticdata\10_Gaa_Positions.sql = db\staticdata\10_Gaa_Positions.sql
 		db\staticdata\90_ReleaseUpdate.sql = db\staticdata\90_ReleaseUpdate.sql
 		db\staticdata\99_StaticData_End.sql = db\staticdata\99_StaticData_End.sql
 	EndProjectSection

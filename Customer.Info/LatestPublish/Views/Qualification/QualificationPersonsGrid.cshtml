@@ -73,7 +73,7 @@
     })
     .Events(e =>
     {
-      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+      e.Error("kendoGridErrorHandler('#gridQualificationMemberGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
     })
     .Destroy(update => update.Action("QualificationMember_Delete", "Qualification"))
     .Read(read => read.Action("QualificationMember_GridRead", "Qualification", new { qualificationOid = Model.Entity.Oid }))

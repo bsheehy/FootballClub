@@ -35,6 +35,16 @@
 
       if (pnlViewUserAccess != PageViewType.Create)
       {
+        tabstrip.Add().Text("Matches and Team Sheets")
+        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+        .ImageUrl(Url.Content("~/Images/24px/documents.png"))
+        .Content(
+        @<div id="dTeamSheetsDocs">
+        @Html.Partial("~/Views/Team/TeamSheetsGrid.cshtml", Model, Html.ViewData)
+        </div>
+        );
+          
+          
         tabstrip.Add().Text("Attached Documents")
         .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
         .ImageUrl(Url.Content("~/Images/24px/documents.png"))

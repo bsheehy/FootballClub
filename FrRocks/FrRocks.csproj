@@ -2259,6 +2259,13 @@
     <Content Include="Views\Person\SelectAddress.cshtml" />
     <Content Include="Views\Person\SelectAddressCriteria.cshtml" />
     <Content Include="Views\Person\SelectAddressResults.cshtml" />
+    <Content Include="Views\Team\TeamSheetsGrid.cshtml" />
+    <Content Include="Views\Team\TeamSheetPersonGrid.cshtml" />
+    <Content Include="Views\Team\TeamSheetAjax.cshtml" />
+    <Content Include="Views\Team\_TeamSheet.cshtml" />
+    <Content Include="Views\Team\TeamSheetCreate.cshtml" />
+    <Content Include="Views\Person\SelectTeamSheetPerson.cshtml" />
+    <Content Include="Views\Team\TeamSheetEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />

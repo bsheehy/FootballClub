@@ -57,12 +57,17 @@ namespace Club.Domain
 
       CreateMap<CommitteeMinute, ModelCommitteeMinute>();
 
-
       CreateMap<CommitteeAdmin, ModelCommitteeAdmin>().ReverseMap();
 
       CreateMap<LottoResult, ModelLottoResult>().ReverseMap();
 
       CreateMap<LottoResultWinner, ModelLottoResultWinner>().ReverseMap();
+
+      CreateMap<TeamSheet, ModelTeamSheet>()
+        .ForMember(dest => dest.TeamSheetOid, opt => opt.MapFrom(src => src.Oid))
+        .ReverseMap();
+
+      CreateMap<TeamSheetPerson, ModelTeamSheetPerson>().ReverseMap();
     }
   }
 }

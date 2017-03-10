@@ -1,0 +1,78 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model Mallon.Core.Web.Models.TypedModel<Team>
+@{
+  bool teamEdit = false;
+  if (ViewBag.EditTeam != null)
+  {
+    teamEdit = ViewBag.EditTeam;
+  }
+  string newTeamSheetDialogOid = Guid.NewGuid().ToString();
+}
+
+<div id="dTeamSheetGrid">
+  @(Html.Kendo().Grid<ModelTeamSheet>()
+  .Name("gridTeamSheetsGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (teamEdit)
+    {
+      toolbar.Template(@<text>
+      @(Html.ActionLink("Add New Team Sheet", "TeamSheetCreate", "Team", new { teamOid = Model.Entity.Oid }, new { @class = "k-button k-i-plus" }))
+        </text>);
+      @*toolbar.Template(@<text>
+        @(Html.Kendo().Button()
+            .Name("btnAddNewTeamSheet")
+            .Icon("plus")
+            .Content("Add")
+            .HtmlAttributes(new
+            {
+              type = "button",
+              id = "btnAddNewTeamSheet",
+              data_dialogguid = newTeamSheetDialogOid,
+              data_dialogtitle = "Add New Team Sheet",
+              data_dialogtofit = "false",
+              data_closejscallback = "refreshTeamSheetsGrid",
+              data_actionurl = Url.Action("TeamSheetAjax", "Team", new { teamOid = @Model.Entity.Oid, controlId = "btnAddNewTeamSheet" })
+            })
+            .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);*@
+    }
+  })
+  .Editable(editable => editable.Mode(GridEditMode.InLine))
+  .Sortable()
+  .HtmlAttributes(new { style = "min-height: 100px;" })
+  .Columns(columns =>
+  {
+    if (teamEdit)
+    {
+      columns.Bound(p => p.TeamSheetOid).Title("Edit").ClientTemplate("<a href='" + Url.Action("TeamSheetEdit", "Team") + "?teamSheetOid=#= TeamSheetOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:120px;max-width:120px;" });
+    }
+    columns.Bound(p => p.MatchDate).Format("{0:dd/MMM/yyyy}").Title("Full Name").Width("150px");
+    columns.Bound(p => p.Opponent).Title("Opponent").Width("150px");
+    columns.Bound(p => p.Result).Title("Result").Width("150px");
+    columns.Bound(p => p.Notes).Title("Notes").Width("150px");
+    if (teamEdit)
+    {
+      columns.Command(command => { command.Destroy(); }).Title("Delete").Width(130);
+    }
+  })
+  .DataSource(dataSource => dataSource
+    .Ajax()
+    .Model(model =>
+    {
+      model.Id(p => p.TeamSheetOid);
+    })
+    .Events(e =>
+    {
+      e.Error("kendoGridErrorHandler('#gridTeamSheetsGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+    })
+    .Destroy(update => update.Action("TeamSheet_Delete", "Team"))
+    .Read(read => read.Action("TeamSheet_GridRead", "Team", new { teamOid = Model.Entity.Oid }))
+    )
+  )
+</div>

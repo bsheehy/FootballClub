@@ -21,6 +21,9 @@ string msgTableHelp = "<p>All Person details can be searched here.</p><p>You sho
       </td>
     </tr>
     <tr>
+      @Html.Hidden("aq_TeamOid", Model.Entity.aq_TeamOid)
+      @Html.Hidden("aq_SearchFromTeamMembersOnly", Model.Entity.aq_SearchFromTeamMembersOnly)
+
       @Html.TextBoxFor(Model.GetProperty(m => m.aq_Forename), new { @class = "k-textbox", @style = "width:90%" })
 
       @Html.TextBoxFor(Model.GetProperty(m => m.aq_Surname), new { @class = "k-textbox", @style = "width:90%" })

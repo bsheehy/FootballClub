@@ -1,0 +1,130 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model ModelTeamSheet
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.TeamSheetOid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+  string ctrlId = Model.TeamSheetOid.ToString();
+  string teamSheetOid = Model.TeamSheetOid.ToString();
+  bool teamEdit = false;
+  if (ViewBag.EditTeam != null)
+  {
+    teamEdit = ViewBag.EditTeam;
+  }
+
+  SelectList results = null;
+  if (ViewBag.Results != null)
+  {
+    results = ViewBag.Results as SelectList;
+  }
+}
+
+<script type="text/javascript">
+  var isDirty = false;
+  $(document).ready(function () {
+    $(".dfw-clearContainerVals")
+      .bind("click", function () {
+      var container = $(this).data('containerdiv');
+      clearChildCtrls(container);
+
+      //This is needed if clearing Address's
+      $('#' + container).find(".dfw-addressBtn").prop("disabled", false);
+      });
+
+
+    $("input, select, propertychange, paste, change").not(".dfw-ignoreChange").on("change", function (e) {
+      isDirty = true;
+      enableSaveBtn(isDirty);
+    });
+
+    // a with class "dfw-ignoreDirtyLink" is not checked
+    $("a").not(".dfw-ignoreDirtyLink").click(function (event) {
+      if (IsPageDirty() === false) {
+        event.preventDefault();
+        return false;
+      }
+      return true;
+    });
+  });
+
+  function closeDialogCtrl() {
+    var dialogName = getDialogName("@(ctrlId)");
+    if (dialogName != null && $("#" + dialogName).length > 0) {
+      $("#" + dialogName).data("kendoWindow").close();
+    }
+  }
+
+</script>
+
+@*@Html.HiddenFor(m => m.Oid)*@
+@Html.Hidden("dialogId")
+@Html.HiddenFor(m => m.TeamSheetOid)
+@Html.HiddenFor(m => m.TeamOid)
+
+@(Html.Kendo().PanelBar()
+.Name("pnlbTeamSheetDetails")
+.ExpandMode(PanelBarExpandMode.Multiple)
+.HtmlAttributes(new { style = "width:100%" })
+.Items(panelbar =>
+{
+  panelbar.Add().Text("Team Sheet:")
+  .ImageUrl("~/Images/16px/link.png")
+  .Expanded(true)
+  .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+  .Content(@<div id="dPerson" class="dfw-colorText">
+    <table class="tbl2Cols">
+      @*<tr>
+        <td></td>
+        <td>@Html.ActionLink("Back to Team", "Edit", "Team", new { oid = Model.TeamOid }, new { @class = "saveButtonRight k-button" })</td>
+      </tr>*@
+
+      <tr>
+        <td>Team Name</td>
+        <td>@Html.Kendo().TextBoxFor(x => x.TeamNameSingleLine).Enable(false).HtmlAttributes(new { @style = "width:75%", @readonly = true })</td>
+
+      </tr>
+
+      <tr>
+        <td>Match Date</td>
+        <td>@Html.Kendo().DatePicker().Name("MatchDate").Format("dd MMM yyyy").Value(Model.MatchDate).HtmlAttributes(new { @style = "width:75%" })</td>
+      </tr>
+
+      <tr>
+        <td>Opponent</td>
+        <td>@Html.Kendo().TextBoxFor(x => x.Opponent).HtmlAttributes(new { @style = "width:75%"})</td>
+      </tr>
+
+      <tr>
+        <td>Result</td>
+        <td>
+          @(Html.Kendo().DropDownList().Name("Result").Value(Model.Result.ToString()).BindTo(results).OptionLabel(" ").HtmlAttributes(new {@style = "width:75%" }))
+        </td>
+      </tr>
+
+      <tr>
+        <td>Notes</td>
+        <td>@Html.TextArea("Notes", Model.Notes, new { @rows = "5", @class = "k-textbox", @style = "width:75%;" })</td>
+      </tr>
+    </table>
+  <br />
+  </div>);
+
+  if (pnlViewUserAccess != PageViewType.Create)
+  {
+    panelbar.Add().Text("Players:")
+    .ImageUrl(Url.Content("~/Images/24px/edit.png"))
+    .Expanded(true)
+    .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
+    .Content(@<div id="dManagersGrid">
+      @Html.Partial("~/Views/Team/TeamSheetPersonGrid.cshtml", Model, Html.ViewData)
+      <br />
+    </div>);
+  }
+})
+)
+
+

@@ -62,7 +62,7 @@
     })
     .Events(e =>
     {
-      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+      e.Error("kendoGridErrorHandler('#gridCommitteeAdminsGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
     })
     //.Create(c => c.Action("CommitteeAdmin_Create", "Committee", new { committeeOid = Model.Entity.Oid }))
     .Destroy(update => update.Action("CommitteeAdmin_Delete", "Committee"))

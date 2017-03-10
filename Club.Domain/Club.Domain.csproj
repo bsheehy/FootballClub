@@ -108,6 +108,7 @@
     <Compile Include="Artifacts\Mapping\CommitteeMemberMap.cs" />
     <Compile Include="Artifacts\Mapping\PersistentClubMap.cs" />
     <Compile Include="Artifacts\Mapping\CommitteeMap.cs" />
+    <Compile Include="Artifacts\Mapping\TeamSheetMap.cs" />
     <Compile Include="Artifacts\Mapping\TeamMap.cs" />
     <Compile Include="Artifacts\Mapping\QualificationMap.cs" />
     <Compile Include="Artifacts\Mapping\PersonQualificationMap.cs" />
@@ -128,6 +129,9 @@
     <Compile Include="Artifacts\Mapping\PersonMembershipTypeMap.cs" />
     <Compile Include="Artifacts\MembershipType.cs" />
     <Compile Include="Artifacts\PersonMembershipType.cs" />
+    <Compile Include="Artifacts\TeamPosition.cs" />
+    <Compile Include="Artifacts\TeamSheet.cs" />
+    <Compile Include="Artifacts\TeamSheetPerson.cs" />
     <Compile Include="ClubDomainMappingProfile.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums.cs" />
@@ -166,6 +170,8 @@
     <Compile Include="Models\ModelPersonGuardian.cs" />
     <Compile Include="Models\ModelPerson.cs" />
     <Compile Include="Models\ModelPersonMembershipType.cs" />
+    <Compile Include="Models\ModelTeamSheetPerson.cs" />
+    <Compile Include="Models\ModelTeamSheet.cs" />
     <Compile Include="Models\ModelUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queries\CommitteeMinutesQry.cs" />

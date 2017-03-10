@@ -12,6 +12,7 @@ namespace Club.Domain.Models
 
     public virtual int? Year { get; set; }
 
+    [Mallon.Core.Resources.DisplayName("Team Name")]
     public virtual string NameSingleLine { get; set; }
 
     public virtual enumSex Sex { get; set; }

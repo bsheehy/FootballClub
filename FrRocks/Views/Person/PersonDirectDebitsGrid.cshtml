@@ -56,7 +56,6 @@
     .Events(e =>
       {
         e.Error("kendoGridErrorHandler('#gridLottoTicketDirectDebit')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
-        //e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
       })
     .Update(update => update.Action("LottoTicketDirectDebit_Update", "Lotto"))
     .Destroy(update => update.Action("LottoTicketDirectDebit_Delete", "Lotto"))

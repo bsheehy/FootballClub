@@ -128,6 +128,14 @@
       </tr>
 
       <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.IrishName), new { @class = "k-textbox person", @style = "width:75%" })
+      </tr>
+
+      <tr>
+        @Html.TextBoxFor(Model.GetProperty(m => m.RegistrationNumber), new { @class = "k-textbox", @style = "width:75%" })
+      </tr>
+
+      <tr>
         @Html.DateFor(Model.GetProperty(m => m.Dob), new {@style = "width:75%" })
       </tr>
 

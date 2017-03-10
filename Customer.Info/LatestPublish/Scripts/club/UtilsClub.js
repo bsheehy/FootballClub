@@ -833,6 +833,75 @@ function copyTeamMembers(e) {
 
 }
 
+
+/*
+ * =============================================
+ * Team Sheet Methods
+ * =============================================
+ */
+
+function savedModelTeamSheet() {
+  var message = "Team Sheet Saved";
+  var buttons = ["OK"];
+  showModalAlert(message, "", "", buttons);
+}
+
+function refreshTeamSheetsGrid() {
+  $('#gridTeamSheetsGrid').data('kendoGrid').dataSource.read();
+}
+
+function selectTeamSheetPerson(e) {
+  var row = $(e.currentTarget).closest("tr");
+  var gridId = this.element.attr("id");
+  var dataItem = this.dataItem(row);
+  var personOid = dataItem.Oid;
+  var teamSheetOid = $('#TeamSheetOid').val();
+  var url = $('#SaveTeamSheetPersonUrl').val();
+  try {
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        'personOid': personOid,
+        'teamSheetOid': teamSheetOid
+      },
+      success: function (result) {
+        if (result.success === true) {
+          var message = "Team Member added.";
+          var buttons = ["OK"];
+          showModalAlert(message, "", "", buttons);
+          //Remove the row
+          var grid = $('#' + gridId).data("kendoGrid");
+          grid.removeRow(row);
+        }
+        else {
+          handleModelStateException(result);
+        }
+      },
+      error: function (request) {
+        hideProgress();
+        handleModelStateException(request);
+      },
+      beforeSend: function () {
+        showProgress();
+      },
+      complete: function () {
+        hideProgress();
+      }
+    });
+  }
+  catch (e) {
+    var message = e.description;
+    var buttons = ["OK"];
+    showModalAlert(message, "", "", buttons);
+  }
+}
+
+function refreshTeamSheetPersonGrid() {
+  $('#gridTeamSheetPersonGrid').data('kendoGrid').dataSource.read();
+}
+
+
 /*
  * =============================================
  * Committee Methods

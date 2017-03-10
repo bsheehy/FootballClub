@@ -359,6 +359,47 @@ namespace FrRocks.Controllers
 
     #endregion
 
+    #region Team Sheet members
+
+    public PartialViewResult SelectTeamSheetPerson(Guid teamOid, Guid teamSheetOid, string controlId = null)
+    {
+      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
+      model.Init();
+      model.Entity.aq_TeamOid = teamOid;
+      model.Entity.aq_TeamSheetOid = teamSheetOid;
+      model.Entity.aq_SearchFromTeamMembersOnly = true;
+      ViewBag.SelectTeamSheetPerson = true;
+      ViewBag.PersonControlId = controlId;
+      ViewBag.TeamSheetOid = teamSheetOid.ToString();
+      SetViewOptions();
+      SetViewBagSelectLists_ForSearch(controlId);
+      return PartialView(model);
+    }
+
+    [HttpPost]
+    [ActionName("SelectTeamSheetPerson")]
+    public ActionResult SelectTeamSheetPersonPost(Guid personOid, Guid teamSheetOid)
+    {
+      if (this.UserController.EffectiveUser.GetClassAccess(typeof(Team)).Allows(Access.Update) == true)
+      {
+        TeamServiceController service = (TeamServiceController)this.Injector.Activate(typeof(TeamServiceController));
+        if (service.SelectTeamSheetPerson(new ModelStateWrapper(this.ModelState), personOid, teamSheetOid))
+        {
+          ModelJsonResult j = new ModelJsonResult();
+          j.success = true;
+          return Json(j, JsonRequestBehavior.AllowGet);
+        }
+        throw new ModelStateException(this.ModelState);
+      }
+      else
+      {
+        this.ModelState.AddModelError("Person", "You do not have permissions to edit Team Sheets for this Team.");
+        throw new ModelStateException(this.ModelState);
+      }
+    }
+
+    #endregion
+
     #region Committee Members
 
     public PartialViewResult SelectCommitteeMember(Guid committeeOid, string controlId = null)

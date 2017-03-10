@@ -1,8 +1,11 @@
-﻿using Club.Domain;
+﻿using AutoMapper;
+using Club.Domain;
 using Club.Domain.Artifacts;
+using Club.Domain.Models;
 using Mallon.Core.Artifacts;
 using Mallon.Core.Interfaces;
 using NHibernate;
+using NHibernate.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -391,6 +394,218 @@ namespace Club.Services.Controllers
       {
         validatonDictionary.AddError("Person", "You can not enter duplicate members for Teams.");
       }
+    }
+
+    #endregion
+
+    #region Team Sheet
+
+    public bool SaveTeamSheet(IValidationDictionary validatonDictionary, ref ModelTeamSheet entity)
+    {
+      TeamSheet teamSheet = new TeamSheet();
+      if (entity.TeamSheetOid != Guid.Empty)
+      {
+        teamSheet = this.session.Get<TeamSheet>(entity.TeamSheetOid);
+      }
+      teamSheet.Team = this.session.Get<Team>(entity.TeamOid);
+      teamSheet.MatchDate = entity.MatchDate.Value;
+      teamSheet.Notes = entity.Notes;
+      teamSheet.Opponent = entity.Opponent;
+      teamSheet.Result = entity.Result;
+
+      if (SaveTeamSheet(validatonDictionary, ref teamSheet) == false)
+      {
+        return false;
+      }
+
+      IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
+      entity = Mapper.Map<ModelTeamSheet>(teamSheet);
+
+      return true;
+    }
+
+    public bool SaveTeamSheet(IValidationDictionary validatonDictionary, ref TeamSheet teamSheet)
+    {
+      bool newTeamSheet = false;
+      if (teamSheet.Oid == Guid.Empty)
+      {
+        newTeamSheet = true;
+      }
+
+      try
+      {
+        ValidateTeamSheet(validatonDictionary, teamSheet);
+
+        if (validatonDictionary.IsValid)
+        {
+          this.session.BeginTransaction();
+          this.session.SaveOrUpdate(teamSheet);
+
+          Guid teamSheetOid = teamSheet.Oid;
+          Guid teamOid = teamSheet.Team.Oid;
+
+          //If the team sheet is new then
+          //1. If there is previous TeamSheet then copy the Team members and order into this team sheet.
+          //2. If there are NO team sheets then copy all members of the Team into the team sheet.
+          if (newTeamSheet)
+          {
+            TeamSheet teamSheetPrevious = this.session.Query<TeamSheet>().Where(x => x.Team.Oid == teamOid && x.Oid != teamSheetOid).OrderByDescending(x => x.MatchDate).FirstOrDefault();
+            if (teamSheetPrevious != null && teamSheetPrevious.Players.Count > 0)
+            {
+              foreach (TeamSheetPerson person in teamSheetPrevious.Players)
+              {
+                TeamSheetPerson teamSheetPerson = new TeamSheetPerson() { TeamPosition = person.TeamPosition, Person = person.Person, TeamSheet = teamSheet };
+                this.session.SaveOrUpdate(teamSheetPerson);
+              }
+            }
+            else
+            {
+              //Add all Players on team to team sheet - then they can be removed or rearranged as appropriate
+              for (int i = 0; i < teamSheet.Team.Members.Count(); i++)
+              {
+                Person p = teamSheet.Team.Members[i].Person;
+                TeamSheetPerson teamSheetPerson = new TeamSheetPerson() { Person = p, TeamSheet = teamSheet };
+                this.session.SaveOrUpdate(teamSheetPerson);
+              }
+            }
+          }
+
+          this.session.Transaction.Commit();
+          return true;
+        }
+      }
+      catch (Exception)
+      {
+        if (session.Transaction.IsActive)
+        {
+          this.session.Transaction.Rollback();
+        }
+        throw;
+      }
+
+      return false;
+    }
+
+    public bool DeleteTeamSheet(IValidationDictionary validatonDictionary, TeamSheet entity)
+    {
+      try
+      {
+        ValidateTeamSheet(validatonDictionary, entity);
+
+        if (validatonDictionary.IsValid)
+        {
+          this.session.BeginTransaction();
+          this.session.Delete(entity);
+          this.session.Transaction.Commit();
+          return true;
+        }
+      }
+      catch (Exception)
+      {
+        if (session.Transaction.IsActive)
+        {
+          this.session.Transaction.Rollback();
+        }
+        throw;
+      }
+      return false;
+    }
+
+    private void ValidateTeamSheet(IValidationDictionary validatonDictionary, TeamSheet entity)
+    {
+      if (CanUserEditTeam(entity.Team) == false)
+      {
+        validatonDictionary.AddError("Team", "You cant add a Team Sheeht as you do not have permissions to edit this Team.");
+      }
+    }
+
+    public bool SaveTeamSheetPerson(IValidationDictionary validatonDictionary, ref TeamSheetPerson entity)
+    {
+      try
+      {
+        ValidateTeamSheetPerson(validatonDictionary, entity);
+
+        if (validatonDictionary.IsValid)
+        {
+          //MIGHT NEED TO ADD TeamSheetPerson TO Person AND Team
+          this.session.BeginTransaction();
+          this.session.SaveOrUpdate(entity);
+          this.session.Transaction.Commit();
+          return true;
+        }
+      }
+      catch (Exception)
+      {
+        if (session.Transaction.IsActive)
+        {
+          this.session.Transaction.Rollback();
+        }
+        throw;
+      }
+
+      return false;
+    }
+
+    public bool DeleteTeamSheetPerson(IValidationDictionary validatonDictionary, ref TeamSheetPerson entity)
+    {
+      try
+      {
+        if (validatonDictionary.IsValid)
+        {
+          this.session.BeginTransaction();
+          this.session.Delete(entity);
+          this.session.Transaction.Commit();
+          return true;
+        }
+      }
+      catch (Exception)
+      {
+        if (session.Transaction.IsActive)
+        {
+          this.session.Transaction.Rollback();
+        }
+        throw;
+      }
+
+      return false;
+    }
+
+    private void ValidateTeamSheetPerson(IValidationDictionary validatonDictionary, TeamSheetPerson entity)
+    {
+      if (entity.Person == null || entity.Person.Oid == Guid.Empty)
+      {
+        validatonDictionary.AddError("Person", "Please specify the Person for this entity.");
+      }
+      if (entity.TeamSheet == null || entity.TeamSheet.Oid == Guid.Empty)
+      {
+        validatonDictionary.AddError("TeamSheet", "Please specify the Team Sheet for this entity.");
+      }
+
+      //No duplicates
+      if (entity.Oid == Guid.Empty && this.session.QueryOver<TeamSheetPerson>().Where(x => x.TeamSheet.Oid == entity.TeamSheet.Oid && x.Person.Oid == entity.Person.Oid).RowCount() > 0)
+      {
+        validatonDictionary.AddError("Person", "You can not enter duplicate members for Team Sheets.");
+      }
+    }
+
+    public bool SelectTeamSheetPerson(IValidationDictionary validatonDictionary, Guid personOid, Guid teamSheehtOid)
+    {
+      Person person = this.session.Load<Person>(personOid);
+      if (person == null)
+      {
+        validatonDictionary.AddError("Person", string.Format("Cannot locate Person with Id:{0}", personOid.ToString()));
+      }
+      TeamSheet teamSheet = this.session.Load<TeamSheet>(teamSheehtOid);
+      if (teamSheet == null)
+      {
+        validatonDictionary.AddError("TeamSheet", string.Format("Cannot locate TeamSheet with Id:{0}", teamSheehtOid.ToString()));
+      }
+
+      TeamSheetPerson entity = new TeamSheetPerson();
+      entity.Person = person;
+      entity.TeamSheet = teamSheet;
+
+      return SaveTeamSheetPerson(validatonDictionary, ref entity);
     }
 
     #endregion

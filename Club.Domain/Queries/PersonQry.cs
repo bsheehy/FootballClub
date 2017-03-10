@@ -14,8 +14,9 @@ namespace Club.Domain.Queries
     public PersonQry()
       : base(typeof(Person))
     {
-      this.PageSize = 10;
+      this.PageSize = 30;
       this.Page = 0;
+      this.aq_SearchFromTeamMembersOnly = false;
     }
 
     public string JsonSerializeObject()
@@ -91,6 +92,16 @@ namespace Club.Domain.Queries
     /// <summary>
     /// Used for model purposes only - dont search on it.
     /// </summary>
+    public virtual Guid? aq_TeamSheetOid { get; set; }
+
+    /// <summary>
+    /// If this is True and 'aq_TeamOid' is set then search People from Team members
+    /// </summary>
+    public virtual bool aq_SearchFromTeamMembersOnly { get; set; }
+
+    /// <summary>
+    /// Used for model purposes only - dont search on it.
+    /// </summary>
     public virtual Guid? aq_QualificationOid { get; set; }
 
     /// <summary>
@@ -133,7 +144,8 @@ namespace Club.Domain.Queries
 
     protected override void PrepareHql()
     {
-      Hql = (queryString) +
+      Hql = (aq_SearchFromTeamMembersOnly == true && aq_TeamOid.HasValue && aq_TeamOid != Guid.Empty ? queryString_JoinWithTeamMembers : queryString) +
+        (queryStringMandatoryWhere) +
       (!(String.IsNullOrEmpty(aq_Forename)) ? forenameString : null) +
       (!(String.IsNullOrEmpty(aq_Surname)) ? surnameString : null) +
       (!(String.IsNullOrEmpty(aq_Address)) ? addressString : null) +
@@ -141,8 +153,25 @@ namespace Club.Domain.Queries
       (!(String.IsNullOrEmpty(aq_Street)) ? streetString : null) +
       (aq_DobFrom.HasValue ? ageFromString : null) +
       (aq_DobTo.HasValue ? ageToString : null) +
+      (aq_SearchFromTeamMembersOnly == true && aq_TeamOid.HasValue && aq_TeamOid != Guid.Empty ? teamMemberTeamString : "") +
       (!(String.IsNullOrEmpty(aq_Postcode)) ? postcodeString : null);
     }
+
+    //protected override void PrepareHql()
+    //{
+    //  Hql = (queryString) +
+    //    (aq_SearchFromTeamMembersOnly == true && aq_TeamOid.HasValue && aq_TeamOid != Guid.Empty ? queryString_JoinWithTeamMembers : "") +
+    //    (queryStringMandatoryWhere) +
+    //  (!(String.IsNullOrEmpty(aq_Forename)) ? forenameString : null) +
+    //  (!(String.IsNullOrEmpty(aq_Surname)) ? surnameString : null) +
+    //  (!(String.IsNullOrEmpty(aq_Address)) ? addressString : null) +
+    //  (!(String.IsNullOrEmpty(aq_Number)) ? numberString : null) +
+    //  (!(String.IsNullOrEmpty(aq_Street)) ? streetString : null) +
+    //  (aq_DobFrom.HasValue ? ageFromString : null) +
+    //  (aq_DobTo.HasValue ? ageToString : null) +
+    //    //(aq_SearchFromTeamMembersOnly == true && aq_TeamOid.HasValue && aq_TeamOid != Guid.Empty ? teamMemberTeamString : "") +
+    //  (!(String.IsNullOrEmpty(aq_Postcode)) ? postcodeString : null);
+    //}
 
     protected override void PrepareQuery(IQuery query)
     {
@@ -169,6 +198,11 @@ namespace Club.Domain.Queries
 
       if (aq_DobTo.HasValue)
         query.SetDateTime("teamDobTo", aq_DobTo.Value);
+
+      if (aq_SearchFromTeamMembersOnly == true && aq_TeamOid.HasValue && aq_TeamOid != Guid.Empty)
+      {
+        query.SetGuid("teamOid", aq_TeamOid.Value);
+      }
     }
 
     protected override IList List(ISession session)
@@ -182,7 +216,26 @@ namespace Club.Domain.Queries
     }
 
     private readonly string queryString =
-      "select r from Club.Domain.Artifacts.Person as r where 1=1 " + Environment.NewLine;
+      "select r from Club.Domain.Artifacts.Person as r " + Environment.NewLine;
+
+    private readonly string queryString_JoinWithTeamMembers =
+      "select r from Club.Domain.Artifacts.Person as r, Club.Domain.Artifacts.TeamMember tMember " + Environment.NewLine;
+
+    private readonly string teamMemberTeamString =
+      "and (r.Oid = tMember.Person.Oid and tMember.Team.Oid = :teamOid)" + Environment.NewLine;
+
+    private readonly string queryStringMandatoryWhere =
+      " where 1=1 " + Environment.NewLine;
+
+    //private readonly string queryString_JoinWithTeamMembers =
+    //" INNER join Club.Domain.Artifacts.TeamMember t on r.Oid=t.Person.Oid " + Environment.NewLine;
+
+    //private readonly string queryString_JoinWithTeamMembers =
+    //" inner join Club.Domain.Artifacts.TeamMember tMember on r.Oid = tMember.Person.Oid " + Environment.NewLine +
+    //" inner join Club.Domain.Artifacts.Team tTeam on tMember.Team.Oid = tTeam.Oid " + Environment.NewLine;
+
+    //private readonly string teamMemberTeamString =
+    //  "and t.Team.Oid = :teamOid " + Environment.NewLine;
 
     private readonly string forenameString =
       "and r.Forename like :forename " + Environment.NewLine;

@@ -52,6 +52,7 @@
     columns.Bound(p => p.UserEmail).Title("Email").Width("150px");
     columns.Command(command => { command.Destroy(); }).Title("Delete").Width(130);
   })
+  .Resizable(resize => resize.Columns(true))
   .DataSource(dataSource => dataSource
     .Ajax()
     .Model(model =>
@@ -62,7 +63,7 @@
     })
     .Events(e =>
     {
-      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+      e.Error("kendoGridErrorHandler('#gridTeamAdminsGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
     })
     //.Create(c => c.Action("TeamAdmin_Create", "Team", new { teamOid = Model.Entity.Oid }))
     .Destroy(update => update.Action("TeamAdmin_Delete", "Team"))

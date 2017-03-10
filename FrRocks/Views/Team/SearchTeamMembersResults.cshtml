@@ -43,10 +43,12 @@
     })
   .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()
+      .Resizable(resize => resize.Columns(true))
   .Filterable()
   .Groupable()
   .Scrollable(s => s.Enabled(true).Height("auto"))
   .Selectable(x => x.Type(GridSelectionType.Cell))
+      .Resizable(resize => resize.Columns(true))
   .DataSource(ds => ds
     .Ajax()
     .Events(e => e.Error("handleAjaxError").Change("searchOnChange"))

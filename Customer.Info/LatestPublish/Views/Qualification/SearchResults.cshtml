@@ -34,6 +34,7 @@
   .Sortable()
   .Filterable()
   .Groupable()
+      .Resizable(resize => resize.Columns(true))
   .Scrollable(s => s.Enabled(true).Height("auto"))
   .Selectable(x => x.Type(GridSelectionType.Cell))
   .DataSource(ds => ds

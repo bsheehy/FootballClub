@@ -119,11 +119,11 @@ namespace FrRocks.Utils
       List<Team> entities;
       if (activeOnly.HasValue)
       {
-        entities = session.QueryOver<Team>().List<Team>().Where(x => x.Active == activeOnly.Value).ToList<Team>();
+        entities = session.QueryOver<Team>().List<Team>().Where(x => x.Active == activeOnly.Value).OrderByDescending(x => x.Year).ThenBy(x => x.NameSingleLine).ToList<Team>();
       }
       else
       {
-        entities = session.QueryOver<Team>().List<Team>().ToList<Team>();
+        entities = session.QueryOver<Team>().List<Team>().OrderByDescending(x => x.Year).ThenBy(x => x.NameSingleLine).ToList<Team>();
       }
 
       SelectList result;
@@ -146,11 +146,11 @@ namespace FrRocks.Utils
       {
         if (user.HasRole(user, Constants.AdministrationRoleOids))
         {
-          entities = session.QueryOver<Team>().Where(x => x.Active == activeOnly).List<Team>().ToList<Team>();
+          entities = session.QueryOver<Team>().Where(x => x.Active == activeOnly).List<Team>().OrderByDescending(x => x.Year).ThenBy(x => x.NameSingleLine).ToList<Team>();
         }
         else
         {
-          entities = session.QueryOver<Team>().Where(x => x.Active == activeOnly).Inner.JoinQueryOver<TeamAdmin>(u => u.TeamAdmins).Where(x => x.User.Oid == user.Oid).List<Team>().ToList<Team>();
+          entities = session.QueryOver<Team>().Where(x => x.Active == activeOnly).Inner.JoinQueryOver<TeamAdmin>(u => u.TeamAdmins).Where(x => x.User.Oid == user.Oid).List<Team>().OrderByDescending(x => x.Year).ThenBy(x => x.NameSingleLine).ToList<Team>();
         }
       }
       else
@@ -215,6 +215,30 @@ namespace FrRocks.Utils
       else
       {
         entities = session.QueryOver<TeamMemberType>().List<TeamMemberType>().ToList<TeamMemberType>();
+      }
+
+      SelectList result;
+      if (entities.Count > 0)
+      {
+        result = new SelectList(entities, "Oid", "Name", entities[0]);
+      }
+      else
+      {
+        result = new SelectList(entities, "Oid", "Name");
+      }
+      return result;
+    }
+
+    public static SelectList TeamPositions(ISession session, bool? activeOnly = null)
+    {
+      List<TeamPosition> entities;
+      if (activeOnly.HasValue)
+      {
+        entities = session.QueryOver<TeamPosition>().List<TeamPosition>().Where(x => x.Active == activeOnly.Value).OrderBy(x => x.Number).ThenBy(x => x.Name).ToList<TeamPosition>();
+      }
+      else
+      {
+        entities = session.QueryOver<TeamPosition>().List<TeamPosition>().OrderBy(x => x.Number).ThenBy(x => x.Name).ToList<TeamPosition>();
       }
 
       SelectList result;

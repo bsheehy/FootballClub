@@ -13,4 +13,12 @@ namespace Club.Domain
     Female = 'F',
     Mixed = 'T'
   }
+
+  public enum enumResult
+  {
+    Win = 'W',
+    Draw = 'D',
+    Loss = 'L',
+    Postponed = 'P'
+  }
 }

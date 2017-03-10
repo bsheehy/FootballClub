@@ -35,6 +35,7 @@
       columns.Bound(p => p.No4).Title("No 4").Width("80px");
     })
   .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
+      .Resizable(resize => resize.Columns(true))
   .Sortable()
   .Filterable()
   .Groupable()

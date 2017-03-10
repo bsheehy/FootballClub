@@ -82,7 +82,7 @@
     })
     .Events(e =>
     {
-      e.Error("kendoGridErrorHandler").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
+      e.Error("kendoGridErrorHandler('#gridCommitteeMemberGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd").Change("searchOnChangeNoWarning");
     })
     //.Create(update => update.Action("PersonMembership_Create", "Membership", new { personOid = Model.Entity.Oid }))
     .Update(update => update.Action("CommitteeMember_Update", "Committee"))

@@ -1,0 +1,30 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model ModelCommitteeMinute
+@{
+  ViewBag.Title = "Team Sheet";
+  string teamSheetsControlId = ViewBag.TeamSheetsControlId;
+  string taemOid = ViewBag.TeamOid;
+}
+@using (Ajax.BeginForm("TeamSheetAjax", "Team", new AjaxOptions
+{
+  HttpMethod = "POST",
+  OnFailure = "handleAjaxError",
+  OnSuccess = "savedModelTeamSheet"
+}))
+{
+  
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(false)
+
+  @Html.Hidden("TeamSheetsControlId", teamSheetsControlId)
+  @Html.Partial("~/Views/Committee/_CommitteeMinute.cshtml", Model)
+  <input id="hiddenSubmit" type="submit" value="Save" class="saveButtonRight k-button" />
+}
+
+
+
+

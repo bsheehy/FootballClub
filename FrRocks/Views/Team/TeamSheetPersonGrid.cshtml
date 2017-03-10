@@ -1,0 +1,102 @@
+﻿@using Club.Domain.Artifacts
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Services.Utils
+@using Club.Domain.Models
+@model ModelTeamSheet
+@{
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.TeamSheetOid);
+  bool teamEdit = false;
+  if (ViewBag.EditTeam != null)
+  {
+    teamEdit = ViewBag.EditTeam;
+  }
+
+}
+
+@*@if (teamEdit)
+  {
+    <div class="row">
+      <div class="col-md-4 text-right">
+        @Html.Label("Copy Members From:")
+      </div>
+      <div class="col-md-7">
+        @(Html.Kendo().DropDownList()
+            .Name("CopyTeamSheetPersons")
+            .BindTo(ViewBag.Teams as SelectList)
+            .OptionLabel(" ")
+            .HtmlAttributes(new { @style = "width:75%" }))
+
+        <button class="k-button" value="Go" onclick="copyTeamSheetPersons()">Go</button>
+      </div>
+    </div>
+    <br />
+  }*@
+
+
+<div id="dTeamSheetPersonGrid">
+  @(Html.Kendo().Grid<ModelTeamSheetPerson>()
+  .Name("gridTeamSheetPersonGrid")
+  .HtmlAttributes(new { @class = "ignore" })
+  .ToolBar(toolbar =>
+  {
+    if (teamEdit && (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create))
+    {
+      toolbar.Template(@<text>
+        <a class="k-button k-button-icontext k-grid-excel" href="#"><span class="k-icon k-i-excel"></span>Export to Excel</a>
+        @(Html.Kendo().Button()
+          .Name("btnAddNewTeamSheetPerson")
+          .Icon("plus")
+          .Content("Add")
+          .HtmlAttributes(new
+          {
+            type = "button",
+            id = "btnAddNewTeamSheetPerson",
+            data_dialogguid = Model.TeamSheetOid,
+            data_dialogtitle = "Add New Team Member",
+            data_dialogtofit = "false",
+            data_closejscallback = "refreshTeamSheetPersonGrid",
+            data_actionurl = Url.Action("SelectTeamSheetPerson", "Person", new { teamSheetOid = @Model.TeamSheetOid, teamOid = @Model.TeamOid, controlId = "btnAddNewTeamSheetPerson" })
+          })
+          .Events(ev => ev.Click("openKendoEntityDialog")))
+      </text>);
+    }
+    else
+    {
+      toolbar.Excel();
+    }
+  })
+                      .Editable(editable => editable.Mode(GridEditMode.InLine))
+                      .HtmlAttributes(new { style = "height: 900px;" })
+                      .Scrollable()
+                      .Columns(columns =>
+                      {
+                        if (teamEdit && pnlViewUserAccess == PageViewType.Edit)
+                        {
+                          columns.Command(command => { command.Edit(); command.Destroy(); }).Width(200);
+                        }
+                        columns.Bound(p => p.TeamPositionNumber).Title("Number").Width(80);
+                        columns.ForeignKey(p => p.TeamPositionOid, (System.Collections.IEnumerable)ViewData["TeamPositions"], "Value", "Text").EditorTemplateName("GridNullableForeignKey").Title("Position").Width(180);
+                        columns.Bound(p => p.PersonNameSingleLine).Title("Person").Width(200);
+                        columns.Bound(p => p.PersonIrishName).Title("Irish Name").Width(200);
+                        columns.Bound(p => p.Notes).Title("Notes").Width(400);
+                      })
+                          .DataSource(dataSource => dataSource
+                          .Ajax()
+                          .Model(model =>
+                          {
+                            model.Id(p => p.Oid);
+                            model.Field(p => p.TeamPositionNumber).Editable(false);
+                            model.Field(p => p.PersonNameSingleLine).Editable(false);
+                            model.Field(p => p.PersonIrishName).Editable(false);
+                          })
+                          .Events(e =>
+                          {
+                            e.Error("kendoGridErrorHandler('#gridTeamSheetPersonGrid')").RequestEnd("kendoGridErrorHandlerRequestEnd");
+                          })
+                          .Update(update => update.Action("TeamSheetPerson_Update", "Team"))
+                          .Destroy(update => update.Action("TeamSheetPerson_Delete", "Team"))
+                                    .Read(read => read.Action("TeamSheetPerson_GridRead", "Team", new { teamSheetOid = Model.TeamSheetOid }))
+                          )
+  )
+</div>
