@@ -45,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "staticdata", "staticdata", 
 		db\staticdata\01_StaticData.sql = db\staticdata\01_StaticData.sql
 		db\staticdata\02_StaticUsers.sql = db\staticdata\02_StaticUsers.sql
 		db\staticdata\10_Gaa_Positions.sql = db\staticdata\10_Gaa_Positions.sql
+		db\staticdata\11_CalendarEventTypes.sql = db\staticdata\11_CalendarEventTypes.sql
 		db\staticdata\90_ReleaseUpdate.sql = db\staticdata\90_ReleaseUpdate.sql
 		db\staticdata\99_StaticData_End.sql = db\staticdata\99_StaticData_End.sql
 	EndProjectSection
@@ -114,6 +115,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tables", "tables", "{D6BC03
 		db\elmah\tables\elmah_table.sql = db\elmah\tables\elmah_table.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Club.Resources", "Club.Resources\Club.Resources.csproj", "{8F66C94A-C324-4BC7-B0C7-64CAFA51601D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,6 +179,10 @@ Global
 		{46B8E582-8AC0-431E-9FB1-13DCC8864483}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46B8E582-8AC0-431E-9FB1-13DCC8864483}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46B8E582-8AC0-431E-9FB1-13DCC8864483}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F66C94A-C324-4BC7-B0C7-64CAFA51601D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F66C94A-C324-4BC7-B0C7-64CAFA51601D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F66C94A-C324-4BC7-B0C7-64CAFA51601D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F66C94A-C324-4BC7-B0C7-64CAFA51601D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

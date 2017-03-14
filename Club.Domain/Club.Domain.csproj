@@ -37,7 +37,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentNHibernate, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
+      <HintPath>..\..\NuGetPackages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Geocoding, Version=3.6.0.0, Culture=neutral, PublicKeyToken=7c714700b88674c7, processorArchitecture=MSIL">
@@ -45,19 +45,22 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+      <HintPath>..\..\NuGetPackages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\..\DotNetLib3\Kendo\UI for ASP.NET MVC R3 2016\wrappers\aspnetmvc\Binaries\Mvc5\Kendo.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\NuGetPackages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\NuGetPackages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\NHibernate.4.0.2.4000\lib\net40\NHibernate.dll</HintPath>
+      <HintPath>..\..\NuGetPackages\NHibernate.4.0.2.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PowerCollections, Version=1.0.0.0, Culture=neutral, PublicKeyToken=2573bf8a1bdddcd5, processorArchitecture=MSIL">
@@ -99,6 +102,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Artifacts\ClubCalendar.cs" />
     <Compile Include="Artifacts\CommitteeMinute.cs" />
     <Compile Include="Artifacts\Committee.cs" />
     <Compile Include="Artifacts\CommitteeMemberType.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="Artifacts\Mapping\PersonQualificationMap.cs" />
     <Compile Include="Artifacts\PersistentClub.cs" />
     <Compile Include="Artifacts\CommitteeAdmin.cs" />
+    <Compile Include="Artifacts\ClubCalendarEventType.cs" />
     <Compile Include="Artifacts\TeamAdmin.cs" />
     <Compile Include="Artifacts\CommitteeMember.cs" />
     <Compile Include="Artifacts\TeamMemberType.cs" />
@@ -136,6 +141,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\ArrayExtensions.cs" />
+    <Compile Include="Extensions\ExtsConvertTo.cs" />
     <Compile Include="Extensions\MappingAutoConfig.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Interfaces\IAddress.cs" />
@@ -148,6 +154,7 @@
     <Compile Include="Models\DataAnnotationAttributes.cs" />
     <Compile Include="Models\ModelAddressGeocode.cs" />
     <Compile Include="Models\ModelAddressSearch.cs" />
+    <Compile Include="Models\ModelCalendarSchedulerEvent.cs" />
     <Compile Include="Models\ModelClassAccess.cs" />
     <Compile Include="Models\ModelCommitteeMinute.cs" />
     <Compile Include="Models\ModelDefaultAccess.cs" />
@@ -181,6 +188,7 @@
     <Compile Include="Queries\CommitteeQry.cs" />
     <Compile Include="Queries\CommitteeMemberQry.cs" />
     <Compile Include="Queries\ClubMinutesQry.cs" />
+    <Compile Include="Queries\ClubCalendarQry.cs" />
     <Compile Include="Queries\QualificationQry.cs" />
     <Compile Include="Queries\PersonQualificationQry.cs" />
     <Compile Include="Queries\UserQry.cs" />
@@ -208,6 +216,10 @@
     <ProjectReference Include="..\..\Lancelot\NHibernateSupport\NHibernateSupport.csproj">
       <Project>{3ab65de2-9af1-4815-9231-3d97f7578f55}</Project>
       <Name>NHibernateSupport</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Club.Resources\Club.Resources.csproj">
+      <Project>{8f66c94a-c324-4bc7-b0c7-64cafa51601d}</Project>
+      <Name>Club.Resources</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

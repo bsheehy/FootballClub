@@ -56,6 +56,9 @@
       <HintPath>..\..\NuGetPackages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>..\..\DotNetLib3\Kendo\UI for ASP.NET MVC R3 2016\wrappers\aspnetmvc\Binaries\Mvc5\Kendo.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\NuGetPackages\NHibernate.4.0.2.4000\lib\net40\NHibernate.dll</HintPath>
       <Private>True</Private>
@@ -73,6 +76,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AdminServiceController.cs" />
     <Compile Include="Controllers\AutoMapperConfig.cs" />
+    <Compile Include="Controllers\ClubCalendarService.cs" />
     <Compile Include="Controllers\ClubDetailsServiceController.cs" />
     <Compile Include="Controllers\CommitteeServiceController.cs" />
     <Compile Include="Controllers\ClubMinutesServiceController.cs" />

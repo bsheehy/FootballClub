@@ -57,7 +57,6 @@ namespace Club.Domain.Queries
       if (string.IsNullOrEmpty(this.aq_TeamName) == false)
         return true;
 
-
       if (aq_TeamOid.HasValue && aq_TeamOid.Value != Guid.Empty)
         return true;
 

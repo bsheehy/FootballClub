@@ -138,6 +138,39 @@ namespace FrRocks.Utils
       return result;
     }
 
+    public static SelectList ClubCalendarEventTypes(ISession session, bool? activeOnly = null)
+    {
+
+      List<ClubCalendarEventType> entities;
+      if (activeOnly.HasValue)
+      {
+        entities = session.QueryOver<ClubCalendarEventType>().List<ClubCalendarEventType>().Where(x => x.Active == activeOnly.Value).OrderBy(x => x.Name).ToList<ClubCalendarEventType>();
+      }
+      else
+      {
+        entities = session.QueryOver<ClubCalendarEventType>().List<ClubCalendarEventType>().OrderBy(x => x.Name).ToList<ClubCalendarEventType>();
+      }
+
+      SelectList result;
+      if (entities.Count > 0)
+      {
+        ClubCalendarEventType defaultEntry = entities.Where(x => x.Default == true).FirstOrDefault();
+        if (defaultEntry != null)
+        {
+          result = new SelectList(entities, "Oid", "Name", defaultEntry);
+        }
+        else
+        {
+          result = new SelectList(entities, "Oid", "Name", entities[0]);
+        }
+      }
+      else
+      {
+        result = new SelectList(entities, "Oid", "Name");
+      }
+      return result;
+    }
+
     public static SelectList TeamsWhereUserIsAdminOrAdministrator(ISession session, User user, bool? activeOnly = null, int? yearLimit = null)
     {
 

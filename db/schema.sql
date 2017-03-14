@@ -217,6 +217,30 @@ go
 
 
 
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FKF8C85DD28C0C498]') AND parent_object_id = OBJECT_ID('[club_club_calendar]'))
+
+alter table [club_club_calendar]  drop constraint FKF8C85DD28C0C498
+
+
+
+go
+
+
+
+
+
+    if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FKF8C85DD297D4C465]') AND parent_object_id = OBJECT_ID('[club_club_calendar]'))
+
+alter table [club_club_calendar]  drop constraint FKF8C85DD297D4C465
+
+
+
+go
+
+
+
+
+
     if exists (select 1 from sys.objects where object_id = OBJECT_ID(N'[FK64E97048260EFD8]') AND parent_object_id = OBJECT_ID('[club_committee_admin]'))
 
 alter table [club_committee_admin]  drop constraint FK64E97048260EFD8
@@ -790,6 +814,22 @@ go
 
 
     if exists (select * from dbo.sysobjects where id = object_id(N'[documents_type_path_configuration]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [documents_type_path_configuration]
+
+go
+
+
+
+
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[club_club_calendar]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_club_calendar]
+
+go
+
+
+
+
+
+    if exists (select * from dbo.sysobjects where id = object_id(N'[club_club_calendar_event_type]') and OBJECTPROPERTY(id, N'IsUserTable') = 1) drop table [club_club_calendar_event_type]
 
 go
 
@@ -1745,6 +1785,72 @@ go
 
 
 
+    create table [club_club_calendar] (
+
+        [oid] UNIQUEIDENTIFIER not null,
+
+       [orev] INT not null,
+
+       [is_all_day] BIT default 0  not null,
+
+       [is_reminder] BIT default 0  not null,
+
+       [title] NVARCHAR(255) null,
+
+       [description] NVARCHAR(500) null,
+
+       [start] DATETIME not null,
+
+       [end] DATETIME null,
+
+       [recurrence_i_d] NVARCHAR(255) null,
+
+       [recurrence_exception] NVARCHAR(255) null,
+
+       [recurrence_rule] NVARCHAR(255) null,
+
+       [url] NVARCHAR(255) null,
+
+       [team] UNIQUEIDENTIFIER null,
+
+       [club_calendar_event_type] UNIQUEIDENTIFIER not null,
+
+       primary key ([oid])
+
+    )
+
+go
+
+
+
+
+
+    create table [club_club_calendar_event_type] (
+
+        [oid] UNIQUEIDENTIFIER not null,
+
+       [orev] INT not null,
+
+       [active] BIT default 1  not null,
+
+       [default] BIT default 0  not null,
+
+       [name] NVARCHAR(255) not null,
+
+       [description] NVARCHAR(255) null,
+
+       [color_hex] NVARCHAR(255) null,
+
+       primary key ([oid])
+
+    )
+
+go
+
+
+
+
+
     create table [club_club_details] (
 
         [oid] UNIQUEIDENTIFIER not null,
@@ -2072,6 +2178,8 @@ go
        [sex] NCHAR(1) default 0  not null,
 
        [active] BIT default 1  not null,
+
+       [registration_number] NVARCHAR(255) null,
 
        [forename] NVARCHAR(255) not null,
 
@@ -2746,6 +2854,34 @@ go
         foreign key ([type_path_configuration]) 
 
         references [documents_type_path_configuration]
+
+go
+
+
+
+
+
+    alter table [club_club_calendar] 
+
+        add constraint FKF8C85DD28C0C498 
+
+        foreign key ([team]) 
+
+        references [club_team]
+
+go
+
+
+
+
+
+    alter table [club_club_calendar] 
+
+        add constraint FKF8C85DD297D4C465 
+
+        foreign key ([club_calendar_event_type]) 
+
+        references [club_club_calendar_event_type]
 
 go
 

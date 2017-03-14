@@ -68,6 +68,9 @@ namespace Club.Domain
         .ReverseMap();
 
       CreateMap<TeamSheetPerson, ModelTeamSheetPerson>().ReverseMap();
+
+      CreateMap<ClubCalendar, ModelCalendarSchedulerEvent>().ReverseMap();
+
     }
   }
 }

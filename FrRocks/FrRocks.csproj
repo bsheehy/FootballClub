@@ -211,6 +211,7 @@
     <Compile Include="Controllers\CommitteeMinutesController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\ClubCalendarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ClubDetailsController.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="Models\GuiMappingProfile.cs" />
     <Compile Include="Models\ModelJsonResult.cs" />
     <Compile Include="Models\ModelMenuItem.cs" />
+    <Compile Include="Models\ModelSchedulerResource.cs" />
     <Compile Include="Models\ModelStateException.cs" />
     <Compile Include="Models\ModelStateWrapper.cs" />
     <Compile Include="Models\ModelToolbarItem.cs" />
@@ -2266,6 +2268,8 @@
     <Content Include="Views\Team\TeamSheetCreate.cshtml" />
     <Content Include="Views\Person\SelectTeamSheetPerson.cshtml" />
     <Content Include="Views\Team\TeamSheetEdit.cshtml" />
+    <Content Include="Views\ClubCalendar\Scheduler.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\_SchedulerClubCalendarTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Site.css" />
@@ -2314,6 +2318,10 @@
     <ProjectReference Include="..\Club.Domain\Club.Domain.csproj">
       <Project>{175d77e1-b480-4977-a349-c112016fb5e6}</Project>
       <Name>Club.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Club.Resources\Club.Resources.csproj">
+      <Project>{8f66c94a-c324-4bc7-b0c7-64cafa51601d}</Project>
+      <Name>Club.Resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\Club.Services\Club.Services.csproj">
       <Project>{c4911ce5-d7c8-483b-ab20-78a9e131e7ee}</Project>

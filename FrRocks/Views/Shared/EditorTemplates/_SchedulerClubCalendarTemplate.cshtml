@@ -1,0 +1,105 @@
+﻿@using Club.Domain.Models
+@model ModelCalendarSchedulerEvent
+@{
+  //required in order to render validation attributes
+  ViewContext.FormContext = new FormContext();
+  string uu = Model.Url;
+  SelectList eventTypes = ViewBag.ClubCalendarEventTypes as SelectList;
+  string eventColor = Model.ClubCalendarEventTypeColorHex;
+}
+
+@functions{
+  public Dictionary<string, object> generateDatePickerAttributes(
+         string elementId,
+         string fieldName,
+         string dataBindAttribute,
+         Dictionary<string, object> additionalAttributes = null)
+  {
+
+    Dictionary<string, object> datePickerAttributes = additionalAttributes != null ? new Dictionary<string, object>(additionalAttributes) : new Dictionary<string, object>();
+
+    datePickerAttributes["id"] = elementId;
+    datePickerAttributes["name"] = fieldName;
+    datePickerAttributes["data-bind"] = dataBindAttribute;
+    datePickerAttributes["required"] = "required";
+    datePickerAttributes["style"] = "z-index: inherit;";
+
+    return datePickerAttributes;
+  }
+}
+<div style='color:@(eventColor)' height 100%;width 100%;'>
+  <div class="k-edit-label">
+    @(Html.Label("Event Type"))
+  </div>
+  <div data-container-for="ClubCalendarEventTypeOid" class="k-edit-field">
+    @(Html.Kendo().DropDownList().Name("ClubCalendarEventTypeOid").BindTo(eventTypes).Value(Model.ClubCalendarEventTypeOid == Guid.Empty ? null : Model.ClubCalendarEventTypeOid.ToString()).HtmlAttributes(new { @style = "width:80%", @required = "required", data_bind = "value:ClubCalendarEventTypeOid" }))
+  </div>
+  <div class="k-edit-label">
+    @(Html.LabelFor(model => model.Title))
+  </div>
+  <div data-container-for="title" class="k-edit-field">
+    @(Html.TextBoxFor(model => model.Title, new { @class = "k-textbox", data_bind = "value:title", @style = "width:80%" }))
+  </div>
+
+  <div class="k-edit-label">
+    @(Html.LabelFor(model => model.Start))
+  </div>
+  <div data-container-for="start" class="k-edit-field">
+
+    @(Html.Kendo().DateTimePickerFor(model => model.Start)
+        .HtmlAttributes(generateDatePickerAttributes("startDateTime", "start", "value:start,invisible:isAllDay")))
+
+    @(Html.Kendo().DatePickerFor(model => model.Start)
+        .HtmlAttributes(generateDatePickerAttributes("startDate", "start", "value:start,visible:isAllDay")))
+
+    <span data-bind="text: startTimezone"></span>
+    <span data-for="start" class="k-invalid-msg"></span>
+  </div>
+
+  <div class="k-edit-label">
+    @(Html.LabelFor(model => model.End))
+  </div>
+  <div data-container-for="end" class="k-edit-field">
+
+    @(Html.Kendo().DateTimePickerFor(model => model.End)
+        .HtmlAttributes(generateDatePickerAttributes(
+            "endDateTime",
+            "end",
+            "value:end,invisible:isAllDay",
+            new Dictionary<string, object>() { { "data-dateCompare-msg", "End date should be greater than or equal to the start date" } })))
+
+    @(Html.Kendo().DatePickerFor(model => model.End)
+        .HtmlAttributes(generateDatePickerAttributes(
+            "endDate",
+            "end",
+            "value:end,visible:isAllDay",
+            new Dictionary<string, object>() { { "data-dateCompare-msg", "End date should be greater than or equal to the start date" } })))
+
+    <span data-for="end" class="k-invalid-msg"></span>
+  </div>
+
+  @*<div class="k-edit-label">
+    @(Html.LabelFor(model => model.IsAllDay))
+  </div>
+  <div data-container-for="isAllDay" class="k-edit-field">
+    <input data-bind="checked: isAllDay" data-val="true" id="IsAllDay" name="IsAllDay" type="checkbox" />
+  </div>*@
+
+  <div class="k-edit-label">
+    @(Html.LabelFor(model => model.Description))
+  </div>
+  <div data-container-for="description" class="k-edit-field">
+    @(Html.TextAreaFor(model => model.Description, new { @class = "k-textbox", data_bind = "value:description", @rows = "2", @style = "width:80%" }))
+  </div>
+
+  <div id="recurranceDiv">
+    <div class="k-edit-label"><label for="recurrenceRule">Repeat</label></div>
+    <div data-container-for="recurrenceRule" class="k-edit-field">
+      <div data-bind="value:recurrenceRule" name="recurrenceRule" data-role="recurrenceeditor"></div>
+    </div>
+  </div>
+
+  @{
+    ViewContext.FormContext = null;
+  }
+</div>

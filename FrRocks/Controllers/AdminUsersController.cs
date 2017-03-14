@@ -166,7 +166,7 @@ namespace FrRocks.Controllers
       if (this.UserController.LoggedOnUser.HasRole(current, Constants.SuperAdministrationRoleOids))
       {
         result = qry.List()
-        .Select(x => new KeyValuePair<string, Guid>(GetText(x), x.Oid));
+        .Select(x => new KeyValuePair<string, Guid>(x.DisplayName, x.Oid));
       }
       else
       {
@@ -179,7 +179,7 @@ namespace FrRocks.Controllers
             users.Add(user);
           }
         }
-        result = users.Select(x => new KeyValuePair<string, Guid>(GetText(x), x.Oid));
+        result = users.Select(x => new KeyValuePair<string, Guid>(x.DisplayName, x.Oid));
       }
       // Return it to the view
       SelectList list = new SelectList(result, "Value", "Key", oid);

@@ -1,0 +1,97 @@
+﻿@using Club.Domain.Artifacts
+@using Club.Domain.Queries
+@using Mallon.Core.Web.Models
+@using Mallon.Core.Web.Models.HtmlExtensions
+@using Club.Domain.Models
+@model TypedModel<ClubCalendarQry>
+@{
+  ViewBag.Title = "Club Scheduler";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+  DateTime currentDate = DateTime.Now;
+  int delta = DayOfWeek.Monday - currentDate.DayOfWeek;
+}
+<script type="text/javascript">
+  function getSchedulerSearchParams() {
+    return searchGetParams("searchCriteriaScheduler");
+  }
+</script>
+
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(false)
+
+  <div class="table-responsive">
+    <table id="searchCriteriaScheduler" style="width: 100%; margin-bottom: 5px;">
+      <tr>
+        <td class="dfw-colorText">
+          @Html.Partial("~/Views/Shared/Hint.cshtml", "The scheduler is used to view any Events or Pitch activites for the Club. The times that Teams train should be added to the Scheduler.", new ViewDataDictionary { { "ImageSize", "32px" } })
+          Search for Event Types:  
+          @(Html.Kendo().DropDownList().Name("aq_ClubCalendarEventTypeOid").BindTo((SelectList)ViewBag.ClubCalendarEventTypes).OptionLabel(" ").HtmlAttributes(new { @class = "aSpace", @style = "width:60%", @id = "aq_ClubCalendarEventTypeOid" }))
+          <input type="button" value="Go" class="k-button" id="btnSearchGo" style="width: auto; padding-top: 2px; padding-bottom: 2px;" onclick="searchBeginSchedulerSearch()" />
+          @*<input type="button" value="Clear" class="k-button" id="btnSearchClear" onclick="searchClearSearch('searchCriteriaScheduler')" style="width: auto; padding-top: 2px; padding-bottom: 2px;" />*@
+        </td>
+    </table>
+  </div>
+
+  @(Html.Kendo().Scheduler<ModelCalendarSchedulerEvent>()
+    .Name("scheduler")
+    .Date(currentDate)
+    .StartTime(9,0,0)
+    .EndTime(22, 0, 0)
+    .AllDaySlot(false)
+    //.EventTemplate("<div class='k-event'>" +
+    //                  "<h5>#= title #</h5>" +
+    //                  "<p>#= description #</p>" +
+    //              "</div>")
+    //.WorkDayStart(7, 0, 0)
+    //.WorkDayEnd(18, 0, 0)
+    //.ShowWorkHours(true)
+    //.Events(e =>
+    //{
+    //  e.Remove("scheduler_Delete");
+    //  e.Edit("scheduler_Edit");
+    //})
+    .Views(views =>
+    {
+      views.DayView();
+      views.WeekView(workWeekView => workWeekView.Selected(true));
+      views.AgendaView();
+      views.MonthView();
+    })
+    //.Resources(resource =>
+    //{
+    //    resource.Add(m => m.ClubCalendarEventTypeOid)
+    //    .Title("XXX Event Type YY")
+    //    .DataTextField("Name")
+    //    .DataValueField("Oid")
+    //    .DataColorField("ColorHex")
+    //    .DataSource(
+    //      d => d.Read("Scheduler_GetClubCalendarEventTypes", "ClubCalendar")
+    //    );
+    //})
+    .Editable(editable =>
+    {
+      editable.TemplateName("_SchedulerClubCalendarTemplate");
+    })
+    .DataSource(d => d
+      .Model(m =>
+      {
+        m.Id(f => f.Oid);
+        m.RecurrenceId(f => f.RecurrenceID);
+      })
+      .Events(e => e.Error("handleAjaxError"))
+        .Read(read => read.Action("Scheduler_Read", "ClubCalendar").Data("getSchedulerSearchParams"))
+      .Create("Scheduler_Create", "ClubCalendar")
+      .Destroy("Scheduler_Delete", "ClubCalendar")
+      .Update("Scheduler_Update", "ClubCalendar")
+    )
+  )
+
+  <input id="hiddenSubmit" type="submit" value="Save" hidden="hidden" />
+}
+
+
+
+
+

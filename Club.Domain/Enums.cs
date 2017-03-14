@@ -21,4 +21,11 @@ namespace Club.Domain
     Loss = 'L',
     Postponed = 'P'
   }
+
+  //public enum CalendarItemTypes
+  //{
+  //  All = 0,
+  //  PitchEventsOnly = 1,
+  //  SocialEventsOnly = 2
+  //}
 }

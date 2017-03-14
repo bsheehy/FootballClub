@@ -2526,6 +2526,8 @@
     <Content Include="Releases\1.1.0.0\Website\SqlServerTypes\x86\msvcr100.dll" />
     <Content Include="Releases\1.1.0.0\Website\SqlServerTypes\x86\SqlServerSpatial110.dll" />
     <Content Include="Releases\1.1.0.0\Website\Test.html" />
+    <Content Include="Releases\1.2.0.0\Database\00_UpdateDatabase\00_TablesCreateCalendarEvents.sql" />
+    <Content Include="Releases\1.2.0.0\Database\00_UpdateDatabase\11_CalendarEventTypes.sql" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="LatestPublish\" />

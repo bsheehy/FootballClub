@@ -16,7 +16,7 @@
 
       IF NOT EXISTS(SELECT * FROM [core_version_info] WHERE [Oid] = N'c19df5be-79c7-4ffc-8699-c2cfac4be2bd')
       BEGIN
-      INSERT [dbo].[core_version_info] ([oid], [orev], [database_version], [software_version], [cdc_userid]) VALUES (N'c19df5be-79c7-4ffc-8699-c2cfac4be2bd', 1, N'1.1.0.0', N'1.1.0.0', N'MALLON-DL-DOM\Brendan.Sheehy')
+      INSERT [dbo].[core_version_info] ([oid], [orev], [database_version], [software_version]) VALUES (N'c19df5be-79c7-4ffc-8699-c2cfac4be2bd', 1, N'1.1.0.0', N'1.1.0.0')
       END
       ELSE
       BEGIN
