@@ -28,7 +28,10 @@ BEGIN
 	INSERT [dbo].[club_club_calendar_event_type] ([oid], [orev], [active], [default], [name], [description], [color_hex]) VALUES (N'd591be14-40b8-4447-9606-78d82af7ff04', 0, 1, 0, N'Committee Meeting', N'A recurring or single Committee Meeting.', N'#ff0000')
 END
 
-
+IF NOT EXISTS(SELECT * FROM [club_club_calendar_event_type] WHERE [Oid] = N'd591be14-40b8-4447-9606-78d82af7ff05')
+BEGIN
+	INSERT [dbo].[club_club_calendar_event_type] ([oid], [orev], [active], [default], [name], [description], [color_hex]) VALUES (N'd591be14-40b8-4447-9606-78d82af7ff05', 0, 1, 0, N'Match', N'A one off Match.', N'#ffff00')
+END
 
 END TRY
 BEGIN CATCH

@@ -98,6 +98,7 @@
                       innerChildren.Add().Text("Search Membership").Action("Search", "Membership");
                      
                     });
+                    items.Add().Text("Schedule").Action("Scheduler", "ClubCalendar").ImageUrl("~/Images/24px/calendar.png");
                     items.Add().Text("People").Action("Search", "Person").ImageUrl("~/Images/24px/user1.png");
                     items.Add().Text("Teams").ImageUrl("~/Images/24px/users_family.png").Items(innerChildren =>
                     {

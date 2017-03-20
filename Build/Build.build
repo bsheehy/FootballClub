@@ -3,6 +3,9 @@
    ======================================================================================================
   RELEASE PROCESS EXPLAINED
   CommandLine= NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" createLiveRelease -D:build.type=Release -D:org.default=trunk -logfile:BuildOutput.txt
+  
+  NAnt -buildfile:"C:\development\FootballClub\Build\Build.build" createLiveRelease -D:setupVer.default=1.2.0.0 -D:build.type=Release -D:org.default=trunk -logfile:BuildOutput.txt
+  
   Does the following:
       
   checkLiveArguments: validate passed arguments

@@ -9,6 +9,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Mallon.Core.Artifacts;
 using Mallon.Core.Web.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -38,6 +39,8 @@ namespace FrRocks.Controllers
     [AcceptVerbs(HttpVerbs.Post)]
     public ActionResult Scheduler_Create([DataSourceRequest] DataSourceRequest request, ModelCalendarSchedulerEvent entity)
     {
+      //this.ModelState.AddModelError("TeamOid", "My Team Error XXX");
+      //this.ModelState.AddModelError("Title", "My Title Error AAA");
       ClubCalendarService service = (ClubCalendarService)this.Injector.Activate(typeof(ClubCalendarService));
       if (service.CanUserEditClubCalendar() == false)
       {
@@ -51,11 +54,15 @@ namespace FrRocks.Controllers
           return Json(new[] { entity }.ToDataSourceResult(request, ModelState));
         }
       }
-      throw new ModelStateException(this.ModelState);
+      var x = new[] { entity }.ToDataSourceResult(request, ModelState);
+      return Json(x);
+      //throw new ModelStateException(this.ModelState);
     }
 
     public ActionResult Scheduler_Update([DataSourceRequest] DataSourceRequest request, ModelCalendarSchedulerEvent entity)
     {
+      //this.ModelState.AddModelError("TeamOid", "My UPDATE Team Error XXX");
+      //this.ModelState.AddModelError("Title", "My UPDATE Title Error AAA");
       ClubCalendarService service = (ClubCalendarService)this.Injector.Activate(typeof(ClubCalendarService));
       if (service.CanUserEditClubCalendar() == false)
       {
@@ -69,7 +76,9 @@ namespace FrRocks.Controllers
           return Json(new[] { entity }.ToDataSourceResult(request, ModelState));
         }
       }
-      throw new ModelStateException(this.ModelState);
+      var x = new[] { entity }.ToDataSourceResult(request, ModelState);
+      return Json(x);
+      //throw new ModelStateException(this.ModelState);
     }
 
     private IEnumerable<ClubCalendar> GetClubCalendarItems(TypedModel<ClubCalendarQry> filter)
@@ -117,7 +126,7 @@ namespace FrRocks.Controllers
 
     private void SetViewBagSelectLists_ForSearch()
     {
-      ViewBag.Teams = UtilsSelectLists.Teams(this.DbSession);
+      ViewBag.Teams = UtilsSelectLists.Teams(this.DbSession, null, DateTime.Now.Year);
       ViewBag.ClubCalendarEventTypes = UtilsSelectLists.ClubCalendarEventTypes(this.DbSession);
       ViewBag.MaxRecords = UtilsSelectLists.QueryMaxRecords();
     }

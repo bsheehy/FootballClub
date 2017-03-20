@@ -26,6 +26,28 @@ function kendoGridErrorHandlerRequestEnd(e) {
 //http://blog.codebeastie.com/kendo-grid-error-handling/
 //http://www.telerik.com/forums/grid-inline-editing-with-server-side-validation-errors-2ff29a4fc11f
 
+
+function handleSchedulerError(e) {
+  if (e.errors) {
+    handleAjaxError(e);
+    var scheduler = $("#scheduler").data("kendoScheduler");
+    scheduler.one("dataBinding", function (e) {
+      //prevent saving if server error is thrown
+      e.preventDefault();
+    })
+  }
+  //Handles an Internal Server error (i.e uncaught error in server code)
+  else if(e.errorThrown)
+  {
+    showError(e.errorThrown);
+    var scheduler = $("#scheduler").data("kendoScheduler");
+    scheduler.one("dataBinding", function (e) {
+      //prevent saving if server error is thrown
+      e.preventDefault();
+    })
+  }
+}
+
 // To get GridName and Handle Error use answer by 'Atanas Korchev' here http://stackoverflow.com/questions/20886651/get-a-reference-to-kendo-grid-from-inside-the-error-handler
 function kendoGridErrorHandler(gridName) {
   return function (e) {

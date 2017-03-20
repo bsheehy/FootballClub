@@ -1364,3 +1364,23 @@ function setPersonSingleLine(prependRoute, dataItem, dialogName, personContainer
     }
   }
 }
+
+
+/*
+ * =============================================
+ * Scheduler Methods
+ * =============================================
+ */
+function searchBeginSchedulerSearch() {
+  //showProgress();
+  //var scheduler = $("#scheduler").data("kendoScheduler");
+  //scheduler.refresh();
+
+
+  //scheduler
+  //When doing a gird search by pressing 'Go' we need to reset page back to 0
+  //NOTE: N need to call 'read' as setting the grid's page will already cause it to requery data.
+  var scheduler = $('#scheduler').data('kendoScheduler');
+  //scheduler.view(scheduler.view().name);
+  scheduler.dataSource.read();
+}

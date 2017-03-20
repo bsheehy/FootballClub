@@ -113,7 +113,7 @@ namespace FrRocks.Utils
       return result;
     }
 
-    public static SelectList Teams(ISession session, bool? activeOnly = null)
+    public static SelectList Teams(ISession session, bool? activeOnly = null, int? yearLimit = null)
     {
 
       List<Team> entities;
@@ -124,6 +124,11 @@ namespace FrRocks.Utils
       else
       {
         entities = session.QueryOver<Team>().List<Team>().OrderByDescending(x => x.Year).ThenBy(x => x.NameSingleLine).ToList<Team>();
+      }
+
+      if (yearLimit.HasValue && yearLimit.Value > 1800)
+      {
+        entities = entities.Where(x => x.Year == yearLimit).ToList();
       }
 
       SelectList result;

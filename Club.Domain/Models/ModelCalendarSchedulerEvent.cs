@@ -31,6 +31,7 @@ namespace Club.Domain.Models
     /// </summary>
     public string ClubCalendarEventTypeColorHex { get; set; }
 
+    [DisplayName("Team")]
     public Guid? TeamOid { get; set; }
 
     [DisplayName("Team Name")]

@@ -18,6 +18,10 @@ namespace Club.Domain.Extensions
       {
         result.Team = session.Get<Team>(modelCalendarSchedulerEvent.TeamOid);
       }
+      else
+      {
+        result.Team = null;
+      }
       result.ClubCalendarEventType = session.Get<ClubCalendarEventType>(modelCalendarSchedulerEvent.ClubCalendarEventTypeOid);
 
       result.Description = modelCalendarSchedulerEvent.Description;
