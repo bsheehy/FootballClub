@@ -6,21 +6,62 @@
 @model Mallon.Core.Web.Models.TypedModel<Person>
 @{ 
   string ctrlId = System.Guid.NewGuid().ToString();
-  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string onSuccessCall = "setAjaxAddPerson(data)";
+  
+  bool selectGuardian = false;
+  bool selectTeamMember = false;
+  bool selectTeamSheetPerson = false;
+  bool selectCommitteeMember = false;
+  bool selectPersonMembership = false;
+  bool selectQualificationMember = false;
+  if (ViewBag.SelectGuardian != null)
+  {
+    selectGuardian = ViewBag.SelectGuardian;
+  }
+  if (ViewBag.SelectTeamSheetPerson != null)
+  {
+    selectTeamSheetPerson = ViewBag.SelectTeamSheetPerson;
+  }
+  if (ViewBag.SelectTeamMember != null)
+  {
+    selectTeamMember = ViewBag.SelectTeamMember;
+  }
+  if (ViewBag.SelectCommitteeMember != null)
+  {
+    selectCommitteeMember = ViewBag.SelectCommitteeMember;
+  }
+  if (ViewBag.SelectPersonMembership != null)
+  {
+    selectPersonMembership = ViewBag.SelectPersonMembership;
+  }
+  if (ViewBag.SelectQualificationMember != null)
+  {
+    selectQualificationMember = ViewBag.SelectQualificationMember;
+  }
+  
+  if(selectTeamMember == true)
+  {
+    onSuccessCall = "selectTeamMember_NewPerson(data)";
+  }
  }
 
-@using (Ajax.BeginForm("AjaxAddPerson", "Person", new AjaxOptions { OnFailure = "handleAjaxError", OnBegin = "validateAddPersonForm", OnComplete = "hideProgress()", OnSuccess = "setAjaxAddPerson(data)" }, new { @id = "frmAddPerson" }))
+@using (Ajax.BeginForm("AjaxAddPerson", "Person", new AjaxOptions { OnFailure = "handleAjaxError", OnBegin = "validateAddPersonForm", OnComplete = "hideProgress()", OnSuccess = onSuccessCall }, new { @id = "frmAddPerson" }))
 { 
   <script type="text/javascript">
     $(document).ready(function () {
-      $(".dfw-addressBtn").on("click", function (e) {
-        openAddressDialog(this);
-      });
-
       $(".dfw-clearContainerVals")
       .bind("click", function () {
         var container = $(this).data('containerdiv');
         clearChildCtrls(container);
+      });
+
+      $(".close-button").click(function () {
+        // call 'close' method on nearest kendoWindow
+        $(this).closest("[data-role=window]").data("kendoWindow").close();
+      });
+
+      $(".ajaxSave-button").click(function () {
+        submitAjaxAddPerson();
       });
     });
 
@@ -29,6 +70,17 @@
       var frmAjax = $("#frmAddPerson");
       return frmAjax.validate().form();
     }
+
+    function submitAjaxAddPerson() {
+      $("#frmAddPerson").submit();
+    }
+
+    @*function closeDialogCtrl() {
+      var dialogName = getDialogName("@(ViewBag.PersonControlId)");
+      if (dialogName != null && $("#" + dialogName).length > 0) {
+        $("#" + dialogName).data("kendoWindow").close();
+      }
+    }*@
   </script>
   
   @Html.AntiForgeryToken()
@@ -38,25 +90,10 @@
   
   <div id="dAddPerson_@(ctrlId)">
     <div id="winContainer_@ctrlId"></div>
-    @(Html.Kendo().PanelBar()
-        .Name("pnlbAddPerson_" + ctrlId)
-        .ExpandMode(PanelBarExpandMode.Multiple)
-        .HtmlAttributes(new { style = "width:100%" })
-        .Items(panelbar =>
-        {
-          panelbar.Add().Text("Details:")
-            .ImageUrl("~/Images/16px/user1.png")
-              .Expanded(true)
-							.LinkHtmlAttributes(new {@class = "dfw-ignoreDirtyLink"})
-              .Content(@<div id="dAddPersonDetails_@(ctrlId)">
-                <table class="tbl4Cols">
-                  @Html.Partial("~/Views/Person/_EditPanel.cshtml", Model)
-                </table>
-              </div>);
-        })
-      )
-      <input type="submit" value="Save" class="k-button dfw-k-button" />
-      <input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.PersonControlId')" />
+    @Html.Partial("~/Views/Person/_EditPanel.cshtml", Model)
+
+    <button class="k-button close-button saveButtonRight">Close</button>
+    <input type="submit" value="Save" class="k-button saveButtonRight" />
   </div>
 }
 

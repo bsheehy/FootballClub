@@ -10,6 +10,17 @@
     teamEdit = ViewBag.ClubMinutesEdit;
   }
 }
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".close-button").click(function () {
+      // call 'close' method on nearest kendoWindow
+      $(this).closest("[data-role=window]").data("kendoWindow").close();
+    });
+  });
+</script>
+
+
 <div id="dPremSearchResults">
   <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
   <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
@@ -25,7 +36,7 @@
       columns.Bound(p => p.Oid).Hidden();
       if (teamEdit)
       {
-        columns.Bound(p => p.Oid).Title("ClubMinutes").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "ClubMinutes") + "?Oid=#= Oid #' class='k-button'>Edit ClubMinutes</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+        columns.Bound(p => p.Oid).Title("ClubMinutes").ClientTemplate("<a href='" + Url.Action("Edit", "ClubMinutes") + "?Oid=#= Oid #' class='k-button'>Edit ClubMinutes</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
       columns.Bound(p => p.Date).Title("Date").Format("{0:dd/MMM/yyyy}").Width(150);
       columns.Bound(p => p.Committee.NameSingleLine).Title("Committee Details").Width("250px");
@@ -46,4 +57,6 @@
   )
 </div>
 
-<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.PersonControlId')" />
+<button class="k-button close-button saveButtonRight">Close</button>
+
+@*<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.PersonControlId')" />*@

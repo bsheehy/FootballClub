@@ -5,9 +5,6 @@
 @model ModelAddressSearch
 @{
   string addressControlId = ViewBag.AddressControlId;
-
-  //string s = Model.Address;
-  //string d = Model.Country;
 }
 @Html.Hidden("AddressControlId", addressControlId)
 @Html.Hidden("SaveGuardianUrl", Url.Action("SelectAddress", "Person"))

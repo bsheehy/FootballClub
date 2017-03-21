@@ -8,6 +8,43 @@
   PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
   string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
   string ctrlId = Model.Entity.Oid.ToString();
+
+  bool isAjaxSubmit = false;
+  bool selectGuardian = false;
+  bool selectTeamMember = false;
+  bool selectTeamSheetPerson = false;
+  bool selectCommitteeMember = false;
+  bool selectPersonMembership = false;
+  bool selectQualificationMember = false;
+  if (ViewBag.SelectGuardian != null)
+  {
+    selectGuardian = ViewBag.SelectGuardian;
+  }
+  if (ViewBag.SelectTeamSheetPerson != null)
+  {
+    selectTeamSheetPerson = ViewBag.SelectTeamSheetPerson;
+  }
+  if (ViewBag.SelectTeamMember != null)
+  {
+    selectTeamMember = ViewBag.SelectTeamMember;
+  }
+  if (ViewBag.SelectCommitteeMember != null)
+  {
+    selectCommitteeMember = ViewBag.SelectCommitteeMember;
+  }
+  if (ViewBag.SelectPersonMembership != null)
+  {
+    selectPersonMembership = ViewBag.SelectPersonMembership;
+  }
+  if (ViewBag.SelectQualificationMember != null)
+  {
+    selectQualificationMember = ViewBag.SelectQualificationMember;
+  }
+
+  if (selectGuardian == true || selectTeamMember == true ||selectTeamSheetPerson == true ||selectCommitteeMember == true ||selectPersonMembership == true ||selectQualificationMember == true)
+  {
+    isAjaxSubmit = true;
+  }
 }
 @Html.Hidden("dialogId")
 <script type="text/javascript">
@@ -16,7 +53,8 @@
       .bind("click", function () {
       var container = $(this).data('containerdiv');
       clearChildCtrls(container);
-    });
+      });
+
   });
 
   function refreshPersonGuardians() {
@@ -70,13 +108,6 @@
     }
   }
 
-  function closeDialogCtrl() {
-    var dialogName = getDialogName("@(ctrlId)");
-    if (dialogName != null && $("#" + dialogName).length > 0) {
-      $("#" + dialogName).data("kendoWindow").close();
-    }
-  }
-
 </script>
 
 
@@ -91,8 +122,18 @@
   .Expanded(true)
   .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
   .Content(@<div id="dPerson" class="dfw-colorText">
+
+
     <div id="headerSubMenu">
-      @(Html.Kendo().Button()
+      @if (isAjaxSubmit)
+      {
+        <button class="k-button close-button saveButtonRight">Close</button>
+        <input type="submit" value="Save" class="k-button saveButtonRight" />
+      }
+      else
+      {
+        <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+        @(Html.Kendo().Button()
         .Name("frmSubmit")
         .Enable(true)
         .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
@@ -100,8 +141,13 @@
         .Content("Save")
         .Events(x => x.Click("clickHiddenSubmit")))
 
-      <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
+        <a href="@Url.Action("Search", "Person")" title="Search Person" class="saveButtonRight k-button">
+          <img alt="Search Person" src="@Url.Content("~/Images/16px/view.png")" />
+          Search
+        </a>
+      }
     </div>
+  
 
     <table class="tbl2Cols">
       <tr>

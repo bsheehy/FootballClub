@@ -4,8 +4,17 @@
 @using Mallon.Core.Web.Models.HtmlExtensions
 @model TypedModel<PersonQry>
 @{
+  bool hideLayout = false;
+  if (ViewBag.HideLayout != null)
+  {
+    hideLayout = ViewBag.HideLayout;
+  }
+  
   ViewBag.Title = "Search Person";
-  Layout = "~/Views/Shared/_Layout.cshtml";
+  if (hideLayout == false)
+  {
+    Layout = "~/Views/Shared/_Layout.cshtml";
+  }
 }
 
 <div>

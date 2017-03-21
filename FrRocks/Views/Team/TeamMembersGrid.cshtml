@@ -80,7 +80,7 @@
             {
               if (teamEdit)
               {
-                columns.Bound(p => p.PersonOid).Title("Edit").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Person</a>").Width(100).HtmlAttributes(new { style = "min-width:120px;max-width:120px;" });
+                columns.Bound(p => p.PersonOid).Title("Edit").ClientTemplate("<a  href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Person</a>").Width(100).HtmlAttributes(new { style = "min-width:120px;max-width:120px;" });
               }
               if (pnlViewUserAccess == PageViewType.Edit || pnlViewUserAccess == PageViewType.Create)
               {

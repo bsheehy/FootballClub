@@ -55,7 +55,7 @@
   {
     if (personEdit)
     {
-      columns.Bound(p => p.Person.Oid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      columns.Bound(p => p.Person.Oid).Title("").ClientTemplate("<a  href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
     }
     columns.Bound(p => p.Person.NameSingleLine).Title("Person").Width(200);
     columns.Bound(p => p.Person.AddressSingleLine).Title("Address").Width(200);

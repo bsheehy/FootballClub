@@ -21,7 +21,7 @@ namespace Club.Domain.Models
 
     public virtual Guid Oid { get; set; }
 
-    public virtual DateTime Date { get; set; }
+    public virtual DateTime? Date { get; set; }
 
     public virtual bool Active { get; set; }
 
@@ -49,9 +49,9 @@ namespace Club.Domain.Models
 
     public virtual int Year { get; set; }
 
-    public virtual DateTime MembershipTypeStartDate { get; set; }
+    public virtual DateTime? MembershipTypeStartDate { get; set; }
 
-    public virtual DateTime MembershipTypeEndDate { get; set; }
+    public virtual DateTime? MembershipTypeEndDate { get; set; }
 
     #endregion
   }

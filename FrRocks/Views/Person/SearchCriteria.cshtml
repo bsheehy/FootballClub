@@ -7,6 +7,50 @@
 string ctrlId = System.Guid.NewGuid().ToString();
 string msgTableHelp = "<p>All Person details can be searched here.</p><p>You should always search for a Person before creating a New Person to avoid creating duplicates.</p><p>You can add the following to a Person:</p><ul><li>Memberships</li><li>Qualifications</li><li>Lotto Direct Debits</li></ul>";
 }
+@{
+  bool isAjaxSubmit = false;
+  bool personEdit = false;
+  bool selectGuardian = false;
+  bool selectTeamMember = false;
+  bool selectTeamSheetPerson = false;
+  bool selectCommitteeMember = false;
+  bool selectPersonMembership = false;
+  bool selectQualificationMember = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  if (ViewBag.SelectGuardian != null)
+  {
+    selectGuardian = ViewBag.SelectGuardian;
+  }
+  if (ViewBag.SelectTeamSheetPerson != null)
+  {
+    selectTeamSheetPerson = ViewBag.SelectTeamSheetPerson;
+  }
+  if (ViewBag.SelectTeamMember != null)
+  {
+    selectTeamMember = ViewBag.SelectTeamMember;
+  }
+  if (ViewBag.SelectCommitteeMember != null)
+  {
+    selectCommitteeMember = ViewBag.SelectCommitteeMember;
+  }
+  if (ViewBag.SelectPersonMembership != null)
+  {
+    selectPersonMembership = ViewBag.SelectPersonMembership;
+  }
+  if (ViewBag.SelectQualificationMember != null)
+  {
+    selectQualificationMember = ViewBag.SelectQualificationMember;
+  }
+
+  if (selectGuardian == true || selectTeamMember == true || selectTeamSheetPerson == true || selectCommitteeMember == true || selectPersonMembership == true || selectQualificationMember == true)
+  {
+    isAjaxSubmit = true;
+  }
+}
+
 <script type="text/javascript">
   function getPersonSearchParams() {
     return searchGetParams("searchCriteria@(ctrlId)");
@@ -18,12 +62,11 @@ string msgTableHelp = "<p>All Person details can be searched here.</p><p>You sho
     <tr>
       <td>
         @Html.Partial("~/Views/Shared/Hint.cshtml", msgTableHelp, new ViewDataDictionary { { "ImageSize", "32px" } })
+        @Html.Hidden("aq_TeamOid", Model.Entity.aq_TeamOid)
+        @Html.Hidden("aq_SearchFromTeamMembersOnly", Model.Entity.aq_SearchFromTeamMembersOnly)
       </td>
     </tr>
     <tr>
-      @Html.Hidden("aq_TeamOid", Model.Entity.aq_TeamOid)
-      @Html.Hidden("aq_SearchFromTeamMembersOnly", Model.Entity.aq_SearchFromTeamMembersOnly)
-
       @Html.TextBoxFor(Model.GetProperty(m => m.aq_Forename), new { @class = "k-textbox", @style = "width:90%" })
 
       @Html.TextBoxFor(Model.GetProperty(m => m.aq_Surname), new { @class = "k-textbox", @style = "width:90%" })
@@ -50,11 +93,13 @@ string msgTableHelp = "<p>All Person details can be searched here.</p><p>You sho
         <input type="submit" value="Go" class="k-button" id="btnSearchGo" style="width: auto; padding-top: 2px; padding-bottom: 2px;" onclick="searchBeginSearch()" />
         <input type="button" value="Clear" class="k-button" id="btnSearchClear" onclick="searchClearSearch('searchCriteria@(ctrlId)')" style="width: auto; padding-top: 2px; padding-bottom: 2px;" />
 
-        <a href="@Url.Action("Create", "Person")" title="Create a new Person" class="k-button" target='_blank'>
-          <img alt="New Person" src="@Url.Content("~/Images/24px/add.png")">
+        @if (isAjaxSubmit == false)
+        { 
+        <a href="@Url.Action("Create", "Person")" title="Create a new Person" class="k-button">
+          <img alt="New Person" src="@Url.Content("~/Images/24px/add.png")" />
           New Person
         </a>
-
+        }
       </div>
     </td>
     </tr>

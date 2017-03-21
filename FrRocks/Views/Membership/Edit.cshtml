@@ -12,17 +12,6 @@
   @Html.AntiForgeryToken()
   @Html.ValidationSummary(false)
 
-  <div id="headerSubMenu">
-    @(Html.Kendo().Button()
-      .Name("frmSubmit")
-      .Enable(false)
-      .HtmlAttributes(new { type = "submit", @class = "saveButtonRight" })
-      .ImageUrl(Url.Content("~/Images/16px/check.png"))
-      .Content("Save")
-      .Events(x => x.Click("clickHiddenSubmit")))
-    <a class="saveButtonRight k-button" href="javascript:history.go(0)">Cancel</a>
-  </div>
-
 
   @Html.Partial("_ViewLayout", Model)
   <input id="hiddenSubmit" type="submit" value="Save" hidden="hidden" />

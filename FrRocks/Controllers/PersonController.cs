@@ -134,12 +134,45 @@ namespace FrRocks.Controllers
     /// </summary>
     /// <param name="personSelect">If True then 'Select Person' enabled and 'Edit' is disabled in List Results.</param>
     /// <returns></returns>
-    public PartialViewResult Search(string controlId = null, bool selectMany = false)
+    public PartialViewResult Search(string controlId = null, bool hideLayout = false, bool personEdit = false, bool selectMany = false, bool selectTeamMember = false, bool selectTeamSheetPerson = false, bool selectQualificationMember = false, bool selectPersonMembership = false, bool selectGuardian = false, bool selectCommitteeMember = false, Guid? teamOid = null, Guid? teamSheetOid = null, Guid? qualificationOid = null, Guid? membershipTypeOid = null, Guid? personOid = null, Guid? committeeOid = null)
     {
       TypedModel<PersonQry> model = new TypedModel<PersonQry>();
       model.Init();
+      model.Entity.aq_TeamOid = teamOid;
+      if (teamSheetOid.HasValue && selectTeamSheetPerson == true)
+      {
+        model.Entity.aq_TeamSheetOid = teamSheetOid;
+        model.Entity.aq_SearchFromTeamMembersOnly = true;
+      }
+      if (qualificationOid.HasValue && selectQualificationMember == true)
+      {
+        model.Entity.aq_QualificationOid = qualificationOid;
+      }
+      if (membershipTypeOid.HasValue && selectPersonMembership == true)
+      {
+        model.Entity.aq_MembershipTypeOid = membershipTypeOid;
+      }
+      if (personOid.HasValue && selectGuardian == true)
+      {
+        model.Entity.aq_PersonOid = personOid;
+      }
+      if (committeeOid.HasValue && selectCommitteeMember == true)
+      {
+        model.Entity.aq_CommitteeOid = committeeOid;
+      }
+
       ViewBag.SelectMany = selectMany;
+      ViewBag.SelectTeamMember = selectTeamMember;
+      ViewBag.SelectTeamSheetPerson = selectTeamSheetPerson;
+      ViewBag.SelectQualificationMember = selectQualificationMember;
+      ViewBag.SelectPersonMembership = selectPersonMembership;
+      ViewBag.SelectGuardian = selectGuardian;
+      ViewBag.SelectCommitteeMember = selectCommitteeMember;
+
+      ViewBag.PersonEdit = personEdit;
+      ViewBag.HideLayout = hideLayout;
       SetViewOptions();
+      SetViewBagSelectLists(null);
       SetViewBagSelectLists_ForSearch(controlId);
       return PartialView(model);
     }
@@ -155,6 +188,33 @@ namespace FrRocks.Controllers
       IMapper Mapper = AutoMapperConfig.MapperConfiguration.CreateMapper();
       IEnumerable<ModelPerson> result = Mapper.Map<IEnumerable<ModelPerson>>(people);
       return Json(result.ToDataSourceResult(request), JsonRequestBehavior.AllowGet);
+    }
+
+    public ActionResult AjaxAddPerson([BoundModel(DontLoad = true, DontMerge = true)]TypedModel<Person> m, string controlId = null)
+    {
+      if (m == null)
+      {
+        m = new TypedModel<Person>();
+      }
+      ViewBag.PersonControlId = controlId;
+      SetViewBagSelectLists(m);
+      return View(m);
+    }
+
+    [HttpPost]
+    [ActionName("AjaxAddPerson")]
+    public ActionResult AjaxAddPersonPost([BoundModel(DontLoad = true, DontMerge = false)]TypedModel<Person> m)
+    {
+      //SetViewBagSelectLists(m);
+      if (ModelState.IsValid)
+      {
+        PersonServiceController service = (PersonServiceController)this.Injector.Activate(typeof(PersonServiceController));
+        if (service.SavePerson(new ModelStateWrapper(this.ModelState), m.Entity))
+        {
+          return Json(m.Entity, JsonRequestBehavior.AllowGet);
+        }
+      }
+      return View(m);
     }
 
     #region Address Search
@@ -244,17 +304,16 @@ namespace FrRocks.Controllers
 
     #region Person Guardians
 
-    public PartialViewResult SelectGuardian(Guid personOid, string controlId = null)
+    public PartialViewResult SelectGuardian(TypedModel<Person> m, Guid personOid, string controlId = null)
     {
-      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
-      model.Init();
-      model.Entity.aq_PersonOid = personOid;
       ViewBag.SelectGuardian = true;
       ViewBag.PersonControlId = controlId;
       ViewBag.PersonOid = personOid.ToString();
-      SetViewOptions();
-      SetViewBagSelectLists_ForSearch(controlId);
-      return PartialView(model);
+      SetViewBagSelectLists(m);
+
+      //Dont want to edit the person when selecting them
+      ViewBag.PersonEdit = false;
+      return PartialView(m);
     }
 
     [HttpPost]
@@ -321,18 +380,36 @@ namespace FrRocks.Controllers
 
     #region Team Members
 
-    public PartialViewResult SelectTeamMember(Guid teamOid, string controlId = null)
+    public PartialViewResult SelectTeamMember(TypedModel<Person> m, Guid teamOid, string controlId = null)
     {
-      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
-      model.Init();
-      model.Entity.aq_TeamOid = teamOid;
       ViewBag.SelectTeamMember = true;
       ViewBag.PersonControlId = controlId;
       ViewBag.TeamOid = teamOid.ToString();
-      SetViewOptions();
-      SetViewBagSelectLists_ForSearch(controlId);
-      return PartialView(model);
+      SetViewBagSelectLists(m);
+      return PartialView(m);
     }
+
+    //public ActionResult SelectTeamMember(TypedModel<Person> m, Guid teamOid, string controlId = null)
+    //{
+    //  SetViewOptions(pnlView, personView, personEdit, personSelect, checkCookie);
+    //  ViewBag.PersonControlId = controlId;
+
+    //  SetViewBagSelectLists(m);
+    //  return View(m);
+    //}
+
+    //public PartialViewResult SelectTeamMember(Guid teamOid, string controlId = null)
+    //{
+    //  TypedModel<PersonQry> model = new TypedModel<PersonQry>();
+    //  model.Init();
+    //  model.Entity.aq_TeamOid = teamOid;
+    //  ViewBag.SelectTeamMember = true;
+    //  ViewBag.PersonControlId = controlId;
+    //  ViewBag.TeamOid = teamOid.ToString();
+    //  SetViewOptions();
+    //  SetViewBagSelectLists_ForSearch(controlId);
+    //  return PartialView(model);
+    //}
 
     [HttpPost]
     [ActionName("SelectTeamMember")]
@@ -361,19 +438,17 @@ namespace FrRocks.Controllers
 
     #region Team Sheet members
 
-    public PartialViewResult SelectTeamSheetPerson(Guid teamOid, Guid teamSheetOid, string controlId = null)
+    public PartialViewResult SelectTeamSheetPerson(TypedModel<Person> m, Guid teamOid, Guid teamSheetOid, string controlId = null)
     {
-      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
-      model.Init();
-      model.Entity.aq_TeamOid = teamOid;
-      model.Entity.aq_TeamSheetOid = teamSheetOid;
-      model.Entity.aq_SearchFromTeamMembersOnly = true;
       ViewBag.SelectTeamSheetPerson = true;
       ViewBag.PersonControlId = controlId;
+      ViewBag.TeamOid = teamOid.ToString();
       ViewBag.TeamSheetOid = teamSheetOid.ToString();
-      SetViewOptions();
-      SetViewBagSelectLists_ForSearch(controlId);
-      return PartialView(model);
+      SetViewBagSelectLists(m);
+
+      //Dont want to edit the person when selecting them
+      ViewBag.PersonEdit = false;
+      return PartialView(m);
     }
 
     [HttpPost]
@@ -402,7 +477,7 @@ namespace FrRocks.Controllers
 
     #region Committee Members
 
-    public PartialViewResult SelectCommitteeMember(Guid committeeOid, string controlId = null)
+    public PartialViewResult SelectCommitteeMember(TypedModel<Person> m, Guid committeeOid, string controlId = null)
     {
       CommitteeServiceController service = (CommitteeServiceController)this.Injector.Activate(typeof(CommitteeServiceController));
       if (service.CanUserEditCommittee(committeeOid) == false)
@@ -411,37 +486,34 @@ namespace FrRocks.Controllers
         throw new ModelStateException(this.ModelState);
       }
 
-      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
-      model.Init();
-      model.Entity.aq_CommitteeOid = committeeOid;
       ViewBag.SelectCommitteeMember = true;
       ViewBag.PersonControlId = controlId;
       ViewBag.CommitteeOid = committeeOid.ToString();
-      SetViewOptions();
-      SetViewBagSelectLists_ForSearch(controlId);
-      return PartialView(model);
+      SetViewBagSelectLists(m);
+
+      //Dont want to edit the person when selecting them
+      ViewBag.PersonEdit = false;
+      return PartialView(m);
     }
 
     [HttpPost]
     [ActionName("SelectCommitteeMember")]
     public ActionResult SelectCommitteeMemberPost(Guid personOid, Guid committeeOid)
     {
-      if (this.UserController.EffectiveUser.GetClassAccess(typeof(Committee)).Allows(Access.Update) == true)
+      CommitteeServiceController service = (CommitteeServiceController)this.Injector.Activate(typeof(CommitteeServiceController));
+      if (service.CanUserEditCommittee(committeeOid) == false)
       {
-        CommitteeServiceController service = (CommitteeServiceController)this.Injector.Activate(typeof(CommitteeServiceController));
-        if (service.SelectCommitteeMember(new ModelStateWrapper(this.ModelState), personOid, committeeOid))
-        {
-          ModelJsonResult j = new ModelJsonResult();
-          j.success = true;
-          return Json(j, JsonRequestBehavior.AllowGet);
-        }
+        this.ModelState.AddModelError("Committee", "You do not have permissions to edit this Committee.");
         throw new ModelStateException(this.ModelState);
       }
-      else
+
+      if (service.SelectCommitteeMember(new ModelStateWrapper(this.ModelState), personOid, committeeOid))
       {
-        this.ModelState.AddModelError("Person", "You do not have permissions to edit Person guardians.");
-        throw new ModelStateException(this.ModelState);
+        ModelJsonResult j = new ModelJsonResult();
+        j.success = true;
+        return Json(j, JsonRequestBehavior.AllowGet);
       }
+      throw new ModelStateException(this.ModelState);
     }
 
 
@@ -550,17 +622,16 @@ namespace FrRocks.Controllers
 
     #region Membership Type Members
 
-    public PartialViewResult SelectMembershipMember(Guid membershipTypeOid, string controlId = null)
+    public PartialViewResult SelectMembershipMember(TypedModel<Person> m, Guid membershipTypeOid, string controlId = null)
     {
-      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
-      model.Init();
-      model.Entity.aq_MembershipTypeOid = membershipTypeOid;
-      ViewBag.SelectPersonMembership = true;
+      ViewBag.SelectTeamSheetPerson = true;
       ViewBag.PersonControlId = controlId;
       ViewBag.MembershipTypeOid = membershipTypeOid.ToString();
-      SetViewOptions();
-      SetViewBagSelectLists_ForSearch(controlId);
-      return PartialView(model);
+      SetViewBagSelectLists(m);
+
+      //Dont want to edit the person when selecting them
+      ViewBag.PersonEdit = false;
+      return PartialView(m);
     }
 
     [HttpPost]
@@ -635,17 +706,27 @@ namespace FrRocks.Controllers
 
     #region Qualification Members
 
-    public PartialViewResult SelectQualificationMember(Guid qualificationOid, string controlId = null)
+    public PartialViewResult SelectQualificationMember(TypedModel<Person> m, Guid qualificationOid, string controlId = null)
     {
-      TypedModel<PersonQry> model = new TypedModel<PersonQry>();
-      model.Init();
-      model.Entity.aq_QualificationOid = qualificationOid;
+      //TypedModel<PersonQry> model = new TypedModel<PersonQry>();
+      //model.Init();
+      //model.Entity.aq_QualificationOid = qualificationOid;
+      //ViewBag.SelectQualificationMember = true;
+      //ViewBag.PersonControlId = controlId;
+      //ViewBag.QualificationOid = qualificationOid.ToString();
+      //SetViewOptions();
+      //SetViewBagSelectLists_ForSearch(controlId);
+      //return PartialView(model);
+
+
       ViewBag.SelectQualificationMember = true;
       ViewBag.PersonControlId = controlId;
       ViewBag.QualificationOid = qualificationOid.ToString();
-      SetViewOptions();
-      SetViewBagSelectLists_ForSearch(controlId);
-      return PartialView(model);
+      SetViewBagSelectLists(m);
+
+      //Dont want to edit the person when selecting them
+      ViewBag.PersonEdit = false;
+      return PartialView(m);
     }
 
     [HttpPost]

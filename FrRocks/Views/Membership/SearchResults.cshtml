@@ -30,17 +30,17 @@
       columns.Bound(p => p.Oid).Hidden();
       if (membershipEdit)
       {
-        columns.Bound(p => p.MembershipTypeOid).Title("Membership").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Membership") + "?Oid=#= MembershipTypeOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+        columns.Bound(p => p.MembershipTypeOid).Title("Membership").ClientTemplate("<a  href='" + Url.Action("Edit", "Membership") + "?Oid=#= MembershipTypeOid #' class='k-button'>Edit</a>").Width(120).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
       if (personEdit)
       {
         columns.Bound(p => p.PersonOid).Title("Person").ClientTemplate("<a href='" + Url.Action("Edit", "Membership") + "?Oid=#= PersonOid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
-      columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("200px");
-      columns.Bound(p => p.MembershipTypeName).Title("Membership").Width("300px");
-      columns.Bound(p => p.Date).Title("Paid Date").Width("100px");
-      columns.Bound(p => p.MembershipTypeStartDate).Title("Start Date").Format("{0:dd/MMM/yyyy}").Width(150);
-      columns.Bound(p => p.MembershipTypeEndDate).Title("End Date").Format("{0:dd/MMM/yyyy}").Width(150);
+      columns.Bound(p => p.PersonNameSingleLine).Title("Name").Width("250px");
+      columns.Bound(p => p.MembershipTypeName).Title("Membership").Width("250px");
+      columns.Bound(p => p.Date).Title("Paid Date").Format("{0:dd/MMM/yyyy}").Width("120px");
+      columns.Bound(p => p.MembershipTypeStartDate).Title("Start Date").Format("{0:dd/MMM/yyyy}").Width("120px");
+      columns.Bound(p => p.MembershipTypeEndDate).Title("End Date").Format("{0:dd/MMM/yyyy}").Width("120px");
     })
   .Pageable(x => { x.PageSizes(new int[] { 30, 60, 200, 500}); })
   .Sortable()

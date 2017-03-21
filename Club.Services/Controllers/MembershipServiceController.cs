@@ -198,7 +198,7 @@ namespace Club.Services.Controllers
       }
 
       //No Membership duplicates
-      if (this.session.QueryOver<PersonMembershipType>().Where(x => x.MembershipType.Oid == entity.MembershipType.Oid && x.Person.Oid == entity.Person.Oid).RowCount() > 0)
+      if (entity.Oid == Guid.Empty && this.session.QueryOver<PersonMembershipType>().Where(x => x.MembershipType.Oid == entity.MembershipType.Oid && x.Person.Oid == entity.Person.Oid).RowCount() > 0)
       {
         validatonDictionary.AddError("MembershipOid", "You can not enter duplicate memberships.");
       }

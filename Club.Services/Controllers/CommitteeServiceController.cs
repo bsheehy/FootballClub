@@ -305,7 +305,7 @@ namespace Club.Services.Controllers
       }
 
       //No Membership duplicates
-      if (this.session.QueryOver<CommitteeMember>().Where(x => x.Committee.Oid == entity.Committee.Oid && x.Person.Oid == entity.Person.Oid).RowCount() > 0)
+      if (entity.Oid == Guid.Empty && this.session.QueryOver<CommitteeMember>().Where(x => x.Committee.Oid == entity.Committee.Oid && x.Person.Oid == entity.Person.Oid).RowCount() > 0)
       {
         validatonDictionary.AddError("CommitteeMember", "You can not enter duplicate people in a Committee.");
       }

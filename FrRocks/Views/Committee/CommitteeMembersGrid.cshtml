@@ -60,7 +60,7 @@
   {
     if (committeeEdit)
     {
-      columns.Bound(p => p.PersonOid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+      columns.Bound(p => p.PersonOid).Title("").ClientTemplate("<a  href='" + Url.Action("Edit", "Person") + "?Oid=#= PersonOid #' class='k-button'>Edit Person</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
     }
     columns.Bound(p => p.PersonNameSingleLine).Title("Person").Width(200);
     columns.ForeignKey(p => p.CommitteeMemberTypeOid, (System.Collections.IEnumerable)ViewData["CommitteeMemberTypes"], "Value", "Text").EditorTemplateName("GridForeignKey").Title("Committee Role").Width(120);

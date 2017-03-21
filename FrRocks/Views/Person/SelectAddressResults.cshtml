@@ -3,11 +3,21 @@
 @using Mallon.Core.Web.Models
 @using Mallon.Core.Web.Models.HtmlExtensions
 @using Club.Domain.Models
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".close-button").click(function () {
+      // call 'close' method on nearest kendoWindow
+      $(this).closest("[data-role=window]").data("kendoWindow").close();
+    });
+  });
+</script>
+
 <div id="dPremSearchResults">
   <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
   <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
   @(Html.Kendo().Grid<ModelAddressGeocode>()
-  .Name("searchGridResults")
+  .Name("searchAddressGridResults")
   .AutoBind(true)
   .Columns(columns =>
   {
@@ -15,7 +25,6 @@
     columns.Bound(p => p.AddressSingleLine).Title("Address").Width("200px");
   })
   .Pageable(x => { x.PageSizes(new int[] { 30, 60, 500}); })
-  .Sortable()
   .Scrollable(s => s.Enabled(true).Height("auto"))
   .Selectable(x => x.Type(GridSelectionType.Cell))
   .DataSource(ds => ds   
@@ -27,4 +36,5 @@
   )
 </div>
 
-<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.AddressControlId')" />
+<button id="closeSelectAddress" class="k-button close-button saveButtonRight">Close1</button>
+@*<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.AddressControlId')" />*@

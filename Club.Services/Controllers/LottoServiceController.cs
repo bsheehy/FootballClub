@@ -16,6 +16,9 @@ namespace Club.Services.Controllers
 {
   public class LottoServiceController
   {
+    private const int minLottoNumber = 1;
+    private const int maxLottoNumber = 34;
+
     #region Properties
 
     public ISession session { get; set; }
@@ -147,19 +150,19 @@ namespace Club.Services.Controllers
     {
       if (ValidateLottoNumber(lottoResult.No1) == false)
       {
-        validatonDictionary.AddError("No1", "No1 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No1", string.Format("No 1 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(lottoResult.No2) == false)
       {
-        validatonDictionary.AddError("No2", "No2 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No2", string.Format("No 2 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(lottoResult.No3) == false)
       {
-        validatonDictionary.AddError("No3", "No3 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No3", string.Format("No 3 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(lottoResult.No4) == false)
       {
-        validatonDictionary.AddError("No4", "No4 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No4", string.Format("No 4 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
 
       if (lottoResult.No1.Equals(lottoResult.No2) || lottoResult.No1.Equals(lottoResult.No3) || lottoResult.No1.Equals(lottoResult.No4)
@@ -181,19 +184,19 @@ namespace Club.Services.Controllers
     {
       if (ValidateLottoNumber(modelLottoTicketResult.No1) == false)
       {
-        validatonDictionary.AddError("No1", "No1 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No1", string.Format("No 1 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(modelLottoTicketResult.No2) == false)
       {
-        validatonDictionary.AddError("No2", "No2 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No2", string.Format("No 2 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(modelLottoTicketResult.No3) == false)
       {
-        validatonDictionary.AddError("No3", "No3 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No3", string.Format("No 3 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(modelLottoTicketResult.No4) == false)
       {
-        validatonDictionary.AddError("No4", "No4 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No4", string.Format("No 4 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
 
       if (modelLottoTicketResult.No1.Equals(modelLottoTicketResult.No2) || modelLottoTicketResult.No1.Equals(modelLottoTicketResult.No3) || modelLottoTicketResult.No1.Equals(modelLottoTicketResult.No4)
@@ -300,19 +303,19 @@ namespace Club.Services.Controllers
 
       if (ValidateLottoNumber(entity.No1) == false)
       {
-        validatonDictionary.AddError("No1", "No1 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No1", string.Format("No 1 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(entity.No2) == false)
       {
-        validatonDictionary.AddError("No2", "No2 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No2", string.Format("No 2 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(entity.No3) == false)
       {
-        validatonDictionary.AddError("No3", "No3 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No3", string.Format("No 3 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(entity.No4) == false)
       {
-        validatonDictionary.AddError("No4", "No4 must be a number between 1 and 30.");
+        validatonDictionary.AddError("No4", string.Format("No 4 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
 
       if (entity.No1.Equals(entity.No2) || entity.No1.Equals(entity.No3) || entity.No1.Equals(entity.No4)
@@ -537,19 +540,19 @@ namespace Club.Services.Controllers
       }
       if (ValidateLottoNumber(entity.No1) == false)
       {
-        validatonDictionary.AddError("No1", "No1 must be a number between 1 and 34.");
+        validatonDictionary.AddError("No1", string.Format("No 1 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(entity.No2) == false)
       {
-        validatonDictionary.AddError("No2", "No2 must be a number between 1 and 34.");
+        validatonDictionary.AddError("No2", string.Format("No 2 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(entity.No3) == false)
       {
-        validatonDictionary.AddError("No3", "No3 must be a number between 1 and 34.");
+        validatonDictionary.AddError("No3", string.Format("No 3 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
       if (ValidateLottoNumber(entity.No4) == false)
       {
-        validatonDictionary.AddError("No4", "No4 must be a number between 1 and 34.");
+        validatonDictionary.AddError("No4", string.Format("No 4 must be a number between {0} and {1}.", minLottoNumber.ToString(), maxLottoNumber.ToString()));
       }
 
       if (entity.No1.Equals(entity.No2) || entity.No1.Equals(entity.No3) || entity.No1.Equals(entity.No4)

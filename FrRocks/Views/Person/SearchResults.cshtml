@@ -4,6 +4,7 @@
 @using Mallon.Core.Web.Models.HtmlExtensions
 @using Club.Domain.Models
 @{
+  bool isAjaxSubmit = false;
   bool personEdit = false;
   bool selectGuardian = false;
   bool selectTeamMember = false;
@@ -39,7 +40,23 @@
   {
     selectQualificationMember = ViewBag.SelectQualificationMember;
   }
+
+  if (selectGuardian == true || selectTeamMember == true || selectTeamSheetPerson == true || selectCommitteeMember == true || selectPersonMembership == true || selectQualificationMember == true)
+  {
+    isAjaxSubmit = true;
+  }
 }
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $(".close-button").click(function () {
+      // call 'close' method on nearest kendoWindow
+      $(this).closest("[data-role=window]").data("kendoWindow").close();
+    });
+  });
+</script>
+
+
 <div id="dPremSearchResults">
   <input type="hidden" value="@ViewBag.ListCount" id="searchListCount" />
   <div style="text-align:right;">The top @Html.Label("0", new { @id = "searchLblListCount" }) results.</div>
@@ -55,7 +72,7 @@
       columns.Bound(p => p.Oid).Hidden();
       if (personEdit)
       {
-        columns.Bound(p => p.Oid).Title("").ClientTemplate("<a target='_blank' href='" + Url.Action("Edit", "Person") + "?Oid=#= Oid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
+        columns.Bound(p => p.Oid).Title("").ClientTemplate("<a  href='" + Url.Action("Edit", "Person") + "?Oid=#= Oid #' class='k-button'>Edit</a>").Width(100).HtmlAttributes(new { style = "min-width:100px;max-width:100px;" });
       }
       if (selectGuardian)
       {
@@ -108,5 +125,8 @@
   )
   )
 </div>
-
-<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl('@ViewBag.PersonControlId')" />
+@if (isAjaxSubmit)
+{
+  <button class="k-button" onclick="closeDialogCtrl()">Close</button>
+}
+@*<input type="button" value="Close" class="k-button" onclick="closeDialogCtrl" />*@

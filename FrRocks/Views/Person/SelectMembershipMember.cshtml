@@ -1,53 +1,75 @@
 ﻿@using Club.Domain.Artifacts
-@using Club.Domain.Queries
 @using Mallon.Core.Web.Models
 @using Mallon.Core.Web.Models.HtmlExtensions
-@model TypedModel<PersonQry>
+@using Club.Services.Utils
+@using Club.Services.Utils
+@model Mallon.Core.Web.Models.TypedModel<Person>
+@functions{ string ctrlId = System.Guid.NewGuid().ToString();}
 @{
   ViewBag.Title = "Select Membership Person";
-  //Layout = "~/Views/Shared/_Layout.cshtml";
   string personControlId = ViewBag.PersonControlId;
   string membershipTypeOid = ViewBag.MembershipTypeOid;
+  PageViewType pnlViewUserAccess = Utility.routesSetPnlViewEnum(Convert.ToString(ViewData["PnlView"]), Model.Entity.Oid);
+  string pnlView = Enum.GetName(pnlViewUserAccess.GetType(), pnlViewUserAccess);
+
+  bool selectPersonMembership = false;
+  bool personEdit = false;
+  if (ViewBag.PersonEdit != null)
+  {
+    personEdit = ViewBag.PersonEdit;
+  }
+  if (ViewBag.SelectPersonMembership != null)
+  {
+    selectPersonMembership = ViewBag.SelectPersonMembership;
+  }
+  RouteValueDictionary routeVals = new RouteValueDictionary();
+  routeVals.Add("selectPersonMembership", selectPersonMembership);
+  routeVals.Add("controlId", Convert.ToString(ViewBag.PersonControlId));
+  routeVals.Add("hideLayout", true);
+  routeVals.Add("personEdit", personEdit);
+  routeVals.Add("membershipTypeOid", membershipTypeOid);
 }
+@*VERY IMPORTANT: Used for Dialogs and raising events on calling pages*@
 @Html.Hidden("PersonControlId", personControlId)
 @Html.Hidden("MembershipTypeOid", membershipTypeOid)
 @Html.Hidden("SaveMembershipMemberUrl", Url.Action("SelectMembershipMember", "Person"))
+@{
+  switch (pnlViewUserAccess)
+  {
+    case PageViewType.ReadOnly:
+    case PageViewType.NoAccess:
+      @Html.Partial("~/Views/Person/_View.cshtml", Model)
+      break;
+    case PageViewType.Edit:
+    @(Html.Kendo().TabStrip()
+    .Name("ts_" + ctrlId)
+    .Items(tabstrip =>
+    {
+      tabstrip.Add().Text("Membership - Select Person").LoadContentFrom("Search", "Person", routeVals);
+      //tabstrip.Add().Text("Membership - Edit Person:").Selected(true).Content(@Html.Partial("~/Views/Person/AjaxAddPerson.cshtml", Model, Html.ViewData).ToHtmlString());
+    })
+    )
+      break;
+    //Create
+    default:
+    @(Html.Kendo().TabStrip()
+      .Name("ts_" + ctrlId)
+      .Items(tabstrip =>
+      {
+        tabstrip.Add().Text("Membership - Select Person").Selected(true).LoadContentFrom("Search", "Person", routeVals);
+        //tabstrip.Add().Text("Membership - Create New Person:").Content(@Html.Partial("~/Views/Person/AjaxAddPerson.cshtml", Model, Html.ViewData).ToHtmlString());
+
+      })
+    )
+      break;
+  }
+}
 
 
-<div>
-  @(Html.Kendo().PanelBar()
-  .Name("pnlbPersonS")
-  .ExpandMode(PanelBarExpandMode.Multiple)
-  .HtmlAttributes(new { style = "width:100%" })
-  .Items(panelbar =>
-  {
-    panelbar.Add().Text("Person Search Criteria")
-        .ImageUrl(Url.Content("~/Images/24px/view.png"))
-        .Expanded(true)
-        .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
-        .Content(@<div>
-          @Html.Partial("~/Views/Person/SearchCriteria.cshtml")
-        </div>);
-  })
-  )
-</div>
-<br />
-<div id="listContent">
-  @(Html.Kendo().PanelBar()
-  .Name("pnlbPersonL")
-  .ExpandMode(PanelBarExpandMode.Multiple)
-  .HtmlAttributes(new { style = "width:100%" })
-  .Items(panelbar =>
-  {
-    panelbar.Add().Text("Person Results")
-      .ImageUrl(Url.Content("~/Images/24px/scroll_view.png"))
-      .Expanded(true)
-      .LinkHtmlAttributes(new { @class = "dfw-ignoreDirtyLink" })
-      .Content(@<div id="dPersonResults">
-        @Html.Partial("~/Views/Person/SearchResults.cshtml")
-      </div>
-      );
-  })
-  )
-</div>
+
+
+
+
+
+
 

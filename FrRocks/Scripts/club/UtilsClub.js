@@ -730,6 +730,44 @@ function selectTeamMember(e) {
   }
 }
 
+function selectTeamMember_NewPerson(dataItem) {
+  var personOid = dataItem.Oid;
+  var teamOid = $('#TeamOid').val();
+  var url = $('#SaveTeamMemberUrl').val();
+  try {
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: {
+        'personOid': personOid,
+        'teamOid': teamOid
+      },
+      success: function (result) {
+        var message = "Team Member added.";
+        var buttons = ["OK"];
+        showModalAlert(message, "", "", buttons);
+        closeDialogCtrl(); //This is defined on TheView.cshtml e.g. Person/_EditPanel
+        refreshTeamMemberGrid();
+      },
+      error: function (request) {
+        hideProgress();
+        handleModelStateException(request);
+      },
+      beforeSend: function () {
+        showProgress();
+      },
+      complete: function () {
+        hideProgress();
+      }
+    });
+  }
+  catch (e) {
+    var message = e.description;
+    var buttons = ["OK"];
+    showModalAlert(message, "", "", buttons);
+  }
+}
+
 function refreshTeamAdminsGrid() {
   $('#gridTeamAdminsGrid').data('kendoGrid').dataSource.read();
 }
@@ -1266,8 +1304,9 @@ function selectPersonAddress(e) {
   }
 
   //Close dialog
-  var dialogId = $('#AddressControlId').val();
-  closeDialogCtrl(dialogId)
+  //var dialogId = $('#AddressControlId').val();
+  //closeDialogCtrl(dialogId);
+  $('#closeSelectAddress').trigger('click');
 }
 
 /*
@@ -1285,21 +1324,6 @@ function isStringValueEmpty(sValue) {
   }
 
   return false;
-}
-
-function setAjaxAddPerson(dataItem) {
-  var controlId = $("#PersonControlId").val();
-  setAjaxPersonOnCallingPage(dataItem, controlId);
-}
-
-function setAjaxPersonOnCallingPage(dataItem, personControlId) {
-  var mydata = $("#" + personControlId).data();
-  var prependModel = mydata.modelroutepath;
-  var addressContainerDiv = mydata.containerdiv;
-  var setPerson = mydata.setperson;
-  var parentDialog = getDialogName(mydata.dialogguid);
-
-  setPersonSingleLine(prependModel, dataItem, parentDialog, addressContainerDiv, personControlId, setPerson);
 }
 
 //This function is used to clear the Person details for the following Person Views:_ViewSingleLine.cshtml , _ViewSingleLineAll.cshtml
